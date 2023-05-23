@@ -3,7 +3,7 @@
 
     <!-- Home Page -->
     <string name="location">Location</string>
-    <string name="hello_text">Hi, </string>
+    <string name="hello_text">Hi,&#32;</string>
     <string name="search_text">Let\'s Get Brewing</string>
     <string name="search_hint">Search Cafe</string>
     <string name="nearby">Nearby</string>

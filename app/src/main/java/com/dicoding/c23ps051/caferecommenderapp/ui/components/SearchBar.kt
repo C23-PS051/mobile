@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
+import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
 
 @Composable
 fun SearchBar(
@@ -29,7 +30,7 @@ fun SearchBar(
     Surface(
         modifier = modifier
             .clip(CircleShape)
-            .background(colorResource(id = R.color.white))
+            .background(MaterialTheme.colors.background)
             .padding(8.dp)
     ) {
         Row {
@@ -39,7 +40,7 @@ fun SearchBar(
             )
             Text(
                 text = stringResource(id = R.string.search_hint),
-                color = colorResource(id = R.color.gray),
+                color = Gray,
                 modifier = modifier.padding(horizontal = 4.dp).weight(1f)
             )
         }

@@ -54,7 +54,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.SearchCafe
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SectionText
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.WelcomeText
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
-import com.dicoding.c23ps051.caferecommenderapp.ui.theme.LightGray
+import com.dicoding.c23ps051.caferecommenderapp.ui.theme.*
 
 class HomeActivity : ComponentActivity() {
 
@@ -79,7 +79,6 @@ fun App(modifier: Modifier = Modifier) {
                 .verticalScroll(rememberScrollState())
                 .padding(innerPadding)
         ) {
-//            Header()
             WelcomeText("Yen")
             SearchCafe()
             HomeSection(title = stringResource(id = R.string.nearby))
@@ -154,7 +153,7 @@ fun BottomBar(
                     )
                 },
                 selected = it.title == navigationItems[0].title,
-                unselectedContentColor = LightGray,
+                unselectedContentColor = Gray,
                 onClick = { /*TODO*/ }
             )
         }
