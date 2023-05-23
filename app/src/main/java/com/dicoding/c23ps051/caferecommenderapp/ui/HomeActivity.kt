@@ -71,6 +71,7 @@ class HomeActivity : ComponentActivity() {
 @Composable
 fun App(modifier: Modifier = Modifier) {
     Scaffold(
+        topBar = { Header() },
         bottomBar = { BottomBar() }
     ) { innerPadding ->
         Column(
@@ -78,7 +79,7 @@ fun App(modifier: Modifier = Modifier) {
                 .verticalScroll(rememberScrollState())
                 .padding(innerPadding)
         ) {
-            Header()
+//            Header()
             WelcomeText("Yen")
             SearchCafe()
             HomeSection(title = stringResource(id = R.string.nearby))
