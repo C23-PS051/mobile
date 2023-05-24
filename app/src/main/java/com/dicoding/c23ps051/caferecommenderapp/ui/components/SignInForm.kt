@@ -9,6 +9,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -21,28 +22,66 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.dicoding.c23ps051.caferecommenderapp.R
 
-@Composable
-fun SignInForm() {
+class SignInFormState(
+    initialEmailTextState: String,
+    initialEmailHasErrorState: Boolean,
+    initialPasswordTextState: String,
+    initialPasswordHasErrorState: Boolean,
+    initialShowPasswordState: Boolean,
+) {
+    /* Email Field State */
+    var emailText by mutableStateOf(initialEmailTextState)
+    var emailHasError by mutableStateOf(initialEmailHasErrorState)
 
+    /* Password Field State */
+    var passwordText by mutableStateOf(initialPasswordTextState)
+    var passwordHasError by mutableStateOf(initialPasswordHasErrorState)
+    var showPassword by mutableStateOf(initialShowPasswordState)
+}
+
+@Composable
+fun rememberSignInFormState(
+    emailText: String,
+    emailHasError: Boolean,
+    passwordText: String,
+    passwordHasError: Boolean,
+    showPassword: Boolean,
+): SignInFormState = remember(
+    emailText,
+    emailHasError,
+    passwordText,
+    passwordHasError,
+    showPassword,
+) {
+    SignInFormState(
+        emailText,
+        emailHasError,
+        passwordText,
+        passwordHasError,
+        showPassword,
+    )
+}
+
+@Composable
+fun SignInForm(
+    state: SignInFormState = rememberSignInFormState(
+        emailText = "",
+        emailHasError = false,
+        passwordText = "",
+        passwordHasError = false,
+        showPassword = false,
+    )
+) {
     val focusManager = LocalFocusManager.current
     val minPasswordLength = 8
 
-    /* Email Field State */
-    var emailText by rememberSaveable { mutableStateOf("") }
-    var emailHasError by rememberSaveable { mutableStateOf(false) }
-
-    /* Password Field State */
-    var passwordText by rememberSaveable { mutableStateOf("") }
-    var passwordHasError by rememberSaveable { mutableStateOf(false) }
-    var showPassword by rememberSaveable { mutableStateOf(false) }
-
     EmailTextField(
-        text = emailText,
-        hasError = emailHasError,
+        text = state.emailText,
+        hasError = state.emailHasError,
         onValueChange = { newText: String ->
-            emailText = newText
+            state.emailText = newText
             val emailRegex = Regex("^([a-zA-Z0-9_.+-])+@([a-zA-Z0-9-])+\\.([a-zA-Z0-9-.])+$")
-            emailHasError = !emailRegex.matches(emailText)
+            state.emailHasError = !emailRegex.matches(state.emailText)
         },
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Email,
@@ -58,23 +97,23 @@ fun SignInForm() {
     )
     Spacer(modifier = Modifier.height(16.dp))
     PasswordTextField(
-        text = passwordText,
-        hasError = passwordHasError,
-        showPassword = showPassword,
+        text = state.passwordText,
+        hasError = state.passwordHasError,
+        showPassword = state.showPassword,
         onValueChange = { newText: String ->
-            passwordText = newText
+            state.passwordText = newText
             val passwordRegex = Regex("^(?=.*[A-Za-z])[A-Za-z\\d](?!.*\\s).{8,}\$")
 
-            passwordHasError = passwordText.length < minPasswordLength || !passwordRegex.matches(passwordText)
+            state.passwordHasError = state.passwordText.length < minPasswordLength || !passwordRegex.matches(state.passwordText)
         },
         trailingIcon = {
-            val icon = if (showPassword) {
+            val icon = if (state.showPassword) {
                 painterResource(id = R.drawable.visibility)
             } else {
                 painterResource(id = R.drawable.visibility_off)
             }
 
-            IconButton(onClick = { showPassword = !showPassword }) {
+            IconButton(onClick = { state.showPassword = !state.showPassword }) {
                 Icon(
                     icon,
                     contentDescription = stringResource(id = R.string.visibility),
@@ -83,13 +122,11 @@ fun SignInForm() {
         },
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Next,
+            imeAction = ImeAction.Done,
         ),
         keyboardActions = KeyboardActions(
-            onNext = {
-                focusManager.moveFocus(
-                    focusDirection = FocusDirection.Down,
-                )
+            onDone = {
+                focusManager.clearFocus()
             }
         ),
     )
