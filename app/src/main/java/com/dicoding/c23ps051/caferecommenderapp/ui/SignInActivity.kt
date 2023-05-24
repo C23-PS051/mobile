@@ -28,6 +28,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.ClickableText
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.GoogleButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OrDivider
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.PasswordTextField
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.SignInForm
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ToSignUpText
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
@@ -59,9 +60,7 @@ fun SignIn(modifier: Modifier = Modifier) {
         AppLogo(modifier = modifier.align(Alignment.CenterHorizontally))
         AppName()
         Spacer(modifier = Modifier.height(48.dp))
-//        EmailTextField()
-        Spacer(modifier = Modifier.height(16.dp))
-//        PasswordTextField()
+        SignInForm()
         Spacer(modifier = Modifier.height(24.dp))
         Button(text = stringResource(id = R.string.sign_in)) {
             /* TODO */
