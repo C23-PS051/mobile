@@ -35,7 +35,14 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.LoginActivity"
+            android:name=".ui.SignInActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.SignUpActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

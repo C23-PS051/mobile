@@ -39,7 +39,7 @@ fun Button(
     onClick: () -> Unit,
 ) {
     Button(
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(12.dp),
         modifier = modifier
             .height(48.dp)
             .fillMaxWidth(),
