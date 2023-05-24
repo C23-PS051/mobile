@@ -1,5 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -23,91 +25,86 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import com.dicoding.c23ps051.caferecommenderapp.R
 
 class SignUpFormState(
-    initialNamelTextState: String,
-    initialNameHasErrorState: Boolean,
-    initialEmailTextState: String,
-    initialEmailHasErrorState: Boolean,
-    initialPasswordTextState: String,
-    initialPasswordHasErrorState: Boolean,
+    initialTextState: String,
+    initialHasErrorState: Boolean,
     initialShowPasswordState: Boolean,
-    initialRepasswordTextState: String,
-    initialRepasswordHasErrorState: Boolean,
-    initialShowRepasswordState: Boolean,
 ) {
     /* Name Field State */
-    var nameText by mutableStateOf(initialEmailTextState)
-    var nameHasError by mutableStateOf(initialEmailHasErrorState)
+    var nameText by mutableStateOf(initialTextState)
+    var nameHasError by mutableStateOf(initialHasErrorState)
 
     /* Email Field State */
-    var emailText by mutableStateOf(initialEmailTextState)
-    var emailHasError by mutableStateOf(initialEmailHasErrorState)
+    var emailText by mutableStateOf(initialTextState)
+    var emailHasError by mutableStateOf(initialHasErrorState)
 
     /* Password Field State */
-    var passwordText by mutableStateOf(initialPasswordTextState)
-    var passwordHasError by mutableStateOf(initialPasswordHasErrorState)
+    var passwordText by mutableStateOf(initialTextState)
+    var passwordHasError by mutableStateOf(initialHasErrorState)
     var showPassword by mutableStateOf(initialShowPasswordState)
 
     /* Confirm Password Field State */
-    var repasswordText by mutableStateOf(initialPasswordTextState)
-    var repasswordHasError by mutableStateOf(initialPasswordHasErrorState)
+    var repasswordText by mutableStateOf(initialTextState)
+    var repasswordHasError by mutableStateOf(initialHasErrorState)
     var showRepassword by mutableStateOf(initialShowPasswordState)
 }
 
+val signUpFormSaver = Saver<SignUpFormState, Bundle>(
+    save = {
+        bundleOf(
+            "nameText" to it.nameText,
+            "nameHasError" to it.nameHasError,
+            "emailText" to it.emailText,
+            "emailHasError" to it.emailHasError,
+            "passwordText" to it.passwordText,
+            "passwordHasError" to it.passwordHasError,
+            "showPassword" to it.showPassword,
+            "repasswordText" to it.repasswordText,
+            "repasswordHasError" to it.repasswordHasError,
+            "showRepassword" to it.showRepassword
+        )
+    },
+    restore = {
+        SignUpFormState(
+            initialTextState = it.getString("text", ""),
+            initialHasErrorState = it.getBoolean("hasError", false),
+            initialShowPasswordState = it.getBoolean("showPassword", false)
+        ).apply {
+            nameText = it.getString("nameText", "")
+            nameHasError = it.getBoolean("nameHasError", false)
+            emailText = it.getString("emailText", "")
+            emailHasError = it.getBoolean("emailHasError", false)
+            passwordText = it.getString("passwordText", "")
+            passwordHasError = it.getBoolean("passwordHasError", false)
+            showPassword = it.getBoolean("showPassword", false)
+            repasswordText = it.getString("repasswordText", "")
+            repasswordHasError = it.getBoolean("repasswordHasError", false)
+            showRepassword = it.getBoolean("showRepassword", false)
+        }
+    }
+)
+
 @Composable
 fun rememberSignUpFormState(
-    nameText: String,
-    nameHasError: Boolean,
-    emailText: String,
-    emailHasError: Boolean,
-    passwordText: String,
-    passwordHasError: Boolean,
+    text: String,
+    hasError: Boolean,
     showPassword: Boolean,
-    repasswordText: String,
-    repasswordHasError: Boolean,
-    showRepassword: Boolean,
-): SignUpFormState = remember(
-    nameText,
-    nameHasError,
-    emailText,
-    emailHasError,
-    passwordText,
-    passwordHasError,
-    showPassword,
-    repasswordText,
-    repasswordHasError,
-    showRepassword,
+): SignUpFormState = rememberSaveable(
+    saver = signUpFormSaver
 ) {
-    SignUpFormState(
-        nameText,
-        nameHasError,
-        emailText,
-        emailHasError,
-        passwordText,
-        passwordHasError,
-        showPassword,
-        repasswordText,
-        repasswordHasError,
-        showRepassword,
-    )
+    SignUpFormState(text, hasError, showPassword)
 }
 
 
 @Composable
 fun SignUpForm(
     state: SignUpFormState = rememberSignUpFormState(
-        nameText = "",
-        nameHasError = false,
-        emailText = "",
-        emailHasError = false,
-        passwordText = "",
-        passwordHasError = false,
+        text = "",
+        hasError = false,
         showPassword = false,
-        repasswordText = "",
-        repasswordHasError = false,
-        showRepassword = false,
     )
 ) {
     val focusManager = LocalFocusManager.current
