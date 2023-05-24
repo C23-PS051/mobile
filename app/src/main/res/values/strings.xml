@@ -1,5 +1,11 @@
 <resources>
-    <string name="app_name">CafeRecommenderApp</string>
+    <string name="app_name">Café</string>
+
+    <!-- Navigations -->
+    <string name="menu_home">Home</string>
+    <string name="menu_recommended">Recommend</string>
+    <string name="menu_favorite">Favorite</string>
+    <string name="menu_profile">Profile</string>
 
     <!-- Home Page -->
     <string name="location">Location</string>
@@ -12,9 +18,16 @@
     <string name="cafe_name">Cafe Name</string>
     <string name="rating">10/10</string>
 
-    <!-- Navigations -->
-    <string name="menu_home">Home</string>
-    <string name="menu_recommended">Recommend</string>
-    <string name="menu_favorite">Favorite</string>
-    <string name="menu_profile">Profile</string>
+    <!-- Login Page -->
+    <string name="sign_in">SIGN IN</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="or">OR</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="google_sign_in">GOOGLE SIGN IN</string>
+    <string name="coffee_illustration">An illustration of coffee</string>
+    <string name="no_account">Don\'t have an account yet?</string>
+    <string name="register_now">Register Now!</string>
+    <string name="title">Title</string>
 </resources>
