@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
@@ -35,7 +36,7 @@ private val textFieldHeight = 60.dp
 
 @Composable
 fun InputTextField(label: String) {
-    var text by remember { mutableStateOf("") }
+    var text by rememberSaveable { mutableStateOf("") }
     OutlinedTextField(
         value = text,
         onValueChange = { newText ->
@@ -51,8 +52,8 @@ fun EmailTextField(
     modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
-    var text by remember { mutableStateOf("") }
-    var hasError by remember { mutableStateOf(false) }
+    var text by rememberSaveable { mutableStateOf("") }
+    var hasError by rememberSaveable { mutableStateOf(false) }
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth().height(textFieldHeight),
         value = text,
@@ -87,9 +88,9 @@ fun PasswordTextField(
     modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
-    var showPassword by remember { mutableStateOf(false) }
-    var text by remember { mutableStateOf("") }
-    var hasError by remember { mutableStateOf(false) }
+    var showPassword by rememberSaveable { mutableStateOf(false) }
+    var text by rememberSaveable { mutableStateOf("") }
+    var hasError by rememberSaveable { mutableStateOf(false) }
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth().height(textFieldHeight),
         value = text,
