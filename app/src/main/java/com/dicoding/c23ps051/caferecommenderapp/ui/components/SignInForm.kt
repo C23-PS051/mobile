@@ -1,5 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardActions
@@ -10,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -20,55 +22,66 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import com.dicoding.c23ps051.caferecommenderapp.R
 
 class SignInFormState(
-    initialEmailTextState: String,
-    initialEmailHasErrorState: Boolean,
-    initialPasswordTextState: String,
-    initialPasswordHasErrorState: Boolean,
+    initialTextState: String,
+    initialHasErrorState: Boolean,
     initialShowPasswordState: Boolean,
 ) {
     /* Email Field State */
-    var emailText by mutableStateOf(initialEmailTextState)
-    var emailHasError by mutableStateOf(initialEmailHasErrorState)
+    var emailText by mutableStateOf(initialTextState)
+    var emailHasError by mutableStateOf(initialHasErrorState)
 
     /* Password Field State */
-    var passwordText by mutableStateOf(initialPasswordTextState)
-    var passwordHasError by mutableStateOf(initialPasswordHasErrorState)
+    var passwordText by mutableStateOf(initialTextState)
+    var passwordHasError by mutableStateOf(initialHasErrorState)
     var showPassword by mutableStateOf(initialShowPasswordState)
 }
 
+val signInFormSaver = Saver<SignInFormState, Bundle>(
+    save = {
+        bundleOf(
+            "emailText" to it.emailText,
+            "emailHasError" to it.emailHasError,
+            "passwordText" to it.passwordText,
+            "passwordHasError" to it.passwordHasError,
+            "showPassword" to it.showPassword,
+        )
+    },
+    restore = {
+        SignInFormState(
+            initialTextState = it.getString("text", ""),
+            initialHasErrorState = it.getBoolean("hasError", false),
+            initialShowPasswordState = it.getBoolean("showPassword", false)
+        ).apply {
+            emailText = it.getString("emailText", "")
+            emailHasError = it.getBoolean("emailHasError", false)
+            passwordText = it.getString("passwordText", "")
+            passwordHasError = it.getBoolean("passwordHasError", false)
+            showPassword = it.getBoolean("showPassword", false)
+        }
+    }
+)
+
+
 @Composable
 fun rememberSignInFormState(
-    emailText: String,
-    emailHasError: Boolean,
-    passwordText: String,
-    passwordHasError: Boolean,
+    text: String,
+    hasError: Boolean,
     showPassword: Boolean,
-): SignInFormState = remember(
-    emailText,
-    emailHasError,
-    passwordText,
-    passwordHasError,
-    showPassword,
+): SignInFormState = rememberSaveable(
+    saver = signInFormSaver
 ) {
-    SignInFormState(
-        emailText,
-        emailHasError,
-        passwordText,
-        passwordHasError,
-        showPassword,
-    )
+    SignInFormState(text, hasError, showPassword)
 }
 
 @Composable
 fun SignInForm(
     state: SignInFormState = rememberSignInFormState(
-        emailText = "",
-        emailHasError = false,
-        passwordText = "",
-        passwordHasError = false,
+        text = "",
+        hasError = false,
         showPassword = false,
     )
 ) {
