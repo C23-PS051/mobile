@@ -1,5 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -23,41 +25,100 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import com.dicoding.c23ps051.caferecommenderapp.R
 
-@Composable
-fun SignUpForm() {
-
-    val focusManager = LocalFocusManager.current
-    val minPasswordLength = 8
-
+class SignUpFormState(
+    initialTextState: String,
+    initialHasErrorState: Boolean,
+    initialShowPasswordState: Boolean,
+) {
     /* Name Field State */
-    var nameText by rememberSaveable { mutableStateOf("") }
-    var nameHasError by rememberSaveable { mutableStateOf(false) }
+    var nameText by mutableStateOf(initialTextState)
+    var nameHasError by mutableStateOf(initialHasErrorState)
 
     /* Email Field State */
-    var emailText by rememberSaveable { mutableStateOf("") }
-    var emailHasError by rememberSaveable { mutableStateOf(false) }
+    var emailText by mutableStateOf(initialTextState)
+    var emailHasError by mutableStateOf(initialHasErrorState)
 
     /* Password Field State */
-    var passwordText by rememberSaveable { mutableStateOf("") }
-    var passwordHasError by rememberSaveable { mutableStateOf(false) }
-    var showPassword by rememberSaveable { mutableStateOf(false) }
+    var passwordText by mutableStateOf(initialTextState)
+    var passwordHasError by mutableStateOf(initialHasErrorState)
+    var showPassword by mutableStateOf(initialShowPasswordState)
 
     /* Confirm Password Field State */
-    var repasswordText by rememberSaveable { mutableStateOf("") }
-    var repasswordHasError by rememberSaveable { mutableStateOf(false) }
-    var showRepassword by rememberSaveable { mutableStateOf(false) }
+    var repasswordText by mutableStateOf(initialTextState)
+    var repasswordHasError by mutableStateOf(initialHasErrorState)
+    var showRepassword by mutableStateOf(initialShowPasswordState)
+}
+
+val signUpFormSaver = Saver<SignUpFormState, Bundle>(
+    save = {
+        bundleOf(
+            "nameText" to it.nameText,
+            "nameHasError" to it.nameHasError,
+            "emailText" to it.emailText,
+            "emailHasError" to it.emailHasError,
+            "passwordText" to it.passwordText,
+            "passwordHasError" to it.passwordHasError,
+            "showPassword" to it.showPassword,
+            "repasswordText" to it.repasswordText,
+            "repasswordHasError" to it.repasswordHasError,
+            "showRepassword" to it.showRepassword
+        )
+    },
+    restore = {
+        SignUpFormState(
+            initialTextState = it.getString("text", ""),
+            initialHasErrorState = it.getBoolean("hasError", false),
+            initialShowPasswordState = it.getBoolean("showPassword", false)
+        ).apply {
+            nameText = it.getString("nameText", "")
+            nameHasError = it.getBoolean("nameHasError", false)
+            emailText = it.getString("emailText", "")
+            emailHasError = it.getBoolean("emailHasError", false)
+            passwordText = it.getString("passwordText", "")
+            passwordHasError = it.getBoolean("passwordHasError", false)
+            showPassword = it.getBoolean("showPassword", false)
+            repasswordText = it.getString("repasswordText", "")
+            repasswordHasError = it.getBoolean("repasswordHasError", false)
+            showRepassword = it.getBoolean("showRepassword", false)
+        }
+    }
+)
+
+@Composable
+fun rememberSignUpFormState(
+    text: String,
+    hasError: Boolean,
+    showPassword: Boolean,
+): SignUpFormState = rememberSaveable(
+    saver = signUpFormSaver
+) {
+    SignUpFormState(text, hasError, showPassword)
+}
+
+
+@Composable
+fun SignUpForm(
+    state: SignUpFormState = rememberSignUpFormState(
+        text = "",
+        hasError = false,
+        showPassword = false,
+    )
+) {
+    val focusManager = LocalFocusManager.current
+    val minPasswordLength = 8
 
     Column {
         InputTextField(
             label = stringResource(id = R.string.name),
-            text = nameText,
-            hasError = nameHasError,
+            text = state.nameText,
+            hasError = state.nameHasError,
             onValueChange = { newText ->
-                nameText = newText
-                val nameRegex = Regex("^[a-zA-Z0-9]+\$")
-                nameHasError = !nameRegex.matches(nameText)
+                state.nameText = newText
+                val nameRegex = Regex("^(?=.*[a-zA-Z])[a-zA-Z0-9\\s]+\$")
+                state.nameHasError = !nameRegex.matches(state.nameText)
             },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Text,
@@ -73,12 +134,12 @@ fun SignUpForm() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         EmailTextField(
-            text = emailText,
-            hasError = emailHasError,
+            text = state.emailText,
+            hasError = state.emailHasError,
             onValueChange = { newText: String ->
-                emailText = newText
+                state.emailText = newText
                 val emailRegex = Regex("^([a-zA-Z0-9_.+-])+@([a-zA-Z0-9-])+\\.([a-zA-Z0-9-.])+$")
-                emailHasError = !emailRegex.matches(emailText)
+                state.emailHasError = !emailRegex.matches(state.emailText)
             },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Email,
@@ -94,23 +155,23 @@ fun SignUpForm() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         PasswordTextField(
-            text = passwordText,
-            hasError = passwordHasError,
-            showPassword = showPassword,
+            text = state.passwordText,
+            hasError = state.passwordHasError,
+            showPassword = state.showPassword,
             onValueChange = { newText: String ->
-                passwordText = newText
+                state.passwordText = newText
                 val passwordRegex = Regex("^(?=.*[A-Za-z])[A-Za-z\\d](?!.*\\s).{8,}\$")
 
-                passwordHasError = passwordText.length < minPasswordLength || !passwordRegex.matches(passwordText)
+                state.passwordHasError = state.passwordText.length < minPasswordLength || !passwordRegex.matches(state.passwordText)
             },
             trailingIcon = {
-                val icon = if (showPassword) {
+                val icon = if (state.showPassword) {
                     painterResource(id = R.drawable.visibility)
                 } else {
                     painterResource(id = R.drawable.visibility_off)
                 }
 
-                IconButton(onClick = { showPassword = !showPassword }) {
+                IconButton(onClick = { state.showPassword = !state.showPassword }) {
                     Icon(
                         icon,
                         contentDescription = stringResource(id = R.string.visibility),
@@ -131,21 +192,21 @@ fun SignUpForm() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         ConfirmPasswordTextField(
-            confirmText = repasswordText,
-            hasError = repasswordHasError,
-            showPassword = showRepassword,
+            confirmText = state.repasswordText,
+            hasError = state.repasswordHasError,
+            showPassword = state.showRepassword,
             onValueChange = { newText: String ->
-                repasswordText = newText
-                repasswordHasError = repasswordText != passwordText || repasswordText.length < minPasswordLength
+                state.repasswordText = newText
+                state.repasswordHasError = state.repasswordText != state.passwordText || state.repasswordText.length < minPasswordLength
             },
             trailingIcon = {
-                val icon = if (showRepassword) {
+                val icon = if (state.showRepassword) {
                     painterResource(id = R.drawable.visibility)
                 } else {
                     painterResource(id = R.drawable.visibility_off)
                 }
 
-                IconButton(onClick = { showRepassword = !showRepassword }) {
+                IconButton(onClick = { state.showRepassword = !state.showRepassword }) {
                     Icon(
                         icon,
                         contentDescription = stringResource(id = R.string.visibility),
