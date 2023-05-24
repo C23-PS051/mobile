@@ -3,5 +3,6 @@
 
     <style name="Theme.CafeRecommenderApp" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/dark_brown</item>
+        <item name="android:fontFamily">@font/work_sans</item>
     </style>
 </resources>

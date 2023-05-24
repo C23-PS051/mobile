@@ -31,7 +31,7 @@ fun SearchCafe(
     Surface(
         color = MaterialTheme.colors.secondary,
         modifier = modifier
-            .padding(16.dp)
+//            .padding(16.dp)
 //            .background(MaterialTheme.colors.secondary)
             .clip(RoundedCornerShape(12.dp))
             .height(110.dp)
