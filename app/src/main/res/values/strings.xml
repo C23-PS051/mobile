@@ -36,4 +36,7 @@
     <string name="name">Name</string>
     <string name="already_have_account">I already have an account</string>
     <string name="visibility">Visibility</string>
+    <string name="welcome_text">Welcome to Café!</string>
+    <string name="welcome_description">Your personalized dining companion designed to satisfy your unique cravings.</string>
+    <string name="welcome_closing">Going to cafe without confusion!</string>
 </resources>
