@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -64,7 +66,9 @@ class LoginActivity : ComponentActivity() {
 @Composable
 fun Login(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier.padding(24.dp),
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
+            .padding(24.dp),
         verticalArrangement = Arrangement.Center,
     ) {
         AppLogo(modifier = modifier.align(Alignment.CenterHorizontally))
