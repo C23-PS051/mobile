@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.model.BottomBarItem
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.BottomBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeItem
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Header
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.HomeSection
@@ -98,55 +99,6 @@ fun CafeList(
     ) {
         items(5){
             CafeItem()
-        }
-    }
-}
-
-@Composable
-fun BottomBar(
-    modifier: Modifier = Modifier
-) {
-    BottomNavigation (
-        backgroundColor = MaterialTheme.colors.background,
-        contentColor = MaterialTheme.colors.primary,
-        modifier = modifier
-    ) {
-        val navigationItems = listOf(
-            BottomBarItem(
-                title = stringResource(id = R.string.menu_home),
-                icon = Icons.Default.Home
-            ),
-            BottomBarItem(
-                title = stringResource(id = R.string.menu_recommended),
-                icon = Icons.Default.ThumbUp
-            ),
-            BottomBarItem(
-                title = stringResource(id = R.string.menu_favorite),
-                icon = Icons.Default.Favorite
-            ),
-            BottomBarItem(
-                title = stringResource(id = R.string.menu_profile),
-                icon = Icons.Default.AccountCircle
-            ),
-        )
-        navigationItems.map {
-            BottomNavigationItem(
-                icon = {
-                    Icon(
-                        imageVector = it.icon,
-                        contentDescription = it.title
-                    )
-                },
-                label = {
-                    Text(
-                        text = it.title,
-                        fontSize = 10.sp
-                    )
-                },
-                selected = it.title == navigationItems[0].title,
-                unselectedContentColor = Gray,
-                onClick = { /*TODO*/ }
-            )
         }
     }
 }
