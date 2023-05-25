@@ -38,13 +38,20 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
 @Composable
 fun CafeItem(
     modifier: Modifier = Modifier,
+    thumbnail: String,
+    name: String,
+    rating: String,
+    onClick: () -> Unit = {},
 ) {
     Card(
-        shape = RoundedCornerShape(12.dp),
-        modifier = modifier.width(140.dp),
-
+        shape = MaterialTheme.shapes.large,
+        modifier = modifier
+            .width(140.dp)
     ) {
-        Column{
+        Column (
+            modifier = Modifier
+                .clickable { onClick() },
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.img),
                 contentDescription = "Image of a Cafe",
@@ -57,7 +64,7 @@ fun CafeItem(
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text(
-                    text = stringResource(id = R.string.cafe_name),
+                    text = name,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.W500,
                 )
@@ -70,7 +77,7 @@ fun CafeItem(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = stringResource(id = R.string.rating),
+                        text = rating,
                         fontSize = 12.sp
                     )
                 }
@@ -83,7 +90,11 @@ fun CafeItem(
 @Composable
 fun CafeItemPreview() {
     CafeRecommenderAppTheme {
-        CafeItem()
+        CafeItem(
+            thumbnail = "",
+            name = "Cafe",
+            rating = "4,0/5(100)",
+        )
     }
 }
 
@@ -111,7 +122,6 @@ fun CafeItemLarge(
     }
 
     Card(
-        shape = MaterialTheme.shapes.large,
         modifier = modifier
             .fillMaxWidth()
             .border(
@@ -119,8 +129,10 @@ fun CafeItemLarge(
                 color = Gray,
                 shape = MaterialTheme.shapes.large
             )
+            .clip(MaterialTheme.shapes.large)
             .clickable { onClick() },
         elevation = 0.dp,
+        shape = MaterialTheme.shapes.large,
     ) {
         Row(
             modifier = Modifier.padding(16.dp),

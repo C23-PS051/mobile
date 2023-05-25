@@ -3,6 +3,7 @@ package com.dicoding.c23ps051.caferecommenderapp
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import com.dicoding.c23ps051.caferecommenderapp.ui.HomeActivity
 import com.dicoding.c23ps051.caferecommenderapp.ui.RecommendedActivity
 import com.dicoding.c23ps051.caferecommenderapp.ui.SignInActivity
 import com.dicoding.c23ps051.caferecommenderapp.ui.SignUpActivity
