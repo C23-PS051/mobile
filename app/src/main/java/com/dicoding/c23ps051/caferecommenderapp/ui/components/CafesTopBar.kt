@@ -61,26 +61,21 @@ fun CafesTopBar(
 
 class CafesTopBarOutlinedSearchBarState(
     initialSearchTextState: String,
-    initialOnFocusState: Boolean,
 ) {
     var searchText by mutableStateOf(initialSearchTextState)
-    var onFocus by mutableStateOf(initialOnFocusState)
 }
 
 val CafesTopBarOutlinedSearchBarSaver = Saver<CafesTopBarOutlinedSearchBarState, Bundle>(
     save = {
         bundleOf(
             "searchText" to it.searchText,
-            "onFocus" to it.onFocus,
         )
     },
     restore = {
         CafesTopBarOutlinedSearchBarState(
             initialSearchTextState = it.getString("searchText", ""),
-            initialOnFocusState = it.getBoolean("onFocus", false)
         ).apply { 
             searchText = it.getString("searchText", "")
-            onFocus = it.getBoolean("onFocus", false)
         }
     }
 )
@@ -88,11 +83,10 @@ val CafesTopBarOutlinedSearchBarSaver = Saver<CafesTopBarOutlinedSearchBarState,
 @Composable
 fun rememberCafesTopBarOutlinedSearchBarState(
     searchText: String,
-    onFocus: Boolean,
 ): CafesTopBarOutlinedSearchBarState = rememberSaveable(
     saver = CafesTopBarOutlinedSearchBarSaver 
 ) {
-    CafesTopBarOutlinedSearchBarState(searchText, onFocus)
+    CafesTopBarOutlinedSearchBarState(searchText)
 }
 
 @Composable
@@ -100,16 +94,10 @@ fun CafesTopBarOutlinedSearchBar(
     modifier: Modifier = Modifier,
     state: CafesTopBarOutlinedSearchBarState = rememberCafesTopBarOutlinedSearchBarState(
         searchText = "",
-        onFocus = false,
     )
 ) {
     val focusManager = LocalFocusManager.current
-//    OutlinedSearchBar(
-//        text = state.searchText,
-//        onFocus = state.onFocus,
-//        trailingIcon = painterResource(id = R.drawable.search),
-//    )
-    Log.d("MyLogger", "log is working")
+
     OutlinedSearchBar(
         text = state.searchText,
         placeholder = { Text(stringResource(id = R.string.search_hint)) },
@@ -128,7 +116,6 @@ fun CafesTopBarOutlinedSearchBar(
             focusManager.clearFocus()
             /* TODO */
         }
-//        onFocus = state.onFocus,
     )
 }
 
