@@ -1,7 +1,7 @@
 package com.dicoding.c23ps051.caferecommenderapp.model
 
-object DummyCafeLarge {
-    val cafeLargeList = listOf(
+object CafeDummy {
+    val cafelist = listOf(
         Cafe(
             "",
             "Cafe A",

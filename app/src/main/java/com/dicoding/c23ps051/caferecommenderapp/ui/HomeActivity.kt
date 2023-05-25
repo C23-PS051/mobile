@@ -21,8 +21,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dicoding.c23ps051.caferecommenderapp.R
+import com.dicoding.c23ps051.caferecommenderapp.model.CafeDummy
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BottomBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeItem
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeItemLarge
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Header
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.HomeSection
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SearchCafe
@@ -73,19 +75,5 @@ fun Home(modifier: Modifier = Modifier) {
 fun AppPreview() {
     CafeRecommenderAppTheme() {
         Home()
-    }
-}
-
-@Composable
-fun CafeList(
-    modifier: Modifier = Modifier
-) {
-    LazyRow (
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = modifier
-    ) {
-        items(5){
-            CafeItem()
-        }
     }
 }
