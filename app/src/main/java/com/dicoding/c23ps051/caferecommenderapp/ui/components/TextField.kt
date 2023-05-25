@@ -1,32 +1,34 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldColors
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.focus.FocusManager
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.sp
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Red
@@ -34,10 +36,9 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Red
 //private val textFieldHeight = 64.dp
 
 @Composable
-fun OutlinedTextField(
+fun OutlinedFormTextField(
     modifier: Modifier = Modifier,
     label: String,
-//    focusManager: FocusManager,
     text: String,
     hasError: Boolean,
     onValueChange: (String) -> Unit,
@@ -74,19 +75,54 @@ fun OutlinedTextField(
 }
 
 @Composable
+fun OutlinedDropDownTextField(
+    modifier: Modifier = Modifier,
+    text: String,
+    shape: CornerBasedShape = MaterialTheme.shapes.medium,
+    onClick: () -> Unit,
+    notOnFocus: Boolean,
+) {
+    Row (
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .clip(shape)
+            .border(
+                width = if (notOnFocus) 1.dp else 2.dp,
+                color = if (notOnFocus) Gray else MaterialTheme.colors.primary,
+                shape = shape,
+            )
+            .clickable { onClick() }
+            .padding(vertical = 6.dp, horizontal = 14.dp)
+    ) {
+        Text(
+            text = text,
+            color = Gray,
+            fontWeight = if (notOnFocus) FontWeight.Normal else FontWeight.Bold,
+            fontSize = 14.sp,
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Image(
+            painter = if (notOnFocus) painterResource(id = R.drawable.expand_more)
+                else painterResource(id = R.drawable.expand_less),
+            contentDescription = if (notOnFocus) stringResource(id = R.string.expand_more)
+                else stringResource(id = R.string.expand_less),
+            modifier = Modifier.align(Alignment.CenterVertically)
+        )
+    }
+}
+
+@Composable
 fun InputTextField(
     modifier: Modifier = Modifier,
     label: String,
-//    focusManager: FocusManager,
     text: String,
     hasError: Boolean,
     onValueChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
 ) {
-    OutlinedTextField(
+    OutlinedFormTextField(
         label = label,
-//        focusManager = focusManager,
         text = text,
         hasError = hasError,
         onValueChange = onValueChange,
@@ -98,16 +134,14 @@ fun InputTextField(
 @Composable
 fun EmailTextField(
     modifier: Modifier = Modifier,
-//    focusManager: FocusManager,
     text: String,
     hasError: Boolean,
     onValueChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
 ) {
-    OutlinedTextField(
+    OutlinedFormTextField(
         label = stringResource(id =R.string.email),
-//        focusManager = focusManager,
         text = text,
         hasError = hasError,
         onValueChange = onValueChange,
@@ -116,49 +150,9 @@ fun EmailTextField(
     )
 }
 
-//@Composable
-//fun EmailTextField(
-//    modifier: Modifier = Modifier,
-//) {
-//    val focusManager = LocalFocusManager.current
-//    var text by rememberSaveable { mutableStateOf("") }
-//    var hasError by rememberSaveable { mutableStateOf(false) }
-//    OutlinedTextField(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(textFieldHeight),
-//        value = text,
-//        onValueChange = { newText: String ->
-//            text = newText
-//            val emailRegex = Regex("^([a-zA-Z0-9_.+-])+@([a-zA-Z0-9-])+\\.([a-zA-Z0-9-.])+$")
-//            hasError = !emailRegex.matches(text)
-//        },
-//        label = { Text(stringResource(id =R.string.email)) },
-//        keyboardOptions = KeyboardOptions.Default.copy(
-//            keyboardType = KeyboardType.Email,
-//            imeAction = ImeAction.Done,
-//        ),
-//        keyboardActions = KeyboardActions(
-//            onDone = {
-//                focusManager.clearFocus()
-//            }
-//        ),
-//        singleLine = true,
-//        isError = hasError,
-//        colors = TextFieldDefaults.outlinedTextFieldColors(
-//            focusedBorderColor = if (hasError) Red else Gray,
-//            unfocusedBorderColor = if (hasError) Red else Gray,
-//            textColor = if (hasError) Red else Gray,
-//            cursorColor = if (hasError) Red else Gray,
-//        ),
-//        shape = MaterialTheme.shapes.large,
-//    )
-//}
-
 @Composable
 fun PasswordTextField(
     modifier: Modifier = Modifier,
-//    focusManager: FocusManager,
     text: String,
     hasError: Boolean,
     showPassword: Boolean,
@@ -167,9 +161,8 @@ fun PasswordTextField(
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
 ) {
-    OutlinedTextField(
+    OutlinedFormTextField(
         label = stringResource(id =R.string.password),
-//        focusManager = focusManager,
         text = text,
         hasError = hasError,
         onValueChange = onValueChange,
@@ -180,64 +173,9 @@ fun PasswordTextField(
     )
 }
 
-//@Composable
-//fun PasswordTextField(
-//    modifier: Modifier = Modifier,
-//) {
-//    val focusManager = LocalFocusManager.current
-//    var showPassword by rememberSaveable { mutableStateOf(false) }
-//    var text by rememberSaveable { mutableStateOf("") }
-//    var hasError by rememberSaveable { mutableStateOf(false) }
-//    OutlinedTextField(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(textFieldHeight),
-//        value = text,
-//        onValueChange = { newText: String ->
-//            text = newText
-//            hasError = text.length < 8
-//        },
-//        keyboardOptions = KeyboardOptions.Default.copy(
-//            keyboardType = KeyboardType.Text,
-//            imeAction = ImeAction.Done,
-//        ),
-//        keyboardActions = KeyboardActions(
-//            onDone = {
-//                focusManager.clearFocus()
-//            }
-//        ),
-//        label = { Text(stringResource(id =R.string.password)) },
-//        singleLine = true,
-//        isError = hasError,
-//        visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-//        trailingIcon = {
-//            val icon = if (showPassword) {
-//                painterResource(id = R.drawable.visibility)
-//            } else {
-//                painterResource(id = R.drawable.visibility_off)
-//            }
-//
-//            IconButton(onClick = { showPassword = !showPassword }) {
-//                Icon(
-//                    icon,
-//                    contentDescription = "Visibility",
-//                )
-//            }
-//        },
-//        colors = TextFieldDefaults.outlinedTextFieldColors(
-//            focusedBorderColor = if (hasError) Red else Gray,
-//            unfocusedBorderColor = if (hasError) Red else Gray,
-//            textColor = if (hasError) Red else Gray,
-//            cursorColor = if (hasError) Red else Gray,
-//        ),
-//        shape = MaterialTheme.shapes.large,
-//    )
-//}
-
 @Composable
 fun ConfirmPasswordTextField(
     modifier: Modifier = Modifier,
-//    focusManager: FocusManager,
     confirmText: String,
     hasError: Boolean,
     showPassword: Boolean,
@@ -246,9 +184,8 @@ fun ConfirmPasswordTextField(
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
 ) {
-    OutlinedTextField(
+    OutlinedFormTextField(
         label = stringResource(id = R.string.repassword),
-//        focusManager = focusManager,
         text = confirmText,
         hasError = hasError,
         onValueChange = onValueChange,
@@ -258,59 +195,3 @@ fun ConfirmPasswordTextField(
         keyboardActions = keyboardActions,
     )
 }
-
-
-//@Composable
-//fun ConfirmPasswordTextField(
-//    text: String,
-//    modifier: Modifier = Modifier,
-//) {
-//    val focusManager = LocalFocusManager.current
-//    var showPassword by rememberSaveable { mutableStateOf(false) }
-//    var confirmText by rememberSaveable { mutableStateOf("") }
-//    var hasError by rememberSaveable { mutableStateOf(false) }
-//    OutlinedTextField(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(textFieldHeight),
-//        value = confirmText,
-//        onValueChange = { newText: String ->
-//            confirmText = newText
-//            hasError = !(text == confirmText || text.length >= 8)
-//        },
-//        label = { Text(stringResource(id =R.string.repassword)) },
-//        keyboardOptions = KeyboardOptions.Default.copy(
-//            keyboardType = KeyboardType.Text,
-//            imeAction = ImeAction.Done,
-//        ),
-//        keyboardActions = KeyboardActions(
-//            onDone = {
-//                focusManager.clearFocus()
-//            }
-//        ),
-//        singleLine = true,
-//        isError = hasError,
-//        visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-//        trailingIcon = {
-//            val icon = if (showPassword) {
-//                painterResource(id = R.drawable.visibility)
-//            } else {
-//                painterResource(id = R.drawable.visibility_off)
-//            }
-//
-//            IconButton(onClick = { showPassword = !showPassword }) {
-//                Icon(
-//                    icon,
-//                    contentDescription = "Visibility",
-//                )
-//            }
-//        },
-//        colors = TextFieldDefaults.outlinedTextFieldColors(
-//            focusedBorderColor = if (hasError) Red else Gray,
-//            unfocusedBorderColor = if (hasError) Red else Gray,
-//            textColor = if (hasError) Red else Gray,
-//            cursorColor = if (hasError) Red else Gray,
-//        ),
-//        shape = MaterialTheme.shapes.large,
-//    )
-//}
