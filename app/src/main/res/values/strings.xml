@@ -40,4 +40,15 @@
     <string name="welcome_description">Your personalized dining companion designed to satisfy your unique cravings.</string>
     <string name="welcome_closing">Going to cafe without confusion!</string>
     <string name="back_button">Go back</string>
+
+    <!-- Recommended Page -->
+    <string name="recommended_for_you">Recommended for you</string>
+    <string name="highest_rating">Highest rating</string>
+    <string name="nearest">Nearest</string>
+    <string name="lowest_price_range">Lowest price range</string>
+    <string name="highest_price_range">Highest price range</string>
+    <string name="sort_by">Sort by</string>
+    <string name="expand_less">Expand less</string>
+    <string name="expand_more">Expand more</string>
+    <string name="rating_count">Rating count</string>
 </resources>
