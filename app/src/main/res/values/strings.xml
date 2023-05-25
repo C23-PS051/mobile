@@ -39,4 +39,5 @@
     <string name="welcome_text">Welcome to Café!</string>
     <string name="welcome_description">Your personalized dining companion designed to satisfy your unique cravings.</string>
     <string name="welcome_closing">Going to cafe without confusion!</string>
+    <string name="back_button">Go back</string>
 </resources>
