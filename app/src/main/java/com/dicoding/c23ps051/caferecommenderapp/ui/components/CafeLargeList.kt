@@ -1,6 +1,7 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
@@ -14,7 +15,8 @@ fun CafeLargeList(
 ) {
     LazyColumn (
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = modifier
+        modifier = modifier,
+        contentPadding = PaddingValues(vertical = 8.dp)
     ) {
         val cafes = DummyCafeLarge.cafeLargeList
         items(cafes.size) { i ->
