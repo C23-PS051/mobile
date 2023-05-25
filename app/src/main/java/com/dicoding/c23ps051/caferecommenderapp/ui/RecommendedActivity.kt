@@ -46,7 +46,7 @@ fun Recommended(
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        topBar = { CafesTopBar(title = stringResource(id = R.string.recommended_for_you), showBackButton = true) },
+        topBar = { CafesTopBar(title = stringResource(id = R.string.recommended_for_you), showBackButton = false) },
         bottomBar = { BottomBar() },
     ) { innerPadding ->
         Column(

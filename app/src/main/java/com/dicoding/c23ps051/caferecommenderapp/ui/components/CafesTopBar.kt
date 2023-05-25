@@ -1,7 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
 import android.os.Bundle
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -44,10 +43,10 @@ fun CafesTopBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (showBackButton) {
-                Back {
+                BackButton {
                     /* TODO */
                 }
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(4.dp))
             }
             TopBarTitle(title = title)
         }
