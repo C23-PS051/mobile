@@ -1,4 +1,4 @@
-package com.dicoding.c23ps051.caferecommenderapp.ui
+package com.dicoding.c23ps051.caferecommenderapp.ui.screen.sign_up
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -24,14 +24,11 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.AppLogo
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.AppName
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
-import com.dicoding.c23ps051.caferecommenderapp.ui.components.ForgotPassword
-import com.dicoding.c23ps051.caferecommenderapp.ui.components.GoogleButton
-import com.dicoding.c23ps051.caferecommenderapp.ui.components.OrDivider
-import com.dicoding.c23ps051.caferecommenderapp.ui.components.SignInForm
-import com.dicoding.c23ps051.caferecommenderapp.ui.components.ToSignUpText
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.ClickableText
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.SignUpForm
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
-class SignInActivity : ComponentActivity() {
+class SignUpActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +38,7 @@ class SignInActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background,
                 ) {
-                    SignIn()
+                    SignUp()
                 }
             }
         }
@@ -49,8 +46,7 @@ class SignInActivity : ComponentActivity() {
 }
 
 @Composable
-fun SignIn(modifier: Modifier = Modifier) {
-
+fun SignUp(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
@@ -63,26 +59,25 @@ fun SignIn(modifier: Modifier = Modifier) {
         AppLogo(modifier = modifier.align(Alignment.CenterHorizontally))
         AppName()
         Spacer(modifier = Modifier.height(48.dp))
-        SignInForm()
+        SignUpForm()
         Spacer(modifier = Modifier.height(24.dp))
-        Button(text = stringResource(id = R.string.sign_in)) {
+        Button(text = stringResource(id = R.string.sign_up)) {
             /* TODO */
         }
         Spacer(modifier = Modifier.height(16.dp))
-        ForgotPassword()
-        Spacer(modifier = Modifier.height(48.dp))
-        OrDivider()
-        Spacer(modifier = Modifier.height(48.dp))
-        GoogleButton()
-        Spacer(modifier = Modifier.height(16.dp))
-        ToSignUpText()
+        ClickableText(
+            text = stringResource(id = R.string.already_have_account),
+            onClick = {
+                /* TODO */
+            }
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun SignInPreview() {
+fun SignUpPreview() {
     CafeRecommenderAppTheme {
-        SignIn()
+        SignUp()
     }
 }

@@ -29,35 +29,35 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.HomeActivity"
+            android:name=".ui.screen.home.HomeScreen"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.SignInActivity"
+            android:name=".ui.screen.sign_in.SignInActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.SignUpActivity"
+            android:name=".ui.screen.sign_up.SignUpActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.WelcomeActivity"
+            android:name=".ui.screen.welcome.WelcomeActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.RecommendedActivity"
+            android:name=".ui.screen.recommended.RecommendedScreen"
             android:screenOrientation="portrait"
             android:exported="false">
             <meta-data

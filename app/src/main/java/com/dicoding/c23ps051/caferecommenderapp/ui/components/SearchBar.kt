@@ -3,6 +3,7 @@ package com.dicoding.c23ps051.caferecommenderapp.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,10 +34,12 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Red
 @Composable
 fun FilledSearchBar(
     modifier: Modifier = Modifier,
+    onCLick: () -> Unit = {},
 ) {
     Surface(
         modifier = modifier
             .clip(CircleShape)
+            .clickable { onCLick() }
             .background(MaterialTheme.colors.background)
             .padding(8.dp)
     ) {

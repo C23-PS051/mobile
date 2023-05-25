@@ -1,15 +1,13 @@
-package com.dicoding.c23ps051.caferecommenderapp.ui
+package com.dicoding.c23ps051.caferecommenderapp.ui.screen.home
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -20,39 +18,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.dicoding.c23ps051.caferecommenderapp.R
-import com.dicoding.c23ps051.caferecommenderapp.model.CafeDummy
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BottomBar
-import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeItem
-import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeItemLarge
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Header
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.HomeSection
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SearchCafe
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.WelcomeText
+import com.dicoding.c23ps051.caferecommenderapp.ui.navigation.Screen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screen.favorite.FavoriteScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screen.profile.ProfileScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screen.recommended.RecommendedScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
-class HomeActivity : ComponentActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            CafeRecommenderAppTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background,
-                ) {
-                    Home()
-                }
-            }
-        }
-    }
-}
-
 @Composable
-fun Home(modifier: Modifier = Modifier) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+) {
     Scaffold(
         topBar = { Header() },
-        bottomBar = { BottomBar() }
     ) { innerPadding ->
         Column(
             modifier = modifier
@@ -73,7 +60,7 @@ fun Home(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun AppPreview() {
-    CafeRecommenderAppTheme() {
-        Home()
+    CafeRecommenderAppTheme {
+        HomeScreen()
     }
 }
