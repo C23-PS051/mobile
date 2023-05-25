@@ -50,4 +50,5 @@
     <string name="sort_by">Sort by</string>
     <string name="expand_less">Expand less</string>
     <string name="expand_more">Expand more</string>
+    <string name="rating_count">Rating count</string>
 </resources>

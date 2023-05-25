@@ -17,14 +17,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
+import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
 @Composable
 fun CafesTopBar(
@@ -34,9 +37,12 @@ fun CafesTopBar(
 ) {
     Column (
         modifier = Modifier
-            .padding(APP_CONTENT_PADDING)
+            .padding(horizontal = APP_CONTENT_PADDING)
     ) {
-        Row {
+        Spacer(modifier = Modifier.height(12.dp))
+        Row (
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             if (showBackButton) {
                 Back {
                     /* TODO */
@@ -45,10 +51,11 @@ fun CafesTopBar(
             }
             TopBarTitle(title = title)
         }
-        Spacer(modifier = Modifier.height(20.dp))
-        CafesTopBarOutlinedSearchBar()
         Spacer(modifier = Modifier.height(12.dp))
+        CafesTopBarOutlinedSearchBar()
+        Spacer(modifier = Modifier.height(8.dp))
         CafesTopBarDropDown()
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
@@ -193,11 +200,19 @@ fun CafesTopBarDropDown(
         notOnFocus = !state.expanded
     )
     
-    Spacer(modifier = Modifier.height(8.dp))
+    Spacer(modifier = Modifier.height(4.dp))
 
     OutlinedDropDown(
         expanded = state.expanded,
         options = options,
         actions = actions,
     )
+}
+
+@Preview
+@Composable
+fun CafesTopBarPreview() {
+    CafeRecommenderAppTheme {
+        CafesTopBar(title = "Recommended for you")
+    }
 }
