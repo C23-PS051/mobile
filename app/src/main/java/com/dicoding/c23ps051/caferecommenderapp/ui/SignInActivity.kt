@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,9 +24,11 @@ import androidx.compose.ui.unit.dp
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.AppLogo
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.AppName
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.Back
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.EmailTextField
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ClickableText
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.ForgotPassword
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.GoogleButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OrDivider
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.PasswordTextField
@@ -51,12 +55,16 @@ class SignInActivity : ComponentActivity() {
 
 @Composable
 fun SignIn(modifier: Modifier = Modifier) {
+
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,
     ) {
+        Back {
+            /* TODO */
+        }
         AppLogo(modifier = modifier.align(Alignment.CenterHorizontally))
         AppName()
         Spacer(modifier = Modifier.height(48.dp))
@@ -66,12 +74,7 @@ fun SignIn(modifier: Modifier = Modifier) {
             /* TODO */
         }
         Spacer(modifier = Modifier.height(16.dp))
-        ClickableText(
-            text = stringResource(id = R.string.forgot_password),
-            onClick = {
-                /* TODO */
-            }
-        )
+        ForgotPassword()
         Spacer(modifier = Modifier.height(48.dp))
         OrDivider()
         Spacer(modifier = Modifier.height(48.dp))
