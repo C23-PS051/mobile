@@ -10,9 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -45,14 +43,19 @@ fun HomeScreen(
             modifier = modifier
                 .verticalScroll(rememberScrollState())
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp),
+
         ) {
-            WelcomeText("Yen")
+//            WelcomeText("Yen")
             SearchCafe()
-            Spacer(modifier = Modifier.height(16.dp))
-            HomeSection(title = stringResource(id = R.string.nearby))
-            HomeSection(title = stringResource(id = R.string.open_24_hours))
-            HomeSection(title = stringResource(id = R.string.on_budget))
+            Column (
+                modifier = Modifier
+                    .padding(horizontal = 16.dp),
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                HomeSection(title = stringResource(id = R.string.nearby))
+                HomeSection(title = stringResource(id = R.string.open_24_hours))
+                HomeSection(title = stringResource(id = R.string.on_budget))
+            }
         }
     }
 }

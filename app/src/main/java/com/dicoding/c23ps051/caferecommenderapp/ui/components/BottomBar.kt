@@ -1,17 +1,15 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -63,7 +61,7 @@ fun BottomBar(
             ),
         )
         navigationItems.map {
-            BottomNavigationItem(
+            NavigationBarItem(
                 icon = {
                     Icon(
                         imageVector = it.icon,
@@ -77,7 +75,7 @@ fun BottomBar(
                     )
                 },
                 selected = currentRoute == it.screen.route,
-                unselectedContentColor = Gray,
+//                unselectedContentColor = Gray,
                 onClick = {
                     navController.navigate(it.screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) {

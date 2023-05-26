@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -164,20 +164,7 @@ fun SignUpForm(
 
                 state.passwordHasError = state.passwordText.length < minPasswordLength || !passwordRegex.matches(state.passwordText)
             },
-            trailingIcon = {
-                val icon = if (state.showPassword) {
-                    painterResource(id = R.drawable.visibility)
-                } else {
-                    painterResource(id = R.drawable.visibility_off)
-                }
-
-                IconButton(onClick = { state.showPassword = !state.showPassword }) {
-                    Icon(
-                        icon,
-                        contentDescription = stringResource(id = R.string.visibility),
-                    )
-                }
-            },
+            onClick = { state.showPassword = !state.showPassword },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next,
@@ -199,20 +186,7 @@ fun SignUpForm(
                 state.repasswordText = newText
                 state.repasswordHasError = state.repasswordText != state.passwordText || state.repasswordText.length < minPasswordLength
             },
-            trailingIcon = {
-                val icon = if (state.showRepassword) {
-                    painterResource(id = R.drawable.visibility)
-                } else {
-                    painterResource(id = R.drawable.visibility_off)
-                }
-
-                IconButton(onClick = { state.showRepassword = !state.showRepassword }) {
-                    Icon(
-                        icon,
-                        contentDescription = stringResource(id = R.string.visibility),
-                    )
-                }
-            },
+            onClick = { state.showRepassword = !state.showRepassword },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done,

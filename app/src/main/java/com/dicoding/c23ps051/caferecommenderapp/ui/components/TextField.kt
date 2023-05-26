@@ -13,11 +13,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldColors
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -33,8 +36,7 @@ import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Red
 
-//private val textFieldHeight = 64.dp
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OutlinedFormTextField(
     modifier: Modifier = Modifier,
@@ -48,7 +50,8 @@ fun OutlinedFormTextField(
     colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
         focusedBorderColor = if (hasError) Red else Gray,
         unfocusedBorderColor = if (hasError) Red else Gray,
-        textColor = if (hasError) Red else Gray,
+        focusedTextColor = if (hasError) Red else Gray,
+        unfocusedTextColor = if (hasError) Red else Gray,
         cursorColor = if (hasError) Red else Gray,
         unfocusedLabelColor = if (hasError) Red else Gray,
     ),
@@ -78,7 +81,7 @@ fun OutlinedFormTextField(
 fun OutlinedDropDownTextField(
     modifier: Modifier = Modifier,
     text: String,
-    shape: CornerBasedShape = MaterialTheme.shapes.medium,
+    shape: CornerBasedShape = MaterialTheme.shapes.small,
     onClick: () -> Unit,
     notOnFocus: Boolean,
 ) {
@@ -88,17 +91,17 @@ fun OutlinedDropDownTextField(
             .clip(shape)
             .border(
                 width = if (notOnFocus) 1.dp else 2.dp,
-                color = if (notOnFocus) Gray else MaterialTheme.colors.primary,
+                color = if (notOnFocus) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.primary,
                 shape = shape,
             )
             .clickable { onClick() }
-            .padding(vertical = 6.dp, horizontal = 14.dp)
+            .padding(vertical = 2.dp, horizontal = 8.dp)
     ) {
         Text(
             text = text,
-            color = Gray,
+            color = if (notOnFocus) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.primary,
             fontWeight = if (notOnFocus) FontWeight.Normal else FontWeight.Bold,
-            fontSize = 14.sp,
+            fontSize = 12.sp,
         )
         Spacer(modifier = Modifier.width(8.dp))
         Image(
@@ -157,9 +160,9 @@ fun PasswordTextField(
     hasError: Boolean,
     showPassword: Boolean,
     onValueChange: (String) -> Unit,
-    trailingIcon: @Composable () -> Unit,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
+    onClick: () -> Unit,
 ) {
     OutlinedFormTextField(
         label = stringResource(id =R.string.password),
@@ -167,7 +170,20 @@ fun PasswordTextField(
         hasError = hasError,
         onValueChange = onValueChange,
         visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-        trailingIcon = trailingIcon,
+        trailingIcon = {
+            val icon = if (showPassword) {
+                painterResource(id = R.drawable.visibility)
+            } else {
+                painterResource(id = R.drawable.visibility_off)
+            }
+
+            IconButton(onClick = { onClick() }) {
+                Icon(
+                    icon,
+                    contentDescription = stringResource(id = R.string.visibility),
+                )
+            }
+        },
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
     )
@@ -180,9 +196,9 @@ fun ConfirmPasswordTextField(
     hasError: Boolean,
     showPassword: Boolean,
     onValueChange: (String) -> Unit,
-    trailingIcon: @Composable () -> Unit,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
+    onClick: () -> Unit,
 ) {
     OutlinedFormTextField(
         label = stringResource(id = R.string.repassword),
@@ -190,7 +206,20 @@ fun ConfirmPasswordTextField(
         hasError = hasError,
         onValueChange = onValueChange,
         visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-        trailingIcon = trailingIcon,
+        trailingIcon = {
+            val icon = if (showPassword) {
+                painterResource(id = R.drawable.visibility)
+            } else {
+                painterResource(id = R.drawable.visibility_off)
+            }
+
+            IconButton(onClick = { onClick() }) {
+                Icon(
+                    icon,
+                    contentDescription = stringResource(id = R.string.visibility),
+                )
+            }
+        },
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
     )

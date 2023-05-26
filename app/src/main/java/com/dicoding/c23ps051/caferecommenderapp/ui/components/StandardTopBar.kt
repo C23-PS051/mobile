@@ -24,7 +24,7 @@ fun StandardTopBar(
     ) {
         Spacer(modifier = Modifier.height(12.dp))
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             if (showBackButton) {
                 BackButton {

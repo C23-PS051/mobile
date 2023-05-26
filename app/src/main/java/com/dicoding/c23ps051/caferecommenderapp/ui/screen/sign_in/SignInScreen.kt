@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -137,20 +137,9 @@ fun SignInScreen(
 
                 state.passwordHasError = state.passwordText.length < MIN_PASSWORD_LENGTH || !passwordRegex.matches(state.passwordText)
             },
-            passwordTrailingIcon = {
-                val icon = if (state.showPassword) {
-                    painterResource(id = R.drawable.visibility)
-                } else {
-                    painterResource(id = R.drawable.visibility_off)
-                }
-
-                IconButton(onClick = { state.showPassword = !state.showPassword }) {
-                    Icon(
-                        icon,
-                        contentDescription = stringResource(id = R.string.visibility),
-                    )
-                }
-            },
+            onVisibilityClick = {
+                state.showPassword = !state.showPassword
+            }
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(text = stringResource(id = R.string.sign_in)) {

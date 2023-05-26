@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,7 +34,7 @@ fun SignInForm(
     passwordHasError: Boolean,
     showPassword: Boolean,
     passwordOnValueChange: (String) -> Unit,
-    passwordTrailingIcon: @Composable () -> Unit,
+    onVisibilityClick: () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -62,7 +60,7 @@ fun SignInForm(
         hasError = passwordHasError,
         showPassword = showPassword,
         onValueChange = passwordOnValueChange,
-        trailingIcon = passwordTrailingIcon,
+        onClick = { onVisibilityClick() },
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Done,
