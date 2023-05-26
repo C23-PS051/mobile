@@ -1,8 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screen.welcome
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,8 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Black
-import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
-import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Cream
+import com.dicoding.c23ps051.caferecommenderapp.ui.theme.LightCream
 
 @Composable
 fun WelcomeScreen(
@@ -84,7 +80,7 @@ fun WelcomeScreen(
             Spacer(modifier = Modifier.height(12.dp))
             Button(
                 text = stringResource(id = R.string.sign_up),
-                color = Cream,
+                color = LightCream,
                 textColor = Black,
             ) {
                 navigateToSignUp()

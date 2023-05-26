@@ -10,7 +10,6 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -23,9 +22,9 @@ private val DarkColorScheme = darkColorScheme(
     onSecondary = White,
     secondaryContainer = Brown, // Selected navbar background color
     tertiary = Brown, // So text color can change
-    outline = Cream, // For borders etc
+    outline = LightCream, // For borders etc
     surfaceVariant = DarkBrown, // Card background color
-    onSecondaryContainer = Cream, // Selected navbar icon color
+    onSecondaryContainer = LightCream, // Selected navbar icon color
     onSurfaceVariant = Brown, // Navbar icon color
     onTertiary = White, // Text color on card
 )
@@ -35,22 +34,13 @@ private val LightColorScheme = lightColorScheme(
     secondary = Brown,
     onPrimary = White,
     onSecondary = White,
-    secondaryContainer = Cream, // Selected navbar background color
-    tertiary = Cream, // So text color can change
+    secondaryContainer = LightCream, // Selected navbar background color
+    tertiary = LightCream, // So text color can change
     outline = Gray, // For borders etc
-    surfaceVariant = Cream, // Card background color
+    surfaceVariant = LightCream, // Card background color
     onSecondaryContainer = DarkBrown, // Selected navbar icon color
     onSurfaceVariant = Brown, // Navbar icon color
     onTertiary = LightBlack, // Text color on card
-
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
 )
 
 @Composable
