@@ -28,25 +28,8 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.ClickableText
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SignUpForm
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
-class SignUpActivity : ComponentActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            CafeRecommenderAppTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background,
-                ) {
-                    SignUp()
-                }
-            }
-        }
-    }
-}
-
 @Composable
-fun SignUp(modifier: Modifier = Modifier) {
+fun SignUpScreen(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
@@ -78,6 +61,6 @@ fun SignUp(modifier: Modifier = Modifier) {
 @Composable
 fun SignUpPreview() {
     CafeRecommenderAppTheme {
-        SignUp()
+        SignUpScreen()
     }
 }
