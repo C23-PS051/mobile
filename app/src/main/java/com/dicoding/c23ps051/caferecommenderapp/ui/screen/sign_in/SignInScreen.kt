@@ -40,8 +40,6 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.OrDivider
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ToSignUpText
 import com.dicoding.c23ps051.caferecommenderapp.ui.screen.ViewModelFactory
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
 class SignInFormState(
     initialTextState: String,
     initialHasErrorState: Boolean,

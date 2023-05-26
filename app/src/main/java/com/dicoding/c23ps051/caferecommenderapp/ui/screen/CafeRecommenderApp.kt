@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BottomBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.navigation.Screen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screen.favorite.FavoriteScreen
@@ -18,6 +19,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.screen.recommended.Recommende
 @Composable
 fun CafeRecommenderApp(
     modifier: Modifier = Modifier,
+    userPreference: UserPreference,
     navController: NavHostController = rememberNavController(),
 ) {
     Scaffold(
@@ -38,7 +40,7 @@ fun CafeRecommenderApp(
                 FavoriteScreen()
             }
             composable(Screen.Profile.route) {
-                ProfileScreen()
+                ProfileScreen(userPreference)
             }
         }
     }
