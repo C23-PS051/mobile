@@ -27,17 +27,22 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ClickableText
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SignUpForm
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
+import com.dicoding.c23ps051.caferecommenderapp.ui.theme.STARTER_CONTENT_PADDING
 
 @Composable
-fun SignUpScreen(modifier: Modifier = Modifier) {
+fun SignUpScreen(
+    modifier: Modifier = Modifier,
+    navigateUp: () -> Unit,
+    navigateToSignIn: () -> Unit,
+) {
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
-            .padding(24.dp),
+            .padding(STARTER_CONTENT_PADDING),
         verticalArrangement = Arrangement.Center,
     ) {
         BackButton {
-            /* TODO */
+            navigateUp()
         }
         AppLogo(modifier = modifier.align(Alignment.CenterHorizontally))
         AppName()
@@ -51,7 +56,7 @@ fun SignUpScreen(modifier: Modifier = Modifier) {
         ClickableText(
             text = stringResource(id = R.string.already_have_account),
             onClick = {
-                /* TODO */
+                navigateToSignIn()
             }
         )
     }
@@ -61,6 +66,9 @@ fun SignUpScreen(modifier: Modifier = Modifier) {
 @Composable
 fun SignUpPreview() {
     CafeRecommenderAppTheme {
-        SignUpScreen()
+        SignUpScreen(
+            navigateUp = {},
+            navigateToSignIn = {}
+        )
     }
 }

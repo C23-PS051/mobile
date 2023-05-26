@@ -17,7 +17,8 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
 @Composable
 fun ToSignUpText(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
 ) {
     val text = buildAnnotatedString {
         withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)) {
@@ -37,9 +38,7 @@ fun ToSignUpText(
     Spacer(modifier = modifier.height(8.dp))
     ClickableText(
         text = text,
-        onClick = {
-            /* TODO */
-        }
+        onClick = onClick,
     )
 }
 

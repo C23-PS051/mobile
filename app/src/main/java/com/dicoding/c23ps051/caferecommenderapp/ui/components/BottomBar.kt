@@ -10,6 +10,8 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -30,9 +32,9 @@ fun BottomBar(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-    BottomNavigation (
-        backgroundColor = MaterialTheme.colors.background,
-        contentColor = MaterialTheme.colors.primary,
+    NavigationBar (
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.primary,
         modifier = modifier
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()

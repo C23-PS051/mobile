@@ -12,11 +12,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,7 +41,7 @@ fun FilledSearchBar(
         modifier = modifier
             .clip(CircleShape)
             .clickable { onCLick() }
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .padding(8.dp)
     ) {
         Row {
@@ -90,6 +91,7 @@ fun FilledSearchBar(
 //    }
 //}
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OutlinedSearchBar(
     modifier: Modifier = Modifier,
@@ -109,17 +111,18 @@ fun OutlinedSearchBar(
         onValueChange = onValueChange,
         trailingIcon = trailingIcon,
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = MaterialTheme.colors.primary,
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = Gray,
-            textColor = Gray,
-            cursorColor = Gray,
+            unfocusedTextColor = Gray,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            cursorColor = MaterialTheme.colorScheme.primary,
         ),
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Done,
+            imeAction = ImeAction.Search,
         ),
         keyboardActions = KeyboardActions(
-            onDone = { onSearch() }
+            onSearch = { onSearch() }
         ),
     )
 }

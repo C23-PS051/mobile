@@ -27,6 +27,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.constants.MIN_PASSWORD_LENGTH
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
@@ -38,7 +40,9 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.ForgotPassword
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.GoogleButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OrDivider
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ToSignUpText
+import com.dicoding.c23ps051.caferecommenderapp.ui.navigation.Screen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screen.ViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.ui.theme.STARTER_CONTENT_PADDING
 
 class SignInFormState(
     initialTextState: String,
@@ -100,16 +104,18 @@ fun SignInScreen(
         text = "",
         hasError = false,
         showPassword = false,
-    )
+    ),
+    navigateUp: () -> Unit,
+    navigateToSignUp: () -> Unit,
 ) {
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
-            .padding(24.dp),
+            .padding(STARTER_CONTENT_PADDING),
         verticalArrangement = Arrangement.Center,
     ) {
         BackButton {
-            /* TODO */
+            navigateUp()
         }
         AppLogo(modifier = modifier.align(Alignment.CenterHorizontally))
         AppName()
@@ -158,6 +164,8 @@ fun SignInScreen(
         Spacer(modifier = Modifier.height(48.dp))
         GoogleButton()
         Spacer(modifier = Modifier.height(16.dp))
-        ToSignUpText()
+        ToSignUpText {
+            navigateToSignUp()
+        }
     }
 }

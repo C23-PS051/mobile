@@ -5,8 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -16,7 +16,6 @@ import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.screen.CafeRecommenderApp
 import com.dicoding.c23ps051.caferecommenderapp.ui.screen.ViewModelFactory
-import com.dicoding.c23ps051.caferecommenderapp.ui.screen.sign_in.SignInScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -41,9 +40,12 @@ class MainActivity : ComponentActivity() {
                     CafeRecommenderAppTheme {
                         Surface(
                             modifier = Modifier.fillMaxSize(),
-                            color = MaterialTheme.colors.background,
+                            color = MaterialTheme.colorScheme.background,
                         ) {
-                            CafeRecommenderApp(userPreference = UserPreference.getInstance(dataStore))
+                            CafeRecommenderApp(
+                                userPreference = UserPreference.getInstance(dataStore),
+                                isLogin = true,
+                            )
                         }
                     }
                 }
@@ -52,9 +54,12 @@ class MainActivity : ComponentActivity() {
                     CafeRecommenderAppTheme {
                         Surface(
                             modifier = Modifier.fillMaxSize(),
-                            color = MaterialTheme.colors.background,
+                            color = MaterialTheme.colorScheme.background,
                         ) {
-                            SignInScreen(UserPreference.getInstance(dataStore))
+                            CafeRecommenderApp(
+                                userPreference = UserPreference.getInstance(dataStore),
+                                isLogin = false,
+                            )
                         }
                     }
                 }
