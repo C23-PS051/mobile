@@ -33,6 +33,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.sp
 import com.dicoding.c23ps051.caferecommenderapp.R
+import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Black
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Red
 
@@ -50,9 +51,9 @@ fun OutlinedFormTextField(
     colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
         focusedBorderColor = if (hasError) Red else Gray,
         unfocusedBorderColor = if (hasError) Red else Gray,
-        focusedTextColor = if (hasError) Red else Gray,
+        focusedTextColor = if (hasError) Red else Black,
         unfocusedTextColor = if (hasError) Red else Gray,
-        cursorColor = if (hasError) Red else Gray,
+        cursorColor = if (hasError) Red else Black,
         unfocusedLabelColor = if (hasError) Red else Gray,
     ),
     shape: CornerBasedShape = MaterialTheme.shapes.large,
