@@ -26,6 +26,7 @@ fun RecommendedScreen(
 ) {
     Scaffold(
         topBar = { CafesTopBar(title = stringResource(id = R.string.recommended_for_you), showBackButton = false) },
+        modifier = modifier
     ) { innerPadding ->
         Column(
             modifier = Modifier

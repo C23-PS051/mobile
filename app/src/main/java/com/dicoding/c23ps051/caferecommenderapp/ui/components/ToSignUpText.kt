@@ -35,10 +35,10 @@ fun ToSignUpText(
         }
     }
 
-    Spacer(modifier = modifier.height(8.dp))
     ClickableText(
         text = text,
         onClick = onClick,
+        modifier = modifier
     )
 }
 

@@ -29,7 +29,7 @@ fun ClickableText(
         fontSize = 14.sp,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier
+        modifier = modifier
             .clip(CircleShape)
             .fillMaxWidth()
             .clickable { onClick() }
@@ -49,7 +49,7 @@ fun ClickableText(
         fontSize = 14.sp,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier
+        modifier = modifier
             .clip(CircleShape)
             .fillMaxWidth()
             .clickable { onClick() }

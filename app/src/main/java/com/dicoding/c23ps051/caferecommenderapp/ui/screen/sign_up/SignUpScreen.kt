@@ -42,7 +42,7 @@ fun SignUpScreen(
         BackButton {
             navigateUp()
         }
-        AppLogo(modifier = modifier.align(Alignment.CenterHorizontally))
+        AppLogo(modifier = Modifier.align(Alignment.CenterHorizontally))
         AppName()
         Spacer(modifier = Modifier.height(48.dp))
         SignUpForm()

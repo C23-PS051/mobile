@@ -52,7 +52,7 @@ fun ButtonSearchBar(
             Text(
                 text = stringResource(id = R.string.search_hint),
                 color = Gray,
-                modifier = modifier
+                modifier = Modifier
                     .padding(horizontal = 4.dp)
                     .weight(1f)
             )
@@ -103,7 +103,7 @@ fun OutlinedSearchBar(
     onSearch: () -> Unit = {},
 ) {
     OutlinedTextField(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         shape = shape,
         value = text,

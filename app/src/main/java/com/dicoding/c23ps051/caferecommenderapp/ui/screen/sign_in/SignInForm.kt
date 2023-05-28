@@ -1,6 +1,7 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screen.sign_in
 
 import android.os.Bundle
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardActions
@@ -38,37 +39,41 @@ fun SignInForm(
 ) {
     val focusManager = LocalFocusManager.current
 
-    EmailTextField(
-        text = emailText,
-        hasError = emailHasError,
-        onValueChange = emailOnValueChange,
-        keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Next,
-        ),
-        keyboardActions = KeyboardActions(
-            onNext = {
-                focusManager.moveFocus(
-                    focusDirection = FocusDirection.Down,
-                )
-            }
-        ),
-    )
-    Spacer(modifier = Modifier.height(16.dp))
-    PasswordTextField(
-        text = passwordText,
-        hasError = passwordHasError,
-        showPassword = showPassword,
-        onValueChange = passwordOnValueChange,
-        onClick = { onVisibilityClick() },
-        keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Done,
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                focusManager.clearFocus()
-            }
-        ),
-    )
+    Column(
+        modifier = modifier
+    ) {
+        EmailTextField(
+            text = emailText,
+            hasError = emailHasError,
+            onValueChange = emailOnValueChange,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next,
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusManager.moveFocus(
+                        focusDirection = FocusDirection.Down,
+                    )
+                }
+            ),
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        PasswordTextField(
+            text = passwordText,
+            hasError = passwordHasError,
+            showPassword = showPassword,
+            onValueChange = passwordOnValueChange,
+            onClick = { onVisibilityClick() },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done,
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
+            ),
+        )
+    }
 }

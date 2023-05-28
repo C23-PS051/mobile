@@ -19,7 +19,7 @@ fun StandardTopBar(
     showBackButton: Boolean = false,
 ) {
     Column (
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = APP_CONTENT_PADDING)
     ) {
         Spacer(modifier = Modifier.height(12.dp))

@@ -54,9 +54,12 @@ fun Button(
 }
 
 @Composable
-fun GoogleButton() {
+fun GoogleButton(
+    modifier: Modifier = Modifier,
+) {
     Box (
         contentAlignment = Alignment.CenterStart,
+        modifier = modifier,
     ){
         Button(
             text = stringResource(id = R.string.google_sign_in),

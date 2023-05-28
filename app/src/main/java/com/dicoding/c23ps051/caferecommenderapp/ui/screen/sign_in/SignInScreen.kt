@@ -117,7 +117,7 @@ fun SignInScreen(
         BackButton {
             navigateUp()
         }
-        AppLogo(modifier = modifier.align(Alignment.CenterHorizontally))
+        AppLogo(modifier = Modifier.align(Alignment.CenterHorizontally))
         AppName()
         Spacer(modifier = Modifier.height(48.dp))
         SignInForm(
@@ -152,7 +152,7 @@ fun SignInScreen(
         OrDivider()
         Spacer(modifier = Modifier.height(48.dp))
         GoogleButton()
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
         ToSignUpText {
             navigateToSignUp()
         }

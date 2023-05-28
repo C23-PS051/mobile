@@ -32,7 +32,8 @@ fun ProfileScreen(
             StandardTopBar(
                 title = stringResource(id = R.string.your_profile)
             )
-        }
+        },
+        modifier = modifier
     ) { innerPadding ->
         Column (
             modifier = Modifier

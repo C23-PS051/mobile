@@ -42,7 +42,7 @@ fun CafesTopBar(
     showBackButton: Boolean = false,
 ) {
     Column (
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = APP_CONTENT_PADDING)
     ) {
         Spacer(modifier = Modifier.height(12.dp))
@@ -119,6 +119,7 @@ fun CafesTopBarOutlinedSearchBar(
             state.searchText = newText
         },
         onClick = {
+            focusManager.clearFocus()
             /*TODO*/
         },
         onSearch = {

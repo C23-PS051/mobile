@@ -45,6 +45,7 @@ fun HomeScreen(
                 .padding(innerPadding)
 
         ) {
+            Spacer(modifier = Modifier.height(8.dp))
 //            WelcomeText("Yen")
             SearchCafe()
             Column (

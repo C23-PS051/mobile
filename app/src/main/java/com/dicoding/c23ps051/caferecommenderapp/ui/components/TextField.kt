@@ -61,7 +61,7 @@ fun OutlinedFormTextField(
     trailingIcon: @Composable () -> Unit = {},
 ) {
     OutlinedTextField(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(64.dp),
         value = text,

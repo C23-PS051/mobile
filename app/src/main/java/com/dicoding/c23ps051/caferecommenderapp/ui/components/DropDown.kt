@@ -23,7 +23,7 @@ fun OutlinedDropDown(
     DropdownMenu(
         expanded = expanded,
         onDismissRequest = { /*TODO*/ },
-        modifier = Modifier
+        modifier = modifier
             .border(
                 width = 1.dp,
                 color = Gray,

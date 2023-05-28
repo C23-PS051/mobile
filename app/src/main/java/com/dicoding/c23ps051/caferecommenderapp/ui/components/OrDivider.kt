@@ -14,10 +14,12 @@ import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
 @Composable
-fun OrDivider() {
+fun OrDivider(
+    modifier: Modifier = Modifier,
+) {
     Row (
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(horizontal = 16.dp)
+        modifier = modifier.padding(horizontal = 16.dp)
     ) {
         Divider(
             modifier = Modifier.weight(1f),

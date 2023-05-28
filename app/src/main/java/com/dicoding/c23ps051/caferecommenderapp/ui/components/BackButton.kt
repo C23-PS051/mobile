@@ -23,7 +23,10 @@ fun BackButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    IconButton(onClick = onClick) {
+    IconButton(
+        onClick = onClick,
+        modifier = modifier,
+    ) {
         Icon(
             imageVector = Icons.Filled.ArrowBack,
             contentDescription = stringResource(id = R.string.back_button),

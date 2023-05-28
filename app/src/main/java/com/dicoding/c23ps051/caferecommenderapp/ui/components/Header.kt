@@ -38,7 +38,7 @@ fun Header(
             contentDescription = null
         )
         Column (
-            modifier = modifier
+            modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 4.dp)
         ){

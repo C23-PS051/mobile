@@ -21,7 +21,7 @@ fun AppName(
         fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Center,
         style = MaterialTheme.typography.titleLarge,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
     )
 }
 

@@ -36,10 +36,10 @@ fun WelcomeScreen(
 ) {
     Box (
         contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .verticalScroll(rememberScrollState())
                 .padding(24.dp),
             verticalArrangement = Arrangement.Center,

@@ -101,16 +101,19 @@ fun rememberSignUpFormState(
 
 @Composable
 fun SignUpForm(
+    modifier: Modifier = Modifier,
     state: SignUpFormState = rememberSignUpFormState(
         text = "",
         hasError = false,
         showPassword = false,
-    )
+    ),
 ) {
     val focusManager = LocalFocusManager.current
     val minPasswordLength = 8
 
-    Column {
+    Column (
+        modifier = modifier,
+    ) {
         InputTextField(
             label = stringResource(id = R.string.name),
             text = state.nameText,

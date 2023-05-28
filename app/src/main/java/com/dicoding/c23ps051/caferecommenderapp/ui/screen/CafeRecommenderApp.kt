@@ -27,7 +27,8 @@ fun CafeRecommenderApp(
     navController: NavHostController = rememberNavController(),
 ) {
     Scaffold(
-        bottomBar = { if (isLogin) BottomBar(navController) }
+        bottomBar = { if (isLogin) BottomBar(navController) },
+        modifier = modifier
     ) { innerPadding ->
         NavHost(
             navController = navController,

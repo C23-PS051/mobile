@@ -26,7 +26,7 @@ fun Chip(
                 color = MaterialTheme.colorScheme.outline
             )
         },
-        modifier = Modifier
+        modifier = modifier
             .height(28.dp),
         border = AssistChipDefaults.assistChipBorder(MaterialTheme.colorScheme.outline)
     )

@@ -35,7 +35,7 @@ fun SearchCafe(
         Column (
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp)
         ){
             Text(
                 text = stringResource(id = R.string.search_text),
