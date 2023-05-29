@@ -114,9 +114,7 @@ fun SignInScreen(
             .padding(STARTER_CONTENT_PADDING),
         verticalArrangement = Arrangement.Center,
     ) {
-        BackButton {
-            navigateUp()
-        }
+        BackButton(onClick = { navigateUp() })
         AppLogo(modifier = Modifier.align(Alignment.CenterHorizontally))
         AppName()
         Spacer(modifier = Modifier.height(48.dp))

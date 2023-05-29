@@ -34,6 +34,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
 @Composable
 fun HomeScreen(
+    onCafeItemClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -53,9 +54,18 @@ fun HomeScreen(
                     .padding(horizontal = 16.dp),
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
-                HomeSection(title = stringResource(id = R.string.nearby))
-                HomeSection(title = stringResource(id = R.string.open_24_hours))
-                HomeSection(title = stringResource(id = R.string.on_budget))
+                HomeSection(
+                    title = stringResource(id = R.string.nearby),
+                    onCafeItemClick = onCafeItemClick,
+                )
+                HomeSection(
+                    title = stringResource(id = R.string.open_24_hours),
+                    onCafeItemClick = onCafeItemClick,
+                )
+                HomeSection(
+                    title = stringResource(id = R.string.on_budget),
+                    onCafeItemClick = onCafeItemClick,
+                )
             }
         }
     }
@@ -65,6 +75,6 @@ fun HomeScreen(
 @Composable
 fun AppPreview() {
     CafeRecommenderAppTheme {
-        HomeScreen()
+        HomeScreen(onCafeItemClick = {})
     }
 }

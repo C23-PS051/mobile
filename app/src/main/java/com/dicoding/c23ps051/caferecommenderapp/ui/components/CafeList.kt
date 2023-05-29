@@ -9,7 +9,8 @@ import com.dicoding.c23ps051.caferecommenderapp.model.CafeDummy
 
 @Composable
 fun CafeList(
-    modifier: Modifier = Modifier
+    onCafeItemClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     LazyRow (
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -21,6 +22,7 @@ fun CafeList(
                 thumbnail = cafes[i].thumbnail,
                 name = cafes[i].name,
                 rating = cafes[i].rating,
+                onClick = onCafeItemClick
             )
         }
     }

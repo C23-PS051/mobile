@@ -56,4 +56,7 @@
     <string name="your_profile">Your Profile</string>
     <string name="open">Open</string>
     <string name="popular">Popular</string>
+
+    <!-- Detail Page -->
+    <string name="add_to_favorite">Add to favorite</string>
 </resources>
