@@ -174,7 +174,7 @@ fun CafeItemLarge(
                             withStyle(SpanStyle(color = Gray)) {
                                 append(" | ")
                             }
-                            append("${distance}m")
+                            append("$distance km")
                             withStyle(SpanStyle(color = Gray)) {
                                 append(" | ")
                             }
