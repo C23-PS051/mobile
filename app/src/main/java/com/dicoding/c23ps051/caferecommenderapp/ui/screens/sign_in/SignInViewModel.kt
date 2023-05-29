@@ -1,4 +1,4 @@
-package com.dicoding.c23ps051.caferecommenderapp.ui.screen.sign_in
+package com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

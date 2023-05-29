@@ -36,10 +36,12 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
 
 @Composable
 fun CafeItem(
+    id: Long,
     thumbnail: String,
     name: String,
-    rating: String,
-    onClick: () -> Unit,
+    rating: Double,
+    ratingCount: Int,
+    onClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -49,7 +51,7 @@ fun CafeItem(
     ) {
         Column (
             modifier = Modifier
-                .clickable { onClick() },
+                .clickable { onClick(id) },
         ) {
             Image(
                 painter = painterResource(id = R.drawable.cafe),
@@ -76,7 +78,7 @@ fun CafeItem(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = rating,
+                        text = "$rating/5 ($ratingCount)",
                         fontSize = 12.sp
                     )
                 }
@@ -90,9 +92,11 @@ fun CafeItem(
 fun CafeItemPreview() {
     CafeRecommenderAppTheme {
         CafeItem(
+            id = 0,
             thumbnail = "",
             name = "Cafe",
-            rating = "4,0/5(100)",
+            rating = 4.0,
+            ratingCount = 100,
             onClick = {}
         )
     }
@@ -100,14 +104,16 @@ fun CafeItemPreview() {
 
 @Composable
 fun CafeItemLarge(
-    modifier: Modifier = Modifier,
+    id: Long,
     thumbnail: String,
     name: String,
     address: String,
-    rating: String,
-    distance: String,
-    condition: String,
-    onClick: () -> Unit = {},
+    rating: Double,
+    ratingCount: Int,
+    distance: Double,
+    condition: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: (Long) -> Unit = {},
 ) {
     Log.d("MyLogger", "log is working")
     val addressLetterLimit = 50
@@ -130,7 +136,7 @@ fun CafeItemLarge(
 //                shape = MaterialTheme.shapes.large
 //            )
             .clip(MaterialTheme.shapes.large)
-            .clickable { onClick() },
+            .clickable { onClick(id) },
         shape = MaterialTheme.shapes.large,
     ) {
         Row(
@@ -164,15 +170,15 @@ fun CafeItemLarge(
                     )
                     Text(
                         text = buildAnnotatedString {
-                            append(rating)
+                            append("$rating/5 {$ratingCount)")
                             withStyle(SpanStyle(color = Gray)) {
                                 append(" | ")
                             }
-                            append(distance)
+                            append("$distance km")
                             withStyle(SpanStyle(color = Gray)) {
                                 append(" | ")
                             }
-                            append(condition)
+                            append(if (condition) "buka" else "tutup")
                         },
                         fontSize = 14.sp,
                     )
@@ -187,12 +193,14 @@ fun CafeItemLarge(
 fun CafeItemLargePreview() {
     CafeRecommenderAppTheme {
         CafeItemLarge(
+            id = 1,
             thumbnail = "",
             name = "Cafe",
             address = "Jl. Raya Ragunan No. 57, Kec. Pasar Minggu, RT.5/RW.4, Kota Jakarta Selatan",
-            rating = "4,7/5(10)",
-            distance = "2km",
-            condition = "Buka",
+            rating = 4.7,
+            ratingCount = 10,
+            distance = 2.0,
+            condition = true,
         )
     }
 }

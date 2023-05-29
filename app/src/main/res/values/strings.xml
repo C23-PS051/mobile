@@ -59,4 +59,5 @@
 
     <!-- Detail Page -->
     <string name="add_to_favorite">Add to favorite</string>
+    <string name="description">Description</string>
 </resources>

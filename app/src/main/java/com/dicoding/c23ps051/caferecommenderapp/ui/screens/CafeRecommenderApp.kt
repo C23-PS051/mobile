@@ -1,4 +1,4 @@
-package com.dicoding.c23ps051.caferecommenderapp.ui.screen
+package com.dicoding.c23ps051.caferecommenderapp.ui.screens
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -13,14 +13,14 @@ import androidx.navigation.navArgument
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BottomBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.navigation.Screen
-import com.dicoding.c23ps051.caferecommenderapp.ui.screen.detail.DetailScreen
-import com.dicoding.c23ps051.caferecommenderapp.ui.screen.favorite.FavoriteScreen
-import com.dicoding.c23ps051.caferecommenderapp.ui.screen.home.HomeScreen
-import com.dicoding.c23ps051.caferecommenderapp.ui.screen.profile.ProfileScreen
-import com.dicoding.c23ps051.caferecommenderapp.ui.screen.recommended.RecommendedScreen
-import com.dicoding.c23ps051.caferecommenderapp.ui.screen.sign_in.SignInScreen
-import com.dicoding.c23ps051.caferecommenderapp.ui.screen.sign_up.SignUpScreen
-import com.dicoding.c23ps051.caferecommenderapp.ui.screen.welcome.WelcomeScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.detail.DetailScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.favorite.FavoriteScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.home.HomeScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile.ProfileScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended.RecommendedScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in.SignInScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_up.SignUpScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.welcome.WelcomeScreen
 
 @Composable
 fun CafeRecommenderApp(
@@ -40,13 +40,17 @@ fun CafeRecommenderApp(
         ) {
             composable(Screen.Home.route) {
                 HomeScreen(
-                    onCafeItemClick = {
-                        navController.navigate(Screen.Detail.route)
+                    navigateToDetail = { id ->
+                        navController.navigate(Screen.Detail.createRoute(id))
                     }
                 )
             }
             composable(Screen.Recommended.route) {
-                RecommendedScreen()
+                RecommendedScreen(
+                    navigateToDetail = { id ->
+                        navController.navigate(Screen.Detail.createRoute(id))
+                    }
+                )
             }
             composable(Screen.Favorite.route) {
                 FavoriteScreen()
@@ -86,22 +90,17 @@ fun CafeRecommenderApp(
                     },
                 )
             }
-//            composable(
-//                route = Screen.Detail.route,
-//                arguments = listOf(navArgument("id") {  type = NavType.IntType})
-//            ) {
-//                val id = it.arguments?.getInt("id") ?: -1
-//                DetailScreen(
-//                    itemId = id,
-//                    navigateBack = {
-//                        navController.navigateUp()
-//                    }
-//                )
-//            }
-            composable(Screen.Detail.route) {
-                DetailScreen(itemId = 0) {
-                    navController.navigateUp()
-                }
+            composable(
+                route = Screen.Detail.route,
+                arguments = listOf(navArgument("id") {  type = NavType.LongType})
+            ) {
+                val id = it.arguments?.getLong("id") ?: -1
+                DetailScreen(
+                    itemId = id,
+                    navigateBack = {
+                        navController.navigateUp()
+                    }
+                )
             }
         }
     }
