@@ -60,4 +60,10 @@
     <!-- Detail Page -->
     <string name="add_to_favorite">Add to favorite</string>
     <string name="description">Description</string>
+    <string name="logout">Logout</string>
+    <string name="your_profile_picture">Your profile picture</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="help_center">Help center</string>
+    <string name="application_info">Application info</string>
 </resources>

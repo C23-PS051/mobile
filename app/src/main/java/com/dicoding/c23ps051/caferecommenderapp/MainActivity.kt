@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
             PreferenceViewModelFactory(UserPreference.getInstance(dataStore))
         )[PreferenceViewModel::class.java]
 
-        viewModel.getLogin().observe(this) { user ->
+        viewModel.getLoginAsLiveData().observe(this) { user ->
             if (user.isLogin) {
                 setContent {
                     CafeRecommenderAppTheme {

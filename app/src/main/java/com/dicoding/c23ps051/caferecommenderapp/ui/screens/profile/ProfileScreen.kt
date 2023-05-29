@@ -1,12 +1,28 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
@@ -14,13 +30,51 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.StandardTopBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.ButtonSmall
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.SettingsItem
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 
 @Composable
 fun ProfileScreen(
     userPreference: UserPreference,
-    modifier: Modifier = Modifier,
+    navigateToPrivacyPolicy: () -> Unit,
+    navigateToHelpCenter: () -> Unit,
+    navigateToApplicationInfo: () -> Unit,
     preferenceViewModel: PreferenceViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
+) {
+    preferenceViewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
+        when (uiState) {
+            is UiState.Loading -> {
+                preferenceViewModel.getLogin()
+            }
+            is UiState.Success -> {
+                val data = uiState.data
+                ProfileContent(
+                    name = data.name,
+                    email = data.email,
+                    onLogoutClick = { preferenceViewModel.logout() },
+                    onPrivacyPolicyClick = navigateToPrivacyPolicy,
+                    onHelpCenterClick = navigateToHelpCenter,
+                    onApplicationInfoClick = navigateToApplicationInfo,
+                )
+            }
+            is UiState.Error -> {
+                /*TODO*/
+            }
+        }
+    }
+}
+
+@Composable
+fun ProfileContent(
+    name: String,
+    email: String,
+    onLogoutClick: () -> Unit,
+    onPrivacyPolicyClick: () -> Unit,
+    onHelpCenterClick: () -> Unit,
+    onApplicationInfoClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
         topBar = {
@@ -32,13 +86,53 @@ fun ProfileScreen(
     ) { innerPadding ->
         Column (
             modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxSize()
                 .padding(innerPadding)
-                .padding(APP_CONTENT_PADDING)
+                .padding(APP_CONTENT_PADDING),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            /*TODO: TO BE UPDATED*/
-            Button(text = "Logout") {
-                preferenceViewModel.logout()
+            Image(
+                painter = painterResource(id = R.drawable.profile),
+                contentDescription = stringResource(id = R.string.your_profile_picture),
+                modifier = Modifier.size(192.dp)
+            )
+            Text(
+                text = name,
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Text(
+                text = email
+            )
+            ButtonSmall(text = stringResource(id = R.string.edit_profile)) {
+                /* TODO */
             }
+            Divider(modifier = Modifier.padding(vertical = 24.dp))
+            SettingsItem(
+                text = stringResource(id = R.string.privacy_policy),
+                starterIcon = painterResource(id = R.drawable.lock),
+                onClick = onPrivacyPolicyClick
+            )
+            SettingsItem(
+                text = stringResource(id = R.string.help_center),
+                starterIcon = painterResource(id = R.drawable.help),
+                onClick = onHelpCenterClick
+            )
+            SettingsItem(
+                text = stringResource(id = R.string.application_info),
+                starterIcon = painterResource(id = R.drawable.info),
+                onClick = onApplicationInfoClick
+            )
+            Divider(modifier = Modifier.padding(vertical = 20.dp))
+            SettingsItem(
+                text = stringResource(id = R.string.logout),
+                starterIcon = painterResource(id = R.drawable.logout),
+                onClick = onLogoutClick
+            )
+//            /*TODO: TO BE UPDATED*/
+//            Button(text = stringResource(id = R.string.logout)) {
+//                onLogoutClick()
+//            }
         }
     }
 }

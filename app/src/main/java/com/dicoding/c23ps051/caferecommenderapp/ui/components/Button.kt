@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -42,6 +43,29 @@ fun Button(
         modifier = modifier
             .height(48.dp)
             .fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(color),
+        elevation = ButtonDefaults.buttonElevation(0.dp),
+        onClick = onClick,
+    ) {
+        Text(
+            text = text,
+            color = textColor,
+        )
+    }
+}
+
+@Composable
+fun ButtonSmall(
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.secondary,
+    textColor: Color = White,
+    text: String,
+    onClick: () -> Unit,
+) {
+    Button(
+        shape = CircleShape,
+        modifier = modifier
+            .padding(8.dp),
         colors = ButtonDefaults.buttonColors(color),
         elevation = ButtonDefaults.buttonElevation(0.dp),
         onClick = onClick,

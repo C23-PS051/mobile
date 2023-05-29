@@ -56,7 +56,18 @@ fun CafeRecommenderApp(
                 FavoriteScreen()
             }
             composable(Screen.Profile.route) {
-                ProfileScreen(userPreference)
+                ProfileScreen(
+                    userPreference = userPreference,
+                    navigateToPrivacyPolicy = {
+
+                    },
+                    navigateToHelpCenter = {
+
+                    },
+                    navigateToApplicationInfo = {
+
+                    }
+                )
             }
             composable(Screen.Welcome.route) {
                 WelcomeScreen(
