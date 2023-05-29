@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +31,7 @@ import com.dicoding.c23ps051.caferecommenderapp.di.Injection
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.ui.RepositoryViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeDetailInfoItem
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.FavoriteButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
@@ -125,46 +127,40 @@ fun DetailContent(
                 text = name,
                 style = MaterialTheme.typography.displaySmall
             )
-            Text(address)
+            Text(
+                text = address,
+            )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .fillMaxWidth()
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.location),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp)
-                )
-                Text("$distance km")
-                Spacer(modifier = Modifier.width(60.dp))
-                Image(
-                    painter = painterResource(id = R.drawable.time),
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 4.dp)
-                )
-                Text("$rating") /* TODO: CHANGE TO TIME */
+                Column (modifier.weight(1f)) {
+                    CafeDetailInfoItem(
+                        icon = painterResource(id = R.drawable.location),
+                        text = "$distance km"
+                    )
+                    CafeDetailInfoItem(
+                        icon = painterResource(id = R.drawable.star),
+                        text = "$rating/5 ($ratingCount)"
+                    )
+                }
+                Column (modifier.weight(1f)) {
+                    CafeDetailInfoItem(
+                        icon = painterResource(id = R.drawable.time),
+                        text = "$rating" /* TODO: CHANGE TO TIME */
+                    )
+                    CafeDetailInfoItem(
+                        icon = "Rp",
+                        text = "$minPrice-$maxPrice"
+                    )
+                }
             }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(top = 4.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.star),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp))
-                Text("$rating/5 ($ratingCount)")
-                Spacer(modifier = Modifier.width(48.dp))
-                Text(
-                    text = "Rp",
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(end = 4.dp)
-                )
-                Text("$minPrice-$maxPrice")
-            }
-            Spacer(modifier = Modifier.height(24.dp))
+            Divider(modifier = Modifier.padding(24.dp))
             Text(stringResource(id = R.string.description), style = MaterialTheme.typography.titleSmall)
-            Text(address) /* TODO: CHANGE TO DESCRIPTION */
-            Spacer(modifier = Modifier.height(24.dp))
+            Text(address + address + address) /* TODO: CHANGE TO DESCRIPTION */
+            Divider(modifier = Modifier.padding(24.dp))
             Text(stringResource(id = R.string.location), style = MaterialTheme.typography.titleSmall)
             /* TODO: ADD GOOGLE MAPS */
         }
