@@ -27,9 +27,7 @@ fun StandardTopBar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (showBackButton) {
-                BackButton {
-                    /* TODO */
-                }
+                BackButton(onClick = { /* TODO */ })
                 Spacer(modifier = Modifier.width(4.dp))
             }
             TopBarTitle(title = title)

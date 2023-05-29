@@ -5,12 +5,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BottomBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.navigation.Screen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screen.detail.DetailScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screen.favorite.FavoriteScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screen.home.HomeScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screen.profile.ProfileScreen
@@ -36,7 +39,11 @@ fun CafeRecommenderApp(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Home.route) {
-                HomeScreen()
+                HomeScreen(
+                    onCafeItemClick = {
+                        navController.navigate(Screen.Detail.route)
+                    }
+                )
             }
             composable(Screen.Recommended.route) {
                 RecommendedScreen()
@@ -78,6 +85,23 @@ fun CafeRecommenderApp(
                         navController.navigateUp()
                     },
                 )
+            }
+//            composable(
+//                route = Screen.Detail.route,
+//                arguments = listOf(navArgument("id") {  type = NavType.IntType})
+//            ) {
+//                val id = it.arguments?.getInt("id") ?: -1
+//                DetailScreen(
+//                    itemId = id,
+//                    navigateBack = {
+//                        navController.navigateUp()
+//                    }
+//                )
+//            }
+            composable(Screen.Detail.route) {
+                DetailScreen(itemId = 0) {
+                    navController.navigateUp()
+                }
             }
         }
     }

@@ -36,11 +36,11 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
 
 @Composable
 fun CafeItem(
-    modifier: Modifier = Modifier,
     thumbnail: String,
     name: String,
     rating: String,
-    onClick: () -> Unit = {},
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Card(
         shape = MaterialTheme.shapes.large,
@@ -93,6 +93,7 @@ fun CafeItemPreview() {
             thumbnail = "",
             name = "Cafe",
             rating = "4,0/5(100)",
+            onClick = {}
         )
     }
 }

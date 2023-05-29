@@ -14,11 +14,12 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 @Composable
 fun HomeSection(
     title: String,
+    onCafeItemClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
         SectionText(title, modifier)
-        CafeList()
+        CafeList(onCafeItemClick = onCafeItemClick)
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
@@ -27,6 +28,9 @@ fun HomeSection(
 @Composable
 fun HomeSectionPreview() {
     CafeRecommenderAppTheme {
-        HomeSection(title = stringResource(id = R.string.title))
+        HomeSection(
+            title = stringResource(id = R.string.title),
+            onCafeItemClick = {}
+        )
     }
 }
