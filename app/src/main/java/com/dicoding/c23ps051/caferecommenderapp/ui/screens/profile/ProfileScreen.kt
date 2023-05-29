@@ -1,10 +1,6 @@
-package com.dicoding.c23ps051.caferecommenderapp.ui.screen.profile
+package com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -17,15 +13,14 @@ import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.StandardTopBar
-import com.dicoding.c23ps051.caferecommenderapp.ui.screen.ViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
-import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
 @Composable
 fun ProfileScreen(
     userPreference: UserPreference,
     modifier: Modifier = Modifier,
-    preferenceViewModel: PreferenceViewModel = viewModel(factory = ViewModelFactory(userPreference)),
+    preferenceViewModel: PreferenceViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
 ) {
     Scaffold(
         topBar = {

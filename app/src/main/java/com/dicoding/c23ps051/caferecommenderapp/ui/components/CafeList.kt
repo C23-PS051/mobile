@@ -2,26 +2,30 @@ package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.model.CafeDummy
 
 @Composable
 fun CafeList(
-    onCafeItemClick: () -> Unit,
+    onCafeItemClick: (Long) -> Unit,
+    cafes: List<Cafe>,
     modifier: Modifier = Modifier,
 ) {
     LazyRow (
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier
     ) {
-        val cafes = CafeDummy.cafelist
-        items(cafes.size) { i ->
+        itemsIndexed(cafes) { _, cafe ->
             CafeItem(
-                thumbnail = cafes[i].thumbnail,
-                name = cafes[i].name,
-                rating = cafes[i].rating,
+                id = cafe.id,
+                thumbnail = cafe.thumbnail,
+                name = cafe.name,
+                rating = cafe.rating,
+                ratingCount = cafe.ratingCount,
                 onClick = onCafeItemClick
             )
         }

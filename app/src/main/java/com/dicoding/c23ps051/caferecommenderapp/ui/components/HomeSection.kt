@@ -9,17 +9,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dicoding.c23ps051.caferecommenderapp.R
+import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
+import com.dicoding.c23ps051.caferecommenderapp.model.CafeDummy
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
 @Composable
 fun HomeSection(
     title: String,
-    onCafeItemClick: () -> Unit,
+    onCafeItemClick: (Long) -> Unit,
+    cafes: List<Cafe>,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
         SectionText(title, modifier)
-        CafeList(onCafeItemClick = onCafeItemClick)
+        CafeList(
+            onCafeItemClick = onCafeItemClick,
+            cafes = cafes,
+        )
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
@@ -30,7 +36,8 @@ fun HomeSectionPreview() {
     CafeRecommenderAppTheme {
         HomeSection(
             title = stringResource(id = R.string.title),
-            onCafeItemClick = {}
+            onCafeItemClick = {},
+            cafes = CafeDummy.cafeList
         )
     }
 }

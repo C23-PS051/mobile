@@ -1,4 +1,4 @@
-package com.dicoding.c23ps051.caferecommenderapp.ui.screen.favorite
+package com.dicoding.c23ps051.caferecommenderapp.ui.screens.favorite
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview

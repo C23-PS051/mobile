@@ -14,8 +14,8 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
-import com.dicoding.c23ps051.caferecommenderapp.ui.screen.CafeRecommenderApp
-import com.dicoding.c23ps051.caferecommenderapp.ui.screen.ViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.CafeRecommenderApp
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
 
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(UserPreference.getInstance(dataStore))
+            PreferenceViewModelFactory(UserPreference.getInstance(dataStore))
         )[PreferenceViewModel::class.java]
 
         viewModel.getLogin().observe(this) { user ->

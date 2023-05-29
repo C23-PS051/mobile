@@ -1,4 +1,4 @@
-package com.dicoding.c23ps051.caferecommenderapp.ui.screen.welcome
+package com.dicoding.c23ps051.caferecommenderapp.ui.screens.welcome
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
