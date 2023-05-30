@@ -1,5 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens
 
+import android.location.Location
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -24,9 +25,10 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.screens.welcome.WelcomeScreen
 
 @Composable
 fun CafeRecommenderApp(
-    modifier: Modifier = Modifier,
     userPreference: UserPreference,
     isLogin: Boolean,
+    userLocation: String,
+    modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
     Scaffold(
@@ -42,7 +44,8 @@ fun CafeRecommenderApp(
                 HomeScreen(
                     navigateToDetail = { id ->
                         navController.navigate(Screen.Detail.createRoute(id))
-                    }
+                    },
+                    userLocation = userLocation
                 )
             }
             composable(Screen.Recommended.route) {

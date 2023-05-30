@@ -25,6 +25,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
 @Composable
 fun Header(
+    userLocation: String,
     modifier: Modifier = Modifier
 ) {
     Row (
@@ -47,7 +48,7 @@ fun Header(
                 fontSize = 12.sp
             )
             Text(
-                text = "City Name",
+                text = userLocation,
                 fontWeight = FontWeight.W500,
                 fontSize = 14.sp
             )
@@ -66,6 +67,6 @@ fun Header(
 @Composable
 fun HeaderPreview() {
     CafeRecommenderAppTheme {
-        Header()
+        Header("Jakarta Selatan")
     }
 }

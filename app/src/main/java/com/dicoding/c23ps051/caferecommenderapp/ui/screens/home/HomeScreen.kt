@@ -30,6 +30,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 @Composable
 fun HomeScreen(
     navigateToDetail: (Long) -> Unit,
+    userLocation: String,
     viewModel: HomeViewModel = viewModel(
         factory = RepositoryViewModelFactory(Injection.provideRepository())
     ),
@@ -45,7 +46,7 @@ fun HomeScreen(
             }
             is UiState.Success -> {
                 nearbyCafes = uiState.data
-                notifyHomeContent(nearbyCafes, open24HoursCafes, onBudgetCafes, navigateToDetail)
+                notifyHomeContent(nearbyCafes, open24HoursCafes, onBudgetCafes, navigateToDetail, userLocation)
             }
             is UiState.Error -> {
                 /*TODO*/
@@ -60,7 +61,7 @@ fun HomeScreen(
             }
             is UiState.Success -> {
                 open24HoursCafes = uiState.data
-                notifyHomeContent(nearbyCafes, open24HoursCafes, onBudgetCafes, navigateToDetail)
+                notifyHomeContent(nearbyCafes, open24HoursCafes, onBudgetCafes, navigateToDetail, userLocation)
             }
             is UiState.Error -> {
                 /*TODO*/
@@ -75,7 +76,7 @@ fun HomeScreen(
             }
             is UiState.Success -> {
                 onBudgetCafes = uiState.data
-                notifyHomeContent(nearbyCafes, open24HoursCafes, onBudgetCafes, navigateToDetail)
+                notifyHomeContent(nearbyCafes, open24HoursCafes, onBudgetCafes, navigateToDetail, userLocation)
             }
             is UiState.Error -> {
                 /*TODO*/
@@ -91,13 +92,15 @@ fun notifyHomeContent(
     open24HoursCafes: List<Cafe>,
     onBudgetCafes: List<Cafe>,
     navigateToDetail: (Long) -> Unit,
+    userLocation: String,
 ) {
     if (nearbyCafes.isNotEmpty() && open24HoursCafes.isNotEmpty() && onBudgetCafes.isNotEmpty()) {
         HomeContent(
             navigateToDetail = navigateToDetail,
             nearbyCafes = nearbyCafes,
             open24HoursCafes = open24HoursCafes,
-            onBudgetCafes = onBudgetCafes
+            onBudgetCafes = onBudgetCafes,
+            userLocation = userLocation
         )
     }
 }
@@ -108,10 +111,11 @@ fun HomeContent(
     nearbyCafes: List<Cafe>,
     open24HoursCafes: List<Cafe>,
     onBudgetCafes: List<Cafe>,
+    userLocation: String,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        topBar = { Header() },
+        topBar = { Header(userLocation) },
     ) { innerPadding ->
         Column(
             modifier = modifier
