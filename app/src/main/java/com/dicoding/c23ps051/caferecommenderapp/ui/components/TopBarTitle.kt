@@ -1,5 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,7 +19,8 @@ fun TopBarTitle(
         style = MaterialTheme.typography.titleSmall,
         fontWeight = FontWeight.Normal,
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background),
         textAlign = TextAlign.Center,
     )
 }

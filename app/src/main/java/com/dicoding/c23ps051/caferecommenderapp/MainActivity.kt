@@ -36,6 +36,7 @@ class MainActivity : ComponentActivity() {
 
         viewModel.getLoginAsLiveData().observe(this) { user ->
             if (user.isLogin) {
+                getUserLocation()
                 setContent {
                     CafeRecommenderAppTheme {
                         Surface(
@@ -65,5 +66,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun getUserLocation() {
+        locationManager = getSystemService()
     }
 }

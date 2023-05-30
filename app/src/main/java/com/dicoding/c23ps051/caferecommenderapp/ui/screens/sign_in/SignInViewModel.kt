@@ -22,10 +22,10 @@ class SignInViewModel(private val pref: UserPreference) : ViewModel() {
 
     fun login(email: String, password: String) {
         /* TODO: TO BE UPDATED WHEN API IS READY */
-        if (email == "yen@mail.com" && password == "yendistia") {
+        if (email == "john_doe331@mail.com" && password == "password123") {
             _loginSuccess.value = true
 
-            val loginData = LoginModel("Yen", "yen@mail.com", "ABCDEFGH12345678", true)
+            val loginData = LoginModel("John Doe", "john_doe331@mail.com", "ABCDEFGH12345678", true)
 
             viewModelScope.launch {
                 pref.saveLogin(loginData)

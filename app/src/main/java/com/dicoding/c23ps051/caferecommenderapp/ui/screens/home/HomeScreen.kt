@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,7 +22,9 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.RepositoryViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Header
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.HomeSection
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SearchCafe
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.WelcomeText
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
 @Composable
@@ -117,13 +120,13 @@ fun HomeContent(
 
         ) {
             Spacer(modifier = Modifier.height(8.dp))
-//            WelcomeText("Yen")
             SearchCafe()
             Column (
                 modifier = Modifier
                     .padding(horizontal = 16.dp),
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
+//                WelcomeText("Yen", modifier = Modifier.align(Alignment.CenterHorizontally))
                 HomeSection(
                     title = stringResource(id = R.string.nearby),
                     onCafeItemClick = navigateToDetail,

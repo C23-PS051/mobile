@@ -25,6 +25,7 @@ fun WelcomeText(
     val text = buildAnnotatedString {
         withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)) {
             append(stringResource(id = R.string.hello_text))
+            append(" ")
         }
         withStyle(
             style = SpanStyle(
