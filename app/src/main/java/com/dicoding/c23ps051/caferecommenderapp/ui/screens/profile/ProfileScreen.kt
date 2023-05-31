@@ -95,7 +95,7 @@ fun ProfileContent(
             Image(
                 painter = painterResource(id = R.drawable.profile),
                 contentDescription = stringResource(id = R.string.your_profile_picture),
-                modifier = Modifier.size(192.dp)
+                modifier = Modifier.size(144.dp)
             )
             Text(
                 text = name,
