@@ -70,4 +70,6 @@
     <string name="loading_recommendations">Brewing your results..</string>
     <string name="exploring_cafe_options">Exploring cafe options..</string>
     <string name="serving_up_cafe_info">Serving up cafe information..</string>
+    <string name="retry">RETRY</string>
+    <string name="error_loading_cafe_detail">Oops! Couldn\'t fetch cafe details. Please try again.</string>
 </resources>

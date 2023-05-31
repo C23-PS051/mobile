@@ -34,6 +34,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeDetailInfoItem
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.FavoriteButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.error.ErrorScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 
@@ -71,7 +72,7 @@ fun DetailScreen(
                 )
             }
             is UiState.Error -> {
-                /* TODO */
+                ErrorScreen(text = stringResource(id = R.string.error_loading_cafe_detail))
             }
         }
     }
