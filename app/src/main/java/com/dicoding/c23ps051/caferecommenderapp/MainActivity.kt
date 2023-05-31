@@ -67,7 +67,6 @@ class MainActivity : ComponentActivity() {
                                 userPreference = UserPreference.getInstance(dataStore),
                                 isLogin = true,
                                 userLocation = location,
-                                activity = this,
                             )
                         }
                     }
@@ -83,7 +82,6 @@ class MainActivity : ComponentActivity() {
                                 userPreference = UserPreference.getInstance(dataStore),
                                 isLogin = false,
                                 userLocation = location,
-                                activity = this,
                             )
                         }
                     }

@@ -26,6 +26,8 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 @Composable
 fun Header(
     userLocation: String,
+    photoUrl: String,
+    onProfileClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row (
@@ -53,12 +55,12 @@ fun Header(
                 fontSize = 14.sp
             )
         }
-        Image(
-            painter = painterResource(id = R.drawable.profile),
-            contentDescription = null,
+        ProfilePicture(
+            image = photoUrl,
             modifier = Modifier
+                .size(48.dp)
                 .clip(CircleShape)
-                .clickable { /* TODO */ }
+                .clickable { onProfileClick() }
         )
     }
 }
@@ -67,6 +69,6 @@ fun Header(
 @Composable
 fun HeaderPreview() {
     CafeRecommenderAppTheme {
-        Header("Jakarta Selatan")
+        Header("Jakarta Selatan", "", {})
     }
 }

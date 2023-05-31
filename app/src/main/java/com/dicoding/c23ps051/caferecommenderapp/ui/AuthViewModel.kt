@@ -10,35 +10,34 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class AuthViewModel : ViewModel() {
 
-    private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
-    private lateinit var googleSignInClient: GoogleSignInClient
+//    private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
-    fun initGoogleSignInClient(context: Context) {
+    fun initGoogleSignInClient(context: Context): GoogleSignInClient {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(context.getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
 
-        googleSignInClient = GoogleSignIn.getClient(context, gso)
+        return GoogleSignIn.getClient(context, gso)
     }
 
-    fun signInWithEmail(email: String, password: String): LiveData<Result<FirebaseUser?>> {
-        val result = MutableLiveData<Result<FirebaseUser?>>()
-
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val user = task.result?.user
-                    result.value = Result.success(user)
-                } else {
-                    val exception = task.exception
-                    result.value = Result.failure(exception!!)
-                }
-            }
-
-        return result
-    }
+//    fun signInWithEmail(email: String, password: String) {
+//
+//        firebaseAuth.signInWithEmailAndPassword(email, password)
+//            .addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    val user = task.result?.user
+//                    _signInResult.value = Result.success(user)
+//                } else {
+//                    val exception = task.exception
+//                    _signInResult.value = Result.failure(exception!!)
+//                }
+//            }
+//    }
 }

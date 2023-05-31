@@ -18,6 +18,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.di.Injection
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
+import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
+import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
+import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.RepositoryViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Header
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.HomeSection
@@ -25,20 +28,25 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.SearchCafe
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.WelcomeText
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile.ProfileContent
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
 @Composable
 fun HomeScreen(
+    userPreference: UserPreference,
     navigateToDetail: (Long) -> Unit,
+    onProfileClick: () -> Unit,
     userLocation: String,
     viewModel: HomeViewModel = viewModel(
         factory = RepositoryViewModelFactory(Injection.provideRepository())
     ),
+    preferenceViewModel: PreferenceViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
 ) {
     var nearbyCafes = emptyList<Cafe>()
     var open24HoursCafes = emptyList<Cafe>()
     var onBudgetCafes = emptyList<Cafe>()
+    var photoUrl = ""
 
     viewModel.uiStateNearby.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
@@ -48,7 +56,15 @@ fun HomeScreen(
             }
             is UiState.Success -> {
                 nearbyCafes = uiState.data
-                notifyHomeContent(nearbyCafes, open24HoursCafes, onBudgetCafes, navigateToDetail, userLocation)
+                notifyHomeContent(
+                    onProfileClick = onProfileClick,
+                    nearbyCafes = nearbyCafes,
+                    open24HoursCafes = open24HoursCafes,
+                    onBudgetCafes = onBudgetCafes,
+                    navigateToDetail = navigateToDetail,
+                    userLocation = userLocation,
+                    photoUrl = photoUrl
+                )
             }
             is UiState.Error -> {
                 /*TODO*/
@@ -64,7 +80,15 @@ fun HomeScreen(
             }
             is UiState.Success -> {
                 open24HoursCafes = uiState.data
-                notifyHomeContent(nearbyCafes, open24HoursCafes, onBudgetCafes, navigateToDetail, userLocation)
+                notifyHomeContent(
+                    onProfileClick = onProfileClick,
+                    nearbyCafes = nearbyCafes,
+                    open24HoursCafes = open24HoursCafes,
+                    onBudgetCafes = onBudgetCafes,
+                    navigateToDetail = navigateToDetail,
+                    userLocation = userLocation,
+                    photoUrl = photoUrl
+                )
             }
             is UiState.Error -> {
                 /*TODO*/
@@ -80,7 +104,15 @@ fun HomeScreen(
             }
             is UiState.Success -> {
                 onBudgetCafes = uiState.data
-                notifyHomeContent(nearbyCafes, open24HoursCafes, onBudgetCafes, navigateToDetail, userLocation)
+                notifyHomeContent(
+                    onProfileClick = onProfileClick,
+                    nearbyCafes = nearbyCafes,
+                    open24HoursCafes = open24HoursCafes,
+                    onBudgetCafes = onBudgetCafes,
+                    navigateToDetail = navigateToDetail,
+                    userLocation = userLocation,
+                    photoUrl = photoUrl
+                )
             }
             is UiState.Error -> {
                 /*TODO*/
@@ -88,23 +120,49 @@ fun HomeScreen(
         }
     }
 
+    preferenceViewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
+        when (uiState) {
+            is UiState.Loading -> {
+                preferenceViewModel.getLogin()
+            }
+            is UiState.Success -> {
+                photoUrl = uiState.data.photoUrl
+                notifyHomeContent(
+                    onProfileClick = onProfileClick,
+                    nearbyCafes = nearbyCafes,
+                    open24HoursCafes = open24HoursCafes,
+                    onBudgetCafes = onBudgetCafes,
+                    navigateToDetail = navigateToDetail,
+                    userLocation = userLocation,
+                    photoUrl = photoUrl
+                )
+            }
+            is UiState.Error -> {
+                /*TODO*/
+            }
+        }
+    }
 }
 
 @Composable
 fun notifyHomeContent(
+    onProfileClick: () -> Unit,
     nearbyCafes: List<Cafe>,
     open24HoursCafes: List<Cafe>,
     onBudgetCafes: List<Cafe>,
     navigateToDetail: (Long) -> Unit,
     userLocation: String,
+    photoUrl: String,
 ) {
     if (nearbyCafes.isNotEmpty() && open24HoursCafes.isNotEmpty() && onBudgetCafes.isNotEmpty()) {
         HomeContent(
             navigateToDetail = navigateToDetail,
+            onProfileClick = onProfileClick,
             nearbyCafes = nearbyCafes,
             open24HoursCafes = open24HoursCafes,
             onBudgetCafes = onBudgetCafes,
-            userLocation = userLocation
+            userLocation = userLocation,
+            photoUrl = photoUrl
         )
     }
 }
@@ -112,14 +170,16 @@ fun notifyHomeContent(
 @Composable
 fun HomeContent(
     navigateToDetail: (Long) -> Unit,
+    onProfileClick: () -> Unit,
     nearbyCafes: List<Cafe>,
     open24HoursCafes: List<Cafe>,
     onBudgetCafes: List<Cafe>,
     userLocation: String,
+    photoUrl: String,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        topBar = { Header(userLocation) },
+        topBar = { Header(userLocation, photoUrl, onProfileClick) },
     ) { innerPadding ->
         Column(
             modifier = modifier

@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,14 +27,20 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
+import com.dicoding.c23ps051.caferecommenderapp.ui.AuthViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.StandardTopBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ButtonSmall
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProfilePicture
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SettingsItem
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun ProfileScreen(
@@ -42,7 +49,13 @@ fun ProfileScreen(
     navigateToHelpCenter: () -> Unit,
     navigateToApplicationInfo: () -> Unit,
     preferenceViewModel: PreferenceViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
+    authViewModel: AuthViewModel = viewModel()
 ) {
+    val googleSignInClient: GoogleSignInClient
+    val context = LocalContext.current
+
+    googleSignInClient = authViewModel.initGoogleSignInClient(context)
+
     preferenceViewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Loading -> {
@@ -53,7 +66,14 @@ fun ProfileScreen(
                 ProfileContent(
                     name = data.name,
                     email = data.email,
-                    onLogoutClick = { preferenceViewModel.logout() },
+                    photoUrl = data.photoUrl,
+                    onLogoutClick = {
+                        googleSignInClient.signOut().addOnCompleteListener {
+                            googleSignInClient.revokeAccess().addOnCompleteListener {
+                                preferenceViewModel.logout()
+                            }
+                        }
+                    },
                     onPrivacyPolicyClick = navigateToPrivacyPolicy,
                     onHelpCenterClick = navigateToHelpCenter,
                     onApplicationInfoClick = navigateToApplicationInfo,
@@ -70,6 +90,7 @@ fun ProfileScreen(
 fun ProfileContent(
     name: String,
     email: String,
+    photoUrl: String,
     onLogoutClick: () -> Unit,
     onPrivacyPolicyClick: () -> Unit,
     onHelpCenterClick: () -> Unit,
@@ -92,11 +113,7 @@ fun ProfileContent(
                 .padding(APP_CONTENT_PADDING),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.profile),
-                contentDescription = stringResource(id = R.string.your_profile_picture),
-                modifier = Modifier.size(144.dp)
-            )
+            ProfilePicture(image = photoUrl)
             Text(
                 text = name,
                 style = MaterialTheme.typography.headlineSmall
@@ -129,10 +146,6 @@ fun ProfileContent(
                 starterIcon = painterResource(id = R.drawable.logout),
                 onClick = onLogoutClick
             )
-//            /*TODO: TO BE UPDATED*/
-//            Button(text = stringResource(id = R.string.logout)) {
-//                onLogoutClick()
-//            }
         }
     }
 }

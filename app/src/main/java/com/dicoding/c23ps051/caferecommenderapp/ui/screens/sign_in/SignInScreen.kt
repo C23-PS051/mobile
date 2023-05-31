@@ -1,10 +1,9 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in
 
 import android.app.Activity
+import android.net.Uri
 import android.os.Bundle
-import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
@@ -41,11 +41,9 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.ToSignUpText
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.STARTER_CONTENT_PADDING
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
@@ -56,33 +54,35 @@ fun SignInScreen(
     navigateUp: () -> Unit,
     navigateToSignUp: () -> Unit,
     userPreference: UserPreference,
-    activity: Activity,
+    modifier: Modifier = Modifier,
     signInViewModel: SignInViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
     state: SignInFormState = rememberSignInFormState(
         text = "",
         hasError = false,
         showPassword = false,
     ),
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val googleSignInClient: GoogleSignInClient
     val auth: FirebaseAuth = Firebase.auth
     val context = LocalContext.current
 
-    // Configure Google Sign In
-    val gso = GoogleSignInOptions
-        .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken(stringResource(R.string.default_web_client_id))
-        .requestEmail()
-        .build()
-    googleSignInClient = GoogleSignIn.getClient(context, gso)
+    googleSignInClient = authViewModel.initGoogleSignInClient(context)
 
     fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
-            .addOnCompleteListener(activity) { task ->
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-                    signInViewModel.signInWithGoogle(user?.displayName as String, user.email as String, idToken)
+                    if (user != null) {
+                        signInViewModel.signIn(
+                            user.displayName as String,
+                            user.email as String,
+                            idToken,
+                            user.photoUrl.toString(),
+                        )
+                    }
                 } else {
                     /*TODO: SHOW ERROR*/
                 }
@@ -103,32 +103,39 @@ fun SignInScreen(
         }
     }
 
-    fun signIn() {
+    fun signInWithGoogle() {
         val signInIntent = googleSignInClient.signInIntent
         resultLauncher.launch(signInIntent)
     }
 
-    SignInContent(
-        navigateUp = navigateUp,
-        navigateToSignUp = navigateToSignUp,
-        signInWithEmail = { signInViewModel.signInWithEmail(state.emailText, state.passwordText) },
-        signInWithGoogle = { signIn() },
-    )
-}
+    // Configure Email Sign In
+    fun firebaseAuthWithEmail(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    /*TODO: FIX THE TOKEN*/
+                    if (user != null) {
+                        signInViewModel.signIn(
+                            user.displayName as String,
+                            user.email as String,
+                            "idToken",
+                            user.photoUrl.toString(),
+                        )
+                    }
+                } else {
+                    /*TODO: SHOW ERROR*/
+                }
+            }
+    }
 
-@Composable
-fun SignInContent(
-    navigateUp: () -> Unit,
-    navigateToSignUp: () -> Unit,
-    signInWithEmail: () -> Unit,
-    signInWithGoogle: () -> Unit,
-    modifier: Modifier = Modifier,
-    state: SignInFormState = rememberSignInFormState(
-        text = "",
-        hasError = false,
-        showPassword = false,
-    ),
-) {
+//    SignInContent(
+//        navigateUp = navigateUp,
+//        navigateToSignUp = navigateToSignUp,
+//        signInWithEmail = { firebaseAuthWithEmail(state.emailText, state.passwordText) },
+//        signInWithGoogle = { signInWithGoogle() },
+//    )
+
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
@@ -162,7 +169,7 @@ fun SignInContent(
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(text = stringResource(id = R.string.sign_in)) {
-            signInWithEmail()
+            firebaseAuthWithEmail(state.emailText, state.passwordText)
         }
         Spacer(modifier = Modifier.height(16.dp))
         ForgotPassword()
@@ -178,6 +185,69 @@ fun SignInContent(
         }
     }
 }
+
+//@Composable
+//fun SignInContent(
+//    navigateUp: () -> Unit,
+//    navigateToSignUp: () -> Unit,
+//    signInWithEmail: () -> Unit,
+//    signInWithGoogle: () -> Unit,
+//    modifier: Modifier = Modifier,
+//    state: SignInFormState = rememberSignInFormState(
+//        text = "",
+//        hasError = false,
+//        showPassword = false,
+//    ),
+//) {
+//    Column(
+//        modifier = modifier
+//            .verticalScroll(rememberScrollState())
+//            .padding(STARTER_CONTENT_PADDING),
+//        verticalArrangement = Arrangement.Center,
+//    ) {
+//        BackButton(onClick = { navigateUp() })
+//        AppLogo(modifier = Modifier.align(Alignment.CenterHorizontally))
+//        AppName()
+//        Spacer(modifier = Modifier.height(48.dp))
+//        SignInForm(
+//            emailText = state.emailText,
+//            emailHasError = state.emailHasError,
+//            emailOnValueChange = { newText: String ->
+//                state.emailText = newText
+//                val emailRegex = Regex("^([a-zA-Z0-9_.+-])+@([a-zA-Z0-9-])+\\.([a-zA-Z0-9-.])+$")
+//                state.emailHasError = !emailRegex.matches(state.emailText)
+//            },
+//            passwordText = state.passwordText,
+//            passwordHasError = state.passwordHasError,
+//            showPassword = state.showPassword,
+//            passwordOnValueChange = { newText: String ->
+//                state.passwordText = newText
+//                val passwordRegex = Regex("^(?=.*[A-Za-z])[A-Za-z\\d](?!.*\\s).{8,}\$")
+//
+//                state.passwordHasError = state.passwordText.length < MIN_PASSWORD_LENGTH || !passwordRegex.matches(state.passwordText)
+//            },
+//            onVisibilityClick = {
+//                state.showPassword = !state.showPassword
+//            }
+//        )
+//        Spacer(modifier = Modifier.height(24.dp))
+//        Button(text = stringResource(id = R.string.sign_in)) {
+//            signInWithEmail()
+//        }
+//        Spacer(modifier = Modifier.height(16.dp))
+//        ForgotPassword()
+//        Spacer(modifier = Modifier.height(48.dp))
+//        OrDivider()
+//        Spacer(modifier = Modifier.height(48.dp))
+//        GoogleButton(
+//            onClick = { signInWithGoogle() }
+//        )
+//        Spacer(modifier = Modifier.height(24.dp))
+//        ToSignUpText {
+//            navigateToSignUp()
+//        }
+//    }
+//}
 
 class SignInFormState(
     initialTextState: String,

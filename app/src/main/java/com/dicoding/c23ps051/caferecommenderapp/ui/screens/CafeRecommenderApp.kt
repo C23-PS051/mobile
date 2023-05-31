@@ -29,7 +29,6 @@ fun CafeRecommenderApp(
     userPreference: UserPreference,
     isLogin: Boolean,
     userLocation: String,
-    activity: Activity,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
@@ -44,6 +43,11 @@ fun CafeRecommenderApp(
         ) {
             composable(Screen.Home.route) {
                 HomeScreen(
+                    userPreference = userPreference,
+                    onProfileClick = {
+                        navController.popBackStack()
+                        navController.navigate(Screen.Profile.route)
+                    },
                     navigateToDetail = { id ->
                         navController.navigate(Screen.Detail.createRoute(id))
                     },
@@ -94,7 +98,6 @@ fun CafeRecommenderApp(
                     navigateUp = {
                         navController.navigateUp()
                     },
-                    activity = activity,
                 )
             }
             composable(Screen.SignUp.route) {
