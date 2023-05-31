@@ -20,6 +20,8 @@
     <string name="rating">5,0/5,0</string>
     <string name="start_search">Start search</string>
     <string name="get_recommendation">Discover my recommendations</string>
+    <string name="exploring_cafe_options">Exploring cafe options..</string>
+    <string name="unknown">Unknown</string>
 
     <!-- Login Page -->
     <string name="sign_in">SIGN IN</string>
@@ -56,20 +58,27 @@
     <string name="your_profile">Your Profile</string>
     <string name="open">Open</string>
     <string name="popular">Popular</string>
+    <string name="loading_recommendations">Brewing your results..</string>
 
     <!-- Detail Page -->
     <string name="add_to_favorite">Add to favorite</string>
     <string name="description">Description</string>
+    <string name="serving_up_cafe_info">Serving up cafe information..</string>
+    <string name="retry">RETRY</string>
+    <string name="error_loading_cafe_detail">Oops! Couldn\'t fetch cafe details. Please try again.</string>
+
+    <!-- Profile Page -->
+    <string name="yes">YES</string>
+    <string name="logout_confirm_title">Logout</string>
+    <string name="logout_confirm_text">Are you sure you want to logout?</string>
     <string name="logout">Logout</string>
     <string name="your_profile_picture">Your profile picture</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="privacy_policy">Privacy policy</string>
     <string name="help_center">Help center</string>
     <string name="application_info">Application info</string>
-    <string name="unknown">Unknown</string>
-    <string name="loading_recommendations">Brewing your results..</string>
-    <string name="exploring_cafe_options">Exploring cafe options..</string>
-    <string name="serving_up_cafe_info">Serving up cafe information..</string>
-    <string name="retry">RETRY</string>
-    <string name="error_loading_cafe_detail">Oops! Couldn\'t fetch cafe details. Please try again.</string>
+    <string name="no">NO</string>
+    <string name="cannot_load_name">Cannot load name</string>
+    <string name="cannot_load_email">Cannot load email</string>
+    <string name="fetching_your_data">Fetching your data</string>
 </resources>

@@ -1,22 +1,22 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,18 +29,15 @@ import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.AuthViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
-import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.StandardTopBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ButtonSmall
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProfilePicture
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SettingsItem
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun ProfileScreen(
@@ -49,7 +46,8 @@ fun ProfileScreen(
     navigateToHelpCenter: () -> Unit,
     navigateToApplicationInfo: () -> Unit,
     preferenceViewModel: PreferenceViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
-    authViewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel = viewModel(),
+    state: ProfileState = rememberProfileState(showDialog = false)
 ) {
     val googleSignInClient: GoogleSignInClient
     val context = LocalContext.current
@@ -59,6 +57,7 @@ fun ProfileScreen(
     preferenceViewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Loading -> {
+                LoadingScreen(stringResource(id = R.string.fetching_your_data))
                 preferenceViewModel.getLogin()
             }
             is UiState.Success -> {
@@ -68,11 +67,11 @@ fun ProfileScreen(
                     email = data.email,
                     photoUrl = data.photoUrl,
                     onLogoutClick = {
-                        googleSignInClient.signOut().addOnCompleteListener {
-                            googleSignInClient.revokeAccess().addOnCompleteListener {
-                                preferenceViewModel.logout()
-                            }
-                        }
+                        state.showDialog = true
+                    },
+                    buttonText = stringResource(id = R.string.edit_profile),
+                    onButtonClick = {
+                        /*TODO: NAVIGATE TO EDIT PROFILE*/
                     },
                     onPrivacyPolicyClick = navigateToPrivacyPolicy,
                     onHelpCenterClick = navigateToHelpCenter,
@@ -80,11 +79,66 @@ fun ProfileScreen(
                 )
             }
             is UiState.Error -> {
-                /*TODO*/
+                ProfileContent(
+                    name = stringResource(id = R.string.cannot_load_name),
+                    email = stringResource(id = R.string.cannot_load_email),
+                    photoUrl = "",
+                    onLogoutClick = {
+                        state.showDialog = true
+                    },
+                    buttonText = stringResource(id = R.string.retry),
+                    onButtonClick = {
+                        preferenceViewModel.getLogin()
+                    },
+                    onPrivacyPolicyClick = navigateToPrivacyPolicy,
+                    onHelpCenterClick = navigateToHelpCenter,
+                    onApplicationInfoClick = navigateToApplicationInfo,
+                )
             }
         }
     }
+
+    if (state.showDialog) {
+        AlertDialog(
+            confirmButton = {
+                TextButton(onClick = {
+                    googleSignInClient.signOut().addOnCompleteListener {
+                        googleSignInClient.revokeAccess().addOnCompleteListener {
+                            preferenceViewModel.logout()
+                        }
+                    }
+                    state.showDialog = false
+                }) {
+                    Text(text = stringResource(id = R.string.yes))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    state.showDialog = false
+                }) {
+                    Text(text = stringResource(id = R.string.no))
+                }
+            },
+            onDismissRequest = { state.showDialog = false },
+            title = {
+                Text(text = stringResource(id = R.string.logout_confirm_title))
+            },
+            text = {
+                Text(text = stringResource(id = R.string.logout_confirm_text))
+            },
+        )
+    }
 }
+
+class ProfileState(initialShowDialog: Boolean) {
+    var showDialog by mutableStateOf(initialShowDialog)
+}
+
+@Composable
+fun rememberProfileState(showDialog: Boolean): ProfileState =
+    remember(showDialog) {
+        ProfileState(showDialog)
+    }
 
 @Composable
 fun ProfileContent(
@@ -92,6 +146,8 @@ fun ProfileContent(
     email: String,
     photoUrl: String,
     onLogoutClick: () -> Unit,
+    buttonText: String,
+    onButtonClick: () -> Unit,
     onPrivacyPolicyClick: () -> Unit,
     onHelpCenterClick: () -> Unit,
     onApplicationInfoClick: () -> Unit,
@@ -121,8 +177,8 @@ fun ProfileContent(
             Text(
                 text = email
             )
-            ButtonSmall(text = stringResource(id = R.string.edit_profile)) {
-                /* TODO */
+            ButtonSmall(text = buttonText) {
+                onButtonClick()
             }
             Divider(modifier = Modifier.padding(vertical = 24.dp))
             SettingsItem(

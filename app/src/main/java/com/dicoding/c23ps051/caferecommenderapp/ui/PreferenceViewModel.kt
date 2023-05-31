@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.model.Login
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -22,6 +23,7 @@ class PreferenceViewModel(private val pref: UserPreference) : ViewModel() {
     }
 
     fun getLogin() {
+        _uiState.value = UiState.Loading
         viewModelScope.launch {
             pref.getLogin()
                 .catch {
