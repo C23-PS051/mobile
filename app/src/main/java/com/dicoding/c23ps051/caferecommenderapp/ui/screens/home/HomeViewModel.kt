@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.data.CafeRepository
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -50,6 +51,7 @@ class HomeViewModel(private val repository: CafeRepository) : ViewModel() {
     fun getOnBudgetCafes() {
         // TODO: TO BE UPDATED (repository get function)
         viewModelScope.launch {
+            delay(4000)
             repository.getOnBudgetCafes()
                 .catch {
                     _uiStateOnBudget.value = UiState.Error(it.message.toString())

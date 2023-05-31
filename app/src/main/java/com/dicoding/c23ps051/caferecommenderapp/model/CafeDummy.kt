@@ -9,7 +9,7 @@ object CafeDummy {
             "Jl. Raya Ragunan No. 57, Kec. Pasar Minggu, RT.5/RW.4, Kota Jakarta Selatan",
             4.0,
             1,
-        0.1,
+            0.1,
             true,
             15000,
             40000
@@ -46,7 +46,7 @@ object CafeDummy {
             4.6,
             15,
             1.5,
-         false,
+            false,
             18000,
             85000
         ),
@@ -58,7 +58,7 @@ object CafeDummy {
             4.8,
             20,
             2.0,
-       true,
+            true,
             5000,
             50000
         )

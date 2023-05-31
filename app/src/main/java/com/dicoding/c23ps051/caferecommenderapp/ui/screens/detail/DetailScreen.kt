@@ -34,6 +34,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeDetailInfoItem
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.FavoriteButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 
 @Composable
@@ -49,6 +50,7 @@ fun DetailScreen(
     viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Loading -> {
+                LoadingScreen(stringResource(id = R.string.serving_up_cafe_info))
                 viewModel.getCafeById(itemId)
             }
             is UiState.Success -> {

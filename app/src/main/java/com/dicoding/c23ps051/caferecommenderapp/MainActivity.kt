@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var viewModel: PreferenceViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var location: String = getString(R.string.unknown)
+    private var location: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

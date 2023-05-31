@@ -16,7 +16,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.RepositoryViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeLargeList
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafesTopBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.home.HomeViewModel
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
@@ -30,6 +30,7 @@ fun RecommendedScreen(
     viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Loading -> {
+                LoadingScreen(stringResource(id = R.string.loading_recommendations))
                 viewModel.getAllRecommendedCafes()
             }
             is UiState.Success -> {

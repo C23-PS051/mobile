@@ -67,4 +67,7 @@
     <string name="help_center">Help center</string>
     <string name="application_info">Application info</string>
     <string name="unknown">Unknown</string>
+    <string name="loading_recommendations">Brewing your results..</string>
+    <string name="exploring_cafe_options">Exploring cafe options..</string>
+    <string name="serving_up_cafe_info">Serving up cafe information..</string>
 </resources>

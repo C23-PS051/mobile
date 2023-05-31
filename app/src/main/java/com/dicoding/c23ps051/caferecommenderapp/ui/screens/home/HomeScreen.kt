@@ -24,6 +24,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.HomeSection
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SearchCafe
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.WelcomeText
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
@@ -42,6 +43,7 @@ fun HomeScreen(
     viewModel.uiStateNearby.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Loading -> {
+                LoadingScreen(stringResource(id = R.string.exploring_cafe_options))
                 viewModel.getNearbyCafes()
             }
             is UiState.Success -> {
@@ -57,6 +59,7 @@ fun HomeScreen(
     viewModel.uiStateOpen24Hours.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Loading -> {
+                LoadingScreen(stringResource(id = R.string.exploring_cafe_options))
                 viewModel.getOpen24HoursCafes()
             }
             is UiState.Success -> {
@@ -72,6 +75,7 @@ fun HomeScreen(
     viewModel.uiStateOnBudget.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Loading -> {
+                LoadingScreen(stringResource(id = R.string.exploring_cafe_options))
                 viewModel.getOnBudgetCafes()
             }
             is UiState.Success -> {
