@@ -11,6 +11,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -21,12 +22,19 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
+import com.dicoding.c23ps051.caferecommenderapp.ui.AuthViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.CafeRecommenderApp
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -58,7 +66,8 @@ class MainActivity : ComponentActivity() {
                             CafeRecommenderApp(
                                 userPreference = UserPreference.getInstance(dataStore),
                                 isLogin = true,
-                                userLocation = location
+                                userLocation = location,
+                                activity = this,
                             )
                         }
                     }
@@ -73,7 +82,8 @@ class MainActivity : ComponentActivity() {
                             CafeRecommenderApp(
                                 userPreference = UserPreference.getInstance(dataStore),
                                 isLogin = false,
-                                userLocation = location
+                                userLocation = location,
+                                activity = this,
                             )
                         }
                     }

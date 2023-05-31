@@ -1,11 +1,15 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,20 +22,18 @@ fun StandardTopBar(
     title: String,
     showBackButton: Boolean = false,
 ) {
-    Column (
+    Row(
         modifier = modifier
-            .padding(horizontal = APP_CONTENT_PADDING)
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(APP_CONTENT_PADDING),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
     ) {
-        Spacer(modifier = Modifier.height(12.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            if (showBackButton) {
-                BackButton(onClick = { /* TODO */ })
-                Spacer(modifier = Modifier.width(4.dp))
-            }
-            TopBarTitle(title = title)
+        if (showBackButton) {
+            BackButton(onClick = { /* TODO */ })
+            Spacer(modifier = Modifier.width(4.dp))
         }
-        Spacer(modifier = Modifier.height(8.dp))
+        TopBarTitle(title = title)
     }
 }

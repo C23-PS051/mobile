@@ -18,9 +18,8 @@ fun TopBarTitle(
         text = title,
         style = MaterialTheme.typography.titleSmall,
         fontWeight = FontWeight.Normal,
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background),
         textAlign = TextAlign.Center,
+        modifier = modifier
+            .fillMaxWidth(),
     )
 }

@@ -79,6 +79,7 @@ fun ButtonSmall(
 
 @Composable
 fun GoogleButton(
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box (
@@ -90,7 +91,7 @@ fun GoogleButton(
             color = LightGray,
             textColor = Black,
         ) {
-            /* TODO */
+            onClick()
         }
         Image(
             painter = painterResource(id = R.drawable.google),
@@ -114,6 +115,6 @@ fun ButtonPreview() {
 @Composable
 fun GoogleButtonPreview() {
     CafeRecommenderAppTheme {
-        GoogleButton()
+        GoogleButton(onClick = {})
     }
 }
