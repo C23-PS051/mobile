@@ -60,10 +60,10 @@ fun CafesTopBar(
         Spacer(modifier = Modifier.height(12.dp))
         CafesTopBarOutlinedSearchBar()
         Spacer(modifier = Modifier.height(8.dp))
-        Row (
+        Row(
 //            modifier = Modifier
             horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
+        ) {
             CafesTopBarDropDown()
             Chip(text = stringResource(id = R.string.popular))
             Spacer(modifier = Modifier.height(4.dp))

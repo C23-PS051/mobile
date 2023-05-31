@@ -1,5 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens
 
+import android.app.Activity
 import android.location.Location
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -42,6 +43,11 @@ fun CafeRecommenderApp(
         ) {
             composable(Screen.Home.route) {
                 HomeScreen(
+                    userPreference = userPreference,
+                    onProfileClick = {
+                        navController.popBackStack()
+                        navController.navigate(Screen.Profile.route)
+                    },
                     navigateToDetail = { id ->
                         navController.navigate(Screen.Detail.createRoute(id))
                     },
@@ -83,14 +89,15 @@ fun CafeRecommenderApp(
                 )
             }
             composable(Screen.SignIn.route) {
-                SignInScreen(userPreference,
+                SignInScreen(
+                    userPreference = userPreference,
                     navigateToSignUp = {
                         navController.popBackStack()
                         navController.navigate(Screen.SignUp.route)
                     },
                     navigateUp = {
                         navController.navigateUp()
-                    }
+                    },
                 )
             }
             composable(Screen.SignUp.route) {
