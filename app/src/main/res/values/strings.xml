@@ -82,4 +82,9 @@
     <string name="cannot_load_email">Cannot load email</string>
     <string name="fetching_your_data">Fetching your data</string>
     <string name="press_again_to_exit">Press once again to exit</string>
+    <string name="check_your_input">Check your input!</string>
+    <string name="ok">OK</string>
+    <string name="cannot_sign_in">Can\'t sign in</string>
+    <string name="wrong_email_password">Wrong email or password!</string>
+    <string name="please_try_again">Please try again later!</string>
 </resources>

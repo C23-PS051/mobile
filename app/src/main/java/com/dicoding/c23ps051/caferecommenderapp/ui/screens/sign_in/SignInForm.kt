@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -17,7 +18,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.PasswordTextField
 
 @Composable
 fun SignInForm(
-    modifier: Modifier = Modifier,
+    focusManager: FocusManager,
     emailText: String,
     emailHasError: Boolean,
     emailOnValueChange: (String) -> Unit,
@@ -26,9 +27,8 @@ fun SignInForm(
     showPassword: Boolean,
     passwordOnValueChange: (String) -> Unit,
     onVisibilityClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    val focusManager = LocalFocusManager.current
-
     Column(
         modifier = modifier
     ) {

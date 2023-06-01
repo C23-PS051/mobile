@@ -1,30 +1,32 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in
 
 import android.app.Activity
-import android.net.Uri
-import android.os.Bundle
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.os.bundleOf
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.constants.MIN_PASSWORD_LENGTH
@@ -39,10 +41,10 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.GoogleButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OrDivider
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ToSignUpText
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProgressBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.STARTER_CONTENT_PADDING
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -56,24 +58,30 @@ fun SignInScreen(
     userPreference: UserPreference,
     modifier: Modifier = Modifier,
     signInViewModel: SignInViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
-    state: SignInFormState = rememberSignInFormState(
+    state: SignInState = rememberSignInState(
         text = "",
         hasError = false,
         showPassword = false,
+        showErrorDialog = false,
+        errorMessage = "",
+        showProgressBar = false,
     ),
     authViewModel: AuthViewModel = viewModel()
 ) {
     val googleSignInClient: GoogleSignInClient
     val auth: FirebaseAuth = Firebase.auth
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
 
     googleSignInClient = authViewModel.initGoogleSignInClient(context)
 
     fun firebaseAuthWithGoogle(idToken: String) {
+        state.showProgressBar = true
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    state.showProgressBar = false
                     val user = auth.currentUser
                     if (user != null) {
                         signInViewModel.signIn(
@@ -84,7 +92,9 @@ fun SignInScreen(
                         )
                     }
                 } else {
-                    /*TODO: SHOW ERROR*/
+                    state.showProgressBar = false
+                    state.showErrorDialog = true
+                    state.errorMessage = context.getString(R.string.please_try_again)
                 }
             }
     }
@@ -98,7 +108,8 @@ fun SignInScreen(
                 val account = task.getResult(ApiException::class.java)!!
                 firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
-                /*TODO: HANDLE ERROR*/
+                state.showErrorDialog = true
+                state.errorMessage = context.getString(R.string.please_try_again)
             }
         }
     }
@@ -110,9 +121,11 @@ fun SignInScreen(
 
     // Configure Email Sign In
     fun firebaseAuthWithEmail(email: String, password: String) {
+        state.showProgressBar = true
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    state.showProgressBar = false
                     val user = auth.currentUser
                     /*TODO: FIX THE TOKEN*/
                     if (user != null) {
@@ -124,7 +137,9 @@ fun SignInScreen(
                         )
                     }
                 } else {
-                    /*TODO: SHOW ERROR*/
+                    state.showProgressBar = false
+                    state.showErrorDialog = true
+                    state.errorMessage = context.getString(R.string.wrong_email_password)
                 }
             }
     }
@@ -135,6 +150,25 @@ fun SignInScreen(
 //        signInWithEmail = { firebaseAuthWithEmail(state.emailText, state.passwordText) },
 //        signInWithGoogle = { signInWithGoogle() },
 //    )
+
+    if (state.showErrorDialog) {
+        AlertDialog(
+            confirmButton = {
+                TextButton(onClick = { state.showErrorDialog = false }) {
+                    Text(text = stringResource(id = R.string.ok))
+                }
+            },
+            onDismissRequest = { state.showErrorDialog = false },
+            title = {
+                Text(text = stringResource(id = R.string.cannot_sign_in))
+            },
+            text = {
+                Text(text = state.errorMessage)
+            },
+        )
+    }
+
+    if (state.showProgressBar) { ProgressBar() }
 
     Column(
         modifier = modifier
@@ -147,6 +181,7 @@ fun SignInScreen(
         AppName()
         Spacer(modifier = Modifier.height(48.dp))
         SignInForm(
+            focusManager = focusManager,
             emailText = state.emailText,
             emailHasError = state.emailHasError,
             emailOnValueChange = { newText: String ->
@@ -169,7 +204,14 @@ fun SignInScreen(
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(text = stringResource(id = R.string.sign_in)) {
-            firebaseAuthWithEmail(state.emailText, state.passwordText)
+            focusManager.clearFocus()
+            val isInputValid = isInputValid(state.emailText, state.passwordText)
+            if (isInputValid && !state.emailHasError && !state.passwordHasError) {
+                firebaseAuthWithEmail(state.emailText, state.passwordText)
+            } else {
+                state.showErrorDialog = true
+                state.errorMessage = context.getString(R.string.check_your_input)
+            }
         }
         Spacer(modifier = Modifier.height(16.dp))
         ForgotPassword()
@@ -184,6 +226,10 @@ fun SignInScreen(
             navigateToSignUp()
         }
     }
+}
+
+fun isInputValid(email: String, password: String): Boolean {
+    return email != "" && password != ""
 }
 
 //@Composable
@@ -249,10 +295,13 @@ fun SignInScreen(
 //    }
 //}
 
-class SignInFormState(
+class SignInState(
     initialTextState: String,
     initialHasErrorState: Boolean,
     initialShowPasswordState: Boolean,
+    initialShowDialogErrorState: Boolean,
+    initialErrorMessageState: String,
+    initialShowProgressBarState: Boolean,
 ) {
     /* Email Field State */
     var emailText by mutableStateOf(initialTextState)
@@ -262,40 +311,23 @@ class SignInFormState(
     var passwordText by mutableStateOf(initialTextState)
     var passwordHasError by mutableStateOf(initialHasErrorState)
     var showPassword by mutableStateOf(initialShowPasswordState)
+
+    /* Other State */
+    var showErrorDialog by mutableStateOf(initialShowDialogErrorState)
+    var errorMessage by mutableStateOf(initialErrorMessageState)
+    var showProgressBar by mutableStateOf(initialShowProgressBarState)
 }
 
-val signInFormSaver = Saver<SignInFormState, Bundle>(
-    save = {
-        bundleOf(
-            "emailText" to it.emailText,
-            "emailHasError" to it.emailHasError,
-            "passwordText" to it.passwordText,
-            "passwordHasError" to it.passwordHasError,
-            "showPassword" to it.showPassword,
-        )
-    },
-    restore = {
-        SignInFormState(
-            initialTextState = it.getString("text", ""),
-            initialHasErrorState = it.getBoolean("hasError", false),
-            initialShowPasswordState = it.getBoolean("showPassword", false)
-        ).apply {
-            emailText = it.getString("emailText", "")
-            emailHasError = it.getBoolean("emailHasError", false)
-            passwordText = it.getString("passwordText", "")
-            passwordHasError = it.getBoolean("passwordHasError", false)
-            showPassword = it.getBoolean("showPassword", false)
-        }
-    }
-)
-
 @Composable
-fun rememberSignInFormState(
+fun rememberSignInState(
     text: String,
     hasError: Boolean,
     showPassword: Boolean,
-): SignInFormState = rememberSaveable(
-    saver = signInFormSaver
+    showErrorDialog: Boolean,
+    errorMessage: String,
+    showProgressBar: Boolean,
+): SignInState = remember(
+    text, hasError, showPassword, showErrorDialog, errorMessage, showProgressBar
 ) {
-    SignInFormState(text, hasError, showPassword)
+    SignInState(text, hasError, showPassword, showErrorDialog, errorMessage, showProgressBar)
 }
