@@ -15,14 +15,15 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
 
 @Composable
 fun OutlinedDropDown(
-    modifier: Modifier = Modifier,
     expanded: Boolean,
     options: List<String>,
     actions: List<() -> Unit>,
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     DropdownMenu(
         expanded = expanded,
-        onDismissRequest = { /*TODO*/ },
+        onDismissRequest = onDismissRequest,
         modifier = modifier
             .border(
                 width = 1.dp,

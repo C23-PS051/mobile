@@ -1,5 +1,7 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.home
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -9,8 +11,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,15 +29,18 @@ import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.RepositoryViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackPressHandler
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Header
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.HomeSection
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SearchCafe
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.WelcomeText
+import com.dicoding.c23ps051.caferecommenderapp.ui.event.BackPress
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile.ProfileContent
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -43,6 +53,9 @@ fun HomeScreen(
     ),
     preferenceViewModel: PreferenceViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
 ) {
+    var backPressState by remember { mutableStateOf<BackPress>(BackPress.Idle) }
+    val context = LocalContext.current
+
     var nearbyCafes = emptyList<Cafe>()
     var open24HoursCafes = emptyList<Cafe>()
     var onBudgetCafes = emptyList<Cafe>()
@@ -141,6 +154,20 @@ fun HomeScreen(
                 /*TODO*/
             }
         }
+    }
+
+    // User needs to press back twice to exit
+    BackPressHandler(
+        backPressState = backPressState,
+        toggleBackPressState = {
+            backPressState = if (backPressState == BackPress.Idle) {
+                BackPress.InitialTouch
+            } else {
+                BackPress.Idle
+            }
+        }
+    ) {
+        Toast.makeText(context, context.getText(R.string.press_again_to_exit), Toast.LENGTH_SHORT).show()
     }
 }
 

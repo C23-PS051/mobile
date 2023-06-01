@@ -115,7 +115,6 @@ fun CafeItemLarge(
     modifier: Modifier = Modifier,
     onClick: (Long) -> Unit = {},
 ) {
-    Log.d("MyLogger", "log is working")
     val addressLetterLimit = 50
     var newAddress = ""
     if (address.length > addressLetterLimit) {
@@ -170,7 +169,7 @@ fun CafeItemLarge(
                     )
                     Text(
                         text = buildAnnotatedString {
-                            append("$rating/5 {$ratingCount)")
+                            append("$rating/5 ($ratingCount)")
                             withStyle(SpanStyle(color = Gray)) {
                                 append(" | ")
                             }
