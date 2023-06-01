@@ -81,4 +81,5 @@
     <string name="cannot_load_name">Cannot load name</string>
     <string name="cannot_load_email">Cannot load email</string>
     <string name="fetching_your_data">Fetching your data</string>
+    <string name="press_again_to_exit">Press once again to exit</string>
 </resources>
