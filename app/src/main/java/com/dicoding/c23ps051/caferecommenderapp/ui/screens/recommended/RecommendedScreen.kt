@@ -1,6 +1,7 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended
 
 import android.os.Bundle
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
@@ -78,6 +79,9 @@ fun RecommendedScreen(
                     },
                     setSelectedTextState = { selectedText ->
                         state.selectedText = selectedText
+                    },
+                    onDismissRequest = {
+                        state.expanded = false
                     }
                 )
             }
@@ -94,6 +98,23 @@ fun RecommendedScreen(
                 isFirstIndexVisible = firstVisibleItemIndex == 0
             }
     }
+
+//    Log.d("MyLogger", state.expanded.toString())
+//
+//    if (state.expanded) {
+//        BackPressHandler(
+//            backPressState = BackPress.InitialTouch,
+//            toggleBackPressState = {
+//                backPressState = if (backPressState == BackPress.Idle) {
+//                    BackPress.InitialTouch
+//                } else {
+//                    BackPress.Idle
+//                }
+//            }
+//        ) {
+//            state.expanded = false
+//        }
+//    }
 
     // When there is query on the search bar or user has scrolled down the list or state is not the same as initial
     // Then handle the back press differently: Clear the search bar and scroll back to the top
@@ -189,6 +210,7 @@ fun RecommendedContent(
     expanded: Boolean,
     setSelectedTextState: (String) -> Unit,
     setExpandedState: (Boolean) -> Unit,
+    onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -203,6 +225,7 @@ fun RecommendedContent(
                 selectedText = selectedText,
                 setExpandedState = setExpandedState,
                 setSelectedTextState = setSelectedTextState,
+                onDismissRequest = onDismissRequest,
             )
          },
         modifier = modifier

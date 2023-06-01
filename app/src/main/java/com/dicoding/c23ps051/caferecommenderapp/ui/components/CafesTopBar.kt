@@ -46,6 +46,7 @@ fun CafesTopBar(
     expanded: Boolean,
     setSelectedTextState: (String) -> Unit,
     setExpandedState: (Boolean) -> Unit,
+    onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     showBackButton: Boolean = false,
 ) {
@@ -81,6 +82,7 @@ fun CafesTopBar(
                 selectedText = selectedText,
                 setExpandedState = setExpandedState,
                 setSelectedTextState = setSelectedTextState,
+                onDismissRequest = onDismissRequest,
             )
             Chip(text = stringResource(id = R.string.popular))
             Spacer(modifier = Modifier.height(4.dp))
@@ -115,11 +117,12 @@ fun CafesTopBarOutlinedSearchBar(
 
 @Composable
 fun CafesTopBarDropDown(
-    modifier: Modifier = Modifier,
     selectedText: String,
     expanded: Boolean,
     setSelectedTextState: (String) -> Unit,
     setExpandedState: (Boolean) -> Unit,
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val options = listOf(
         stringResource(id = R.string.highest_rating),
@@ -152,6 +155,7 @@ fun CafesTopBarDropDown(
         expanded = expanded,
         options = options,
         actions = actions,
+        onDismissRequest = onDismissRequest
     )
 }
 
