@@ -4,16 +4,13 @@ import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -32,6 +29,7 @@ import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.constants.MIN_PASSWORD_LENGTH
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.AuthViewModel
+import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.AppLogo
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.AppName
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
@@ -39,9 +37,8 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ForgotPassword
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.GoogleButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OrDivider
-import com.dicoding.c23ps051.caferecommenderapp.ui.components.ToSignUpText
-import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProgressBar
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.ToSignUpText
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.STARTER_CONTENT_PADDING
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient

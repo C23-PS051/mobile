@@ -8,11 +8,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,10 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Black
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
-import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.LightGray
-import com.dicoding.c23ps051.caferecommenderapp.ui.theme.MildWhite
-import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Red
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.White
 
 @Composable

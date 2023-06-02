@@ -1,6 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -10,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
 
 @Composable
 fun Chip(

@@ -1,6 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
-import android.widget.ProgressBar
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size

@@ -13,8 +13,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -29,11 +29,11 @@ import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.AuthViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
-import com.dicoding.c23ps051.caferecommenderapp.ui.components.StandardTopBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ButtonSmall
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProfilePicture
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SettingsItem
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.StandardTopBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING

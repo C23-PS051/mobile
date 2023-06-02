@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
-import com.dicoding.c23ps051.caferecommenderapp.model.CafeDummy
 
 @Composable
 fun CafeList(

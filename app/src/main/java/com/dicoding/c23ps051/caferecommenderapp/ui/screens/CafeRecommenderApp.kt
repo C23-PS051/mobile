@@ -1,7 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens
 
-import android.app.Activity
-import android.location.Location
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable

@@ -1,6 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.home
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,11 +14,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
@@ -33,14 +30,9 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackPressHandler
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Header
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.HomeSection
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SearchCafe
-import com.dicoding.c23ps051.caferecommenderapp.ui.components.WelcomeText
 import com.dicoding.c23ps051.caferecommenderapp.ui.event.BackPress
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile.ProfileContent
-import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
-import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
-import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
