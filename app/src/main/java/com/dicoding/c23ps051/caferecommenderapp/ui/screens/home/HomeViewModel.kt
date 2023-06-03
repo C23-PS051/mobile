@@ -51,7 +51,6 @@ class HomeViewModel(private val repository: CafeRepository) : ViewModel() {
     fun getOnBudgetCafes() {
         // TODO: TO BE UPDATED (repository get function)
         viewModelScope.launch {
-            delay(4000)
             repository.getOnBudgetCafes()
                 .catch {
                     _uiStateOnBudget.value = UiState.Error(it.message.toString())
