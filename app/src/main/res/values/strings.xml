@@ -87,4 +87,12 @@
     <string name="cannot_sign_in">Can\'t sign in</string>
     <string name="wrong_email_password">Wrong email or password!</string>
     <string name="please_try_again">Please try again later!</string>
+    <string name="need_location_permission">To continue, we need to access your location</string>
+    <string name="turn_on_location">TURN ON LOCATION</string>
+    <string name="location_permission_not_granted">It looks like you have denied giving location permission. For the best experience, consider give access to your location. You can go to settings to change the permission.</string>
+    <string name="getting_location">Getting your location</string>
+    <string name="get_location_failed">Get location has failed. You can retry or skip this to continue without location information.</string>
+    <string name="go_to_settings">GO TO SETTINGS</string>
+    <string name="skip">SKIP</string>
+    <string name="not_set">Not set</string>
 </resources>

@@ -29,7 +29,7 @@ fun CafeRecommenderApp(
     userPreference: UserPreference,
     isLogin: Boolean,
     modifier: Modifier = Modifier,
-    userLocation: String = stringResource(id = R.string.unknown),
+    userLocation: String? = null,
     navController: NavHostController = rememberNavController(),
 ) {
     Scaffold(

@@ -25,7 +25,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
 @Composable
 fun Header(
-    userLocation: String,
+    userLocation: String?,
     photoUrl: String,
     onProfileClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -50,7 +50,7 @@ fun Header(
                 fontSize = 12.sp
             )
             Text(
-                text = userLocation,
+                text = userLocation ?: stringResource(id = R.string.not_set),
                 fontWeight = FontWeight.W500,
                 fontSize = 14.sp
             )

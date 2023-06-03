@@ -39,7 +39,7 @@ fun HomeScreen(
     userPreference: UserPreference,
     navigateToDetail: (Long) -> Unit,
     onProfileClick: () -> Unit,
-    userLocation: String,
+    userLocation: String?,
     viewModel: HomeViewModel = viewModel(
         factory = RepositoryViewModelFactory(Injection.provideRepository())
     ),
@@ -170,7 +170,7 @@ fun notifyHomeContent(
     open24HoursCafes: List<Cafe>,
     onBudgetCafes: List<Cafe>,
     navigateToDetail: (Long) -> Unit,
-    userLocation: String,
+    userLocation: String?,
     photoUrl: String,
 ) {
     if (nearbyCafes.isNotEmpty() && open24HoursCafes.isNotEmpty() && onBudgetCafes.isNotEmpty()) {
@@ -193,7 +193,7 @@ fun HomeContent(
     nearbyCafes: List<Cafe>,
     open24HoursCafes: List<Cafe>,
     onBudgetCafes: List<Cafe>,
-    userLocation: String,
+    userLocation: String?,
     photoUrl: String,
     modifier: Modifier = Modifier,
 ) {
