@@ -45,8 +45,6 @@ class MainActivity : ComponentActivity() {
     private lateinit var locationViewModel: LocationViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private lateinit var newUserObserver: Observer<Boolean>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -112,8 +110,9 @@ class MainActivity : ComponentActivity() {
                         }
 
                         else -> {
-                            var isValidRegion = false
+                            var isValidRegion = true
                             if (locationViewModel.location.value != null) {
+                                isValidRegion = false
                                 REGIONS.forEach { region ->
                                     if (locationViewModel.location.value.equals(region)) {
                                         isValidRegion = true
@@ -147,14 +146,6 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                             }
-
-//                                CafeRecommenderApp(
-//                                    userPreference = UserPreference.getInstance(
-//                                        dataStore
-//                                    ),
-//                                    isLogin = true,
-//                                    userLocation = locationViewModel.location.value,
-//                                )
                         }
                     }
                 }
