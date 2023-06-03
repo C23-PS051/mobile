@@ -1,9 +1,11 @@
-package com.dicoding.c23ps051.caferecommenderapp.ui.screens.error
+package com.dicoding.c23ps051.caferecommenderapp.ui.screens.info
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -19,8 +21,12 @@ import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 
 @Composable
-fun ErrorScreen(
+fun InfoScreen(
     text: String,
+    actionText: String,
+    secondaryActionText: String,
+    action: () -> Unit,
+    secondaryAction: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -44,8 +50,12 @@ fun ErrorScreen(
             modifier = Modifier
                 .padding(vertical = 24.dp)
         )
-        Button(text = stringResource(id = R.string.retry)) {
-            /*TODO*/
+        Button(text = actionText) {
+            action()
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(text = secondaryActionText) {
+            secondaryAction()
         }
     }
 }
