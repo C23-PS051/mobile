@@ -127,8 +127,8 @@ class MainActivity : ComponentActivity() {
                                             region = locationViewModel.location.value,
                                             navigateUp = { setDefaultContent(true, locationViewModel.location.value) },
                                             onSubmit = {
-                                                setDefaultContent(true, locationViewModel.location.value)
                                                 viewModel.setNotNewUser()
+                                                setDefaultContent(true, locationViewModel.location.value)
                                             }
                                         )
                                     }
@@ -141,7 +141,21 @@ class MainActivity : ComponentActivity() {
                                         text = getString(R.string.location_not_valid),
                                         actionText = getString(R.string.ok),
                                         action = {
-                                            setDefaultContent(true, null)
+                                            locationViewModel.setLocationToNull()
+                                            if (user.isNewUser) {
+                                                setComposable {
+                                                    SearchScreen(
+                                                        region = locationViewModel.location.value,
+                                                        navigateUp = { setDefaultContent(true, locationViewModel.location.value) },
+                                                        onSubmit = {
+                                                            viewModel.setNotNewUser()
+                                                            setDefaultContent(true, locationViewModel.location.value)
+                                                        }
+                                                    )
+                                                }
+                                            } else {
+                                                setDefaultContent(true, locationViewModel.location.value)
+                                            }
                                         }
                                     )
                                 }
