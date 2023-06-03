@@ -11,5 +11,5 @@ sealed class Screen(val route: String) {
     object Detail : Screen("detail/{id}") {
         fun createRoute(id: Long) = "detail/$id"
     }
-    object Location : Screen("location")
+    object Search : Screen("search")
 }

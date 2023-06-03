@@ -20,6 +20,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ClickableText
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SignUpForm
+import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.STARTER_CONTENT_PADDING
 
@@ -29,28 +30,33 @@ fun SignUpScreen(
     navigateUp: () -> Unit,
     navigateToSignIn: () -> Unit,
 ) {
-    Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .padding(STARTER_CONTENT_PADDING),
-        verticalArrangement = Arrangement.Center,
-    ) {
-        BackButton(onClick = { navigateUp() })
-        AppLogo(modifier = Modifier.align(Alignment.CenterHorizontally))
-        AppName()
-        Spacer(modifier = Modifier.height(48.dp))
-        SignUpForm()
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(text = stringResource(id = R.string.sign_up)) {
-            /* TODO */
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        ClickableText(
-            text = stringResource(id = R.string.already_have_account),
-            onClick = {
-                navigateToSignIn()
-            }
+    Column {
+        BackButton(
+            onClick = { navigateUp() },
+            modifier = Modifier.padding(APP_CONTENT_PADDING)
         )
+        Column(
+            modifier = modifier
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = STARTER_CONTENT_PADDING),
+            verticalArrangement = Arrangement.Center,
+        ) {
+            AppLogo(modifier = Modifier.align(Alignment.CenterHorizontally))
+            AppName()
+            Spacer(modifier = Modifier.height(48.dp))
+            SignUpForm()
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(text = stringResource(id = R.string.sign_up)) {
+                /* TODO */
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            ClickableText(
+                text = stringResource(id = R.string.already_have_account),
+                onClick = {
+                    navigateToSignIn()
+                }
+            )
+        }
     }
 }
 

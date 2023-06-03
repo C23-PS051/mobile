@@ -5,5 +5,6 @@ data class Login(
     val email: String,
     val token: String,
     val photoUrl: String,
-    val isLogin: Boolean
+    val isLogin: Boolean,
+    val isNewUser: Boolean,
 )

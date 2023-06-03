@@ -3,12 +3,17 @@ package com.dicoding.c23ps051.caferecommenderapp.ui.screens
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dicoding.c23ps051.caferecommenderapp.R
@@ -20,6 +25,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.screens.favorite.FavoriteScre
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.home.HomeScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile.ProfileScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended.RecommendedScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended.SearchScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in.SignInScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_up.SignUpScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.welcome.WelcomeScreen
@@ -32,24 +38,48 @@ fun CafeRecommenderApp(
     userLocation: String? = null,
     navController: NavHostController = rememberNavController(),
 ) {
+    var bottomBarState by remember { mutableStateOf(true) }
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+    when (navBackStackEntry?.destination?.route) {
+        Screen.Home.route -> {
+            bottomBarState = true
+        }
+        Screen.Recommended.route -> {
+            bottomBarState = true
+        }
+        Screen.Favorite.route -> {
+            bottomBarState = true
+        }
+        Screen.Profile.route -> {
+            bottomBarState = true
+        }
+        else -> {
+            bottomBarState = false
+        }
+    }
+
     Scaffold(
-        bottomBar = { if (isLogin) BottomBar(navController) },
+        bottomBar = { if (bottomBarState) BottomBar(navController) },
         modifier = modifier
     ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = if (isLogin) Screen.Home.route else Screen.Welcome.route,
-            modifier = Modifier.padding(innerPadding)
+            modifier = modifier.padding(innerPadding)
         ) {
             composable(Screen.Home.route) {
                 HomeScreen(
                     userPreference = userPreference,
                     onProfileClick = {
-                        navController.popBackStack()
                         navController.navigate(Screen.Profile.route)
                     },
                     navigateToDetail = { id ->
                         navController.navigate(Screen.Detail.createRoute(id))
+                    },
+                    navigateToSearchCafe = {
+                        navController.navigate(Screen.Search.route)
                     },
                     userLocation = userLocation
                 )
@@ -121,6 +151,14 @@ fun CafeRecommenderApp(
                     navigateBack = {
                         navController.navigateUp()
                     }
+                )
+            }
+            composable(Screen.Search.route) {
+                SearchScreen(
+                    navigateUp = {
+                        navController.navigateUp()
+                    },
+                    onSubmit = { /*TODO*/ }
                 )
             }
         }
