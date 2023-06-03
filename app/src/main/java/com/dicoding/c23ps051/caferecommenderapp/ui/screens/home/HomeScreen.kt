@@ -38,6 +38,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 fun HomeScreen(
     userPreference: UserPreference,
     navigateToDetail: (Long) -> Unit,
+    navigateToSearchCafe: () -> Unit,
     onProfileClick: () -> Unit,
     userLocation: String?,
     viewModel: HomeViewModel = viewModel(
@@ -67,6 +68,7 @@ fun HomeScreen(
                     open24HoursCafes = open24HoursCafes,
                     onBudgetCafes = onBudgetCafes,
                     navigateToDetail = navigateToDetail,
+                    navigateToSearchCafe = navigateToSearchCafe,
                     userLocation = userLocation,
                     photoUrl = photoUrl
                 )
@@ -91,6 +93,7 @@ fun HomeScreen(
                     open24HoursCafes = open24HoursCafes,
                     onBudgetCafes = onBudgetCafes,
                     navigateToDetail = navigateToDetail,
+                    navigateToSearchCafe = navigateToSearchCafe,
                     userLocation = userLocation,
                     photoUrl = photoUrl
                 )
@@ -115,6 +118,7 @@ fun HomeScreen(
                     open24HoursCafes = open24HoursCafes,
                     onBudgetCafes = onBudgetCafes,
                     navigateToDetail = navigateToDetail,
+                    navigateToSearchCafe = navigateToSearchCafe,
                     userLocation = userLocation,
                     photoUrl = photoUrl
                 )
@@ -138,6 +142,7 @@ fun HomeScreen(
                     open24HoursCafes = open24HoursCafes,
                     onBudgetCafes = onBudgetCafes,
                     navigateToDetail = navigateToDetail,
+                    navigateToSearchCafe = navigateToSearchCafe,
                     userLocation = userLocation,
                     photoUrl = photoUrl
                 )
@@ -170,12 +175,14 @@ fun notifyHomeContent(
     open24HoursCafes: List<Cafe>,
     onBudgetCafes: List<Cafe>,
     navigateToDetail: (Long) -> Unit,
+    navigateToSearchCafe: () -> Unit,
     userLocation: String?,
     photoUrl: String,
 ) {
     if (nearbyCafes.isNotEmpty() && open24HoursCafes.isNotEmpty() && onBudgetCafes.isNotEmpty()) {
         HomeContent(
             navigateToDetail = navigateToDetail,
+            navigateToSearchCafe = navigateToSearchCafe,
             onProfileClick = onProfileClick,
             nearbyCafes = nearbyCafes,
             open24HoursCafes = open24HoursCafes,
@@ -189,6 +196,7 @@ fun notifyHomeContent(
 @Composable
 fun HomeContent(
     navigateToDetail: (Long) -> Unit,
+    navigateToSearchCafe: () -> Unit,
     onProfileClick: () -> Unit,
     nearbyCafes: List<Cafe>,
     open24HoursCafes: List<Cafe>,
@@ -207,7 +215,7 @@ fun HomeContent(
 
         ) {
             Spacer(modifier = Modifier.height(8.dp))
-            SearchCafe()
+            SearchCafe(navigateToSearchCafe = navigateToSearchCafe)
             Column (
                 modifier = Modifier
                     .padding(horizontal = 16.dp),

@@ -36,7 +36,7 @@ class SignInViewModel(private val pref: UserPreference) : ViewModel() {
 //    }
 
     fun signIn(name: String, email: String, token: String, photoUrl: String) {
-        val loginData = Login(name, email, token, photoUrl, true)
+        val loginData = Login(name, email, token, photoUrl, isLogin = true, isNewUser = true)
 
         viewModelScope.launch {
             pref.saveLogin(loginData)

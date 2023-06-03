@@ -28,6 +28,10 @@ fun CafesTopBar(
     setSelectedTextState: (String) -> Unit,
     setExpandedState: (Boolean) -> Unit,
     onDismissRequest: () -> Unit,
+    isRegionChipChecked: Boolean,
+    onRegionChipClicked: () -> Unit,
+    isOpenChipChecked: Boolean,
+    onOpenChipClicked: () -> Unit,
     modifier: Modifier = Modifier,
     showBackButton: Boolean = false,
 ) {
@@ -65,9 +69,17 @@ fun CafesTopBar(
                 setSelectedTextState = setSelectedTextState,
                 onDismissRequest = onDismissRequest,
             )
-            Chip(text = stringResource(id = R.string.popular))
+            Chip(
+                text = stringResource(id = R.string.my_region),
+                isChecked = isRegionChipChecked,
+                onClick = onRegionChipClicked,
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            Chip(text = stringResource(id = R.string.open))
+            Chip(
+                text = stringResource(id = R.string.open),
+                isChecked = isOpenChipChecked,
+                onClick = onOpenChipClicked,
+            )
         }
         Spacer(modifier = Modifier.height(8.dp))
     }
@@ -127,7 +139,10 @@ fun CafesTopBarDropDown(
         onClick = {
             setExpandedState(!expanded)
         },
-        notOnFocus = !expanded
+        notOnFocus = !expanded,
+        verticalPadding = 2,
+        horizontalPadding = 8,
+        fontSize = 12,
     )
     
     Spacer(modifier = Modifier.height(4.dp))

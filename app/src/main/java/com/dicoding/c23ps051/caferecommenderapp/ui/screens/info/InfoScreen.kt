@@ -24,10 +24,10 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 fun InfoScreen(
     text: String,
     actionText: String,
-    secondaryActionText: String,
     action: () -> Unit,
-    secondaryAction: () -> Unit,
     modifier: Modifier = Modifier,
+    secondaryActionText: String = "",
+    secondaryAction: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -54,8 +54,10 @@ fun InfoScreen(
             action()
         }
         Spacer(modifier = Modifier.height(8.dp))
-        Button(text = secondaryActionText) {
-            secondaryAction()
+        if (secondaryActionText != "") {
+            Button(text = secondaryActionText) {
+                secondaryAction()
+            }
         }
     }
 }

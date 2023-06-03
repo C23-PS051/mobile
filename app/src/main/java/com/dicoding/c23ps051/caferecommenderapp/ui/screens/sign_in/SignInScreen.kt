@@ -39,6 +39,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.GoogleButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OrDivider
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProgressBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ToSignUpText
+import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.STARTER_CONTENT_PADDING
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -167,60 +168,65 @@ fun SignInScreen(
 
     if (state.showProgressBar) { ProgressBar() }
 
-    Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .padding(STARTER_CONTENT_PADDING),
-        verticalArrangement = Arrangement.Center,
-    ) {
-        BackButton(onClick = { navigateUp() })
-        AppLogo(modifier = Modifier.align(Alignment.CenterHorizontally))
-        AppName()
-        Spacer(modifier = Modifier.height(48.dp))
-        SignInForm(
-            focusManager = focusManager,
-            emailText = state.emailText,
-            emailHasError = state.emailHasError,
-            emailOnValueChange = { newText: String ->
-                state.emailText = newText
-                val emailRegex = Regex("^([a-zA-Z0-9_.+-])+@([a-zA-Z0-9-])+\\.([a-zA-Z0-9-.])+$")
-                state.emailHasError = !emailRegex.matches(state.emailText)
-            },
-            passwordText = state.passwordText,
-            passwordHasError = state.passwordHasError,
-            showPassword = state.showPassword,
-            passwordOnValueChange = { newText: String ->
-                state.passwordText = newText
-                val passwordRegex = Regex("^(?=.*[A-Za-z])[A-Za-z\\d](?!.*\\s).{8,}\$")
+    Column {
+        BackButton(
+            onClick = { navigateUp() },
+            modifier = Modifier.padding(APP_CONTENT_PADDING)
+        )
+        Column(
+            modifier = modifier
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = STARTER_CONTENT_PADDING),
+            verticalArrangement = Arrangement.Center,
+        ) {
+            AppLogo(modifier = Modifier.align(Alignment.CenterHorizontally))
+            AppName()
+            Spacer(modifier = Modifier.height(48.dp))
+            SignInForm(
+                focusManager = focusManager,
+                emailText = state.emailText,
+                emailHasError = state.emailHasError,
+                emailOnValueChange = { newText: String ->
+                    state.emailText = newText
+                    val emailRegex = Regex("^([a-zA-Z0-9_.+-])+@([a-zA-Z0-9-])+\\.([a-zA-Z0-9-.])+$")
+                    state.emailHasError = !emailRegex.matches(state.emailText)
+                },
+                passwordText = state.passwordText,
+                passwordHasError = state.passwordHasError,
+                showPassword = state.showPassword,
+                passwordOnValueChange = { newText: String ->
+                    state.passwordText = newText
+                    val passwordRegex = Regex("^(?=.*[A-Za-z])[A-Za-z\\d](?!.*\\s).{8,}\$")
 
-                state.passwordHasError = state.passwordText.length < MIN_PASSWORD_LENGTH || !passwordRegex.matches(state.passwordText)
-            },
-            onVisibilityClick = {
-                state.showPassword = !state.showPassword
+                    state.passwordHasError = state.passwordText.length < MIN_PASSWORD_LENGTH || !passwordRegex.matches(state.passwordText)
+                },
+                onVisibilityClick = {
+                    state.showPassword = !state.showPassword
+                }
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(text = stringResource(id = R.string.sign_in)) {
+                focusManager.clearFocus()
+                val isInputValid = isInputValid(state.emailText, state.passwordText)
+                if (isInputValid && !state.emailHasError && !state.passwordHasError) {
+                    firebaseAuthWithEmail(state.emailText, state.passwordText)
+                } else {
+                    state.showErrorDialog = true
+                    state.errorMessage = context.getString(R.string.check_your_input)
+                }
             }
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(text = stringResource(id = R.string.sign_in)) {
-            focusManager.clearFocus()
-            val isInputValid = isInputValid(state.emailText, state.passwordText)
-            if (isInputValid && !state.emailHasError && !state.passwordHasError) {
-                firebaseAuthWithEmail(state.emailText, state.passwordText)
-            } else {
-                state.showErrorDialog = true
-                state.errorMessage = context.getString(R.string.check_your_input)
+            Spacer(modifier = Modifier.height(16.dp))
+            ForgotPassword()
+            Spacer(modifier = Modifier.height(48.dp))
+            OrDivider()
+            Spacer(modifier = Modifier.height(48.dp))
+            GoogleButton(
+                onClick = { signInWithGoogle() }
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            ToSignUpText {
+                navigateToSignUp()
             }
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        ForgotPassword()
-        Spacer(modifier = Modifier.height(48.dp))
-        OrDivider()
-        Spacer(modifier = Modifier.height(48.dp))
-        GoogleButton(
-            onClick = { signInWithGoogle() }
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        ToSignUpText {
-            navigateToSignUp()
         }
     }
 }

@@ -3,6 +3,7 @@ package com.dicoding.c23ps051.caferecommenderapp.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dicoding.c23ps051.caferecommenderapp.R
@@ -79,15 +81,19 @@ fun OutlinedFormTextField(
 
 @Composable
 fun OutlinedDropDownTextField(
-    modifier: Modifier = Modifier,
     text: String,
-    shape: CornerBasedShape = MaterialTheme.shapes.small,
     onClick: () -> Unit,
     notOnFocus: Boolean,
+    verticalPadding: Int,
+    horizontalPadding: Int,
+    fontSize: Int,
+    modifier: Modifier = Modifier,
+    shape: CornerBasedShape = MaterialTheme.shapes.small,
 ) {
     Row (
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier
             .clip(shape)
             .border(
                 width = if (notOnFocus) 1.dp else 2.dp,
@@ -95,13 +101,13 @@ fun OutlinedDropDownTextField(
                 shape = shape,
             )
             .clickable { onClick() }
-            .padding(vertical = 2.dp, horizontal = 8.dp)
+            .padding(vertical = verticalPadding.dp, horizontal = horizontalPadding.dp)
     ) {
         Text(
             text = text,
             color = if (notOnFocus) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.primary,
             fontWeight = if (notOnFocus) FontWeight.Normal else FontWeight.Bold,
-            fontSize = 12.sp,
+            fontSize = fontSize.sp,
         )
         Spacer(modifier = Modifier.width(8.dp))
         Image(
@@ -109,7 +115,8 @@ fun OutlinedDropDownTextField(
                 else painterResource(id = R.drawable.expand_less),
             contentDescription = if (notOnFocus) stringResource(id = R.string.expand_more)
                 else stringResource(id = R.string.expand_less),
-            modifier = Modifier.align(Alignment.CenterVertically)
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
         )
     }
 }

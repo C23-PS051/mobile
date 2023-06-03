@@ -57,7 +57,7 @@
     <string name="rating_count">Rating count</string>
     <string name="your_profile">Your Profile</string>
     <string name="open">Open</string>
-    <string name="popular">Popular</string>
+    <string name="my_region">My region</string>
     <string name="loading_recommendations">Brewing your results..</string>
 
     <!-- Detail Page -->
@@ -95,4 +95,20 @@
     <string name="go_to_settings">GO TO SETTINGS</string>
     <string name="skip">SKIP</string>
     <string name="not_set">Not set</string>
+    <string name="what_are_we_looking_for">What are we looking for today?</string>
+    <string name="region">Region</string>
+    <string name="all">All</string>
+    <string name="submit">SUBMIT</string>
+    <string name="ratings">Ratings</string>
+    <string name="one_star_rating">1.0</string>
+    <string name="two_star_rating">2.0</string>
+    <string name="three_star_rating">3.0</string>
+    <string name="four_star_rating">4.0</string>
+    <string name="five_star_rating">5.0</string>
+    <string name="price_range">Price range</string>
+    <string name="low_price">$</string>
+    <string name="mid_price">$$</string>
+    <string name="high_price">$$$</string>
+    <string name="facilities">Facilities</string>
+    <string name="location_not_valid">We are currently unavailable in your area. But you can still browse and try our service.</string>
 </resources>

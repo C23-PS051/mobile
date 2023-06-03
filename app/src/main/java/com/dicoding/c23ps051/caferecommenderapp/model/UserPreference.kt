@@ -17,7 +17,8 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
                 preferences[EMAIL_KEY] ?: "",
                 preferences[TOKEN_KEY] ?: "",
                 preferences[PHOTO_KEY] ?: "",
-                preferences[STATE_KEY] ?: false
+                preferences[STATE_KEY] ?: false,
+                preferences[NEW_USER_KEY] ?: false,
             )
         }
     }
@@ -29,6 +30,13 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
             preferences[TOKEN_KEY] = login.token
             preferences[PHOTO_KEY] = login.photoUrl
             preferences[STATE_KEY] = login.isLogin
+            preferences[NEW_USER_KEY] = login.isNewUser
+        }
+    }
+
+    suspend fun setNotNewUser() {
+        dataStore.edit { preferences ->
+            preferences[NEW_USER_KEY] = false
         }
     }
 
@@ -39,12 +47,19 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
             preferences[TOKEN_KEY] = ""
             preferences[PHOTO_KEY] = ""
             preferences[STATE_KEY] = false
+            preferences[NEW_USER_KEY] = false
         }
     }
 
     fun getToken(): Flow<String> {
         return dataStore.data.map { preferences ->
             preferences[TOKEN_KEY] ?: ""
+        }
+    }
+
+    fun getIsNewUser(): Flow<Boolean> {
+        return dataStore.data.map { preferences ->
+            preferences[NEW_USER_KEY] ?: false
         }
     }
 
@@ -57,6 +72,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         private var STATE_KEY = booleanPreferencesKey("state")
         private var PHOTO_KEY = stringPreferencesKey("photo")
         private var TOKEN_KEY = stringPreferencesKey("token")
+        private var NEW_USER_KEY = booleanPreferencesKey("new_user")
 
         fun getInstance(dataStore: DataStore<Preferences>):UserPreference {
             return INSTANCE ?: synchronized(this) {

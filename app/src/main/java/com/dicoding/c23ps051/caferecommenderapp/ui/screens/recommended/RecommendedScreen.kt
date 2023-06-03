@@ -41,7 +41,12 @@ fun RecommendedScreen(
     viewModel: RecommendedViewModel = viewModel(
         factory = RepositoryViewModelFactory(Injection.provideRepository())
     ),
-    state: HomeState = rememberHomeState(expanded = false, selectedText = stringResource(id = R.string.sort_by))
+    state: HomeState = rememberHomeState(
+        expanded = false,
+        selectedText = stringResource(id = R.string.sort_by),
+        regionChip = false,
+        openChip = false
+    )
 ) {
     val focusManager = LocalFocusManager.current
     val listState = rememberLazyListState()
@@ -77,7 +82,15 @@ fun RecommendedScreen(
                     },
                     onDismissRequest = {
                         state.expanded = false
-                    }
+                    },
+                    isRegionChipChecked = state.regionChip,
+                    onRegionChipClicked = {
+                        state.regionChip = !state.regionChip
+                    },
+                    isOpenChipChecked = state.openChip,
+                    onOpenChipClicked = {
+                        state.openChip = !state.openChip
+                    },
                 )
             }
             is UiState.Error -> {
@@ -166,20 +179,29 @@ fun RecommendedScreen(
 class HomeState(
     initialExpandedState: Boolean,
     initialSelectedTextState: String,
+    initialRegionChipState: Boolean,
+    initialOpenChipState: Boolean,
 ) {
     private val expandedState = initialExpandedState
     private val selectedTextState = initialSelectedTextState
+    private val regionChipState = initialRegionChipState
+    private val openChipState = initialOpenChipState
 
     var expanded by mutableStateOf(expandedState)
     var selectedText by mutableStateOf(selectedTextState)
+    var regionChip by mutableStateOf(regionChipState)
+    var openChip by mutableStateOf(openChipState)
 
     fun resetStates() {
         expanded = expandedState
         selectedText = selectedTextState
+        regionChip = regionChipState
+        openChip = openChipState
     }
 
     fun isDefaultState(): Boolean {
-        return expanded == expandedState && selectedText == selectedTextState
+        return expanded == expandedState && selectedText == selectedTextState &&
+                regionChip == regionChipState && openChip == openChipState
     }
 }
 
@@ -187,10 +209,12 @@ class HomeState(
 fun rememberHomeState(
     expanded: Boolean,
     selectedText: String,
+    regionChip: Boolean,
+    openChip: Boolean,
 ): HomeState = remember(
-    expanded, selectedText
+    expanded, selectedText, regionChip, openChip
 ) {
-    HomeState(expanded, selectedText)
+    HomeState(expanded, selectedText, regionChip, openChip)
 }
 
 @Composable
@@ -206,6 +230,10 @@ fun RecommendedContent(
     setSelectedTextState: (String) -> Unit,
     setExpandedState: (Boolean) -> Unit,
     onDismissRequest: () -> Unit,
+    isRegionChipChecked: Boolean,
+    onRegionChipClicked: () -> Unit,
+    isOpenChipChecked: Boolean,
+    onOpenChipClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -221,6 +249,10 @@ fun RecommendedContent(
                 setExpandedState = setExpandedState,
                 setSelectedTextState = setSelectedTextState,
                 onDismissRequest = onDismissRequest,
+                isRegionChipChecked = isRegionChipChecked,
+                onRegionChipClicked = onRegionChipClicked,
+                isOpenChipChecked = isOpenChipChecked,
+                onOpenChipClicked = onOpenChipClicked,
             )
          },
         modifier = modifier

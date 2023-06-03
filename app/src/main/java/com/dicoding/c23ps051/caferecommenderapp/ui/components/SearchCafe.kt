@@ -19,6 +19,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
 @Composable
 fun SearchCafe(
+    navigateToSearchCafe: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -42,7 +43,7 @@ fun SearchCafe(
             )
 //            ButtonSearchBar()
             Button(text = stringResource(id = R.string.get_recommendation)) {
-                /*TODO*/
+                navigateToSearchCafe()
             }
         }
     }
@@ -52,6 +53,6 @@ fun SearchCafe(
 @Composable
 fun SearchCafePreview() {
     CafeRecommenderAppTheme {
-        SearchCafe()
+        SearchCafe({})
     }
 }

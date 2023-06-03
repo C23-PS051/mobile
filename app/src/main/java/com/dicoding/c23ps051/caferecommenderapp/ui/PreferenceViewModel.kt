@@ -21,6 +21,16 @@ class PreferenceViewModel(private val pref: UserPreference) : ViewModel() {
         return pref.getLogin().asLiveData()
     }
 
+    fun getIsNewUserAsLiveData(): LiveData<Boolean> {
+        return pref.getIsNewUser().asLiveData()
+    }
+
+    fun setNotNewUser() {
+        viewModelScope.launch {
+            pref.setNotNewUser()
+        }
+    }
+
     fun getLogin() {
         _uiState.value = UiState.Loading
         viewModelScope.launch {
@@ -34,7 +44,8 @@ class PreferenceViewModel(private val pref: UserPreference) : ViewModel() {
                         email = data.email,
                         token = data.token,
                         photoUrl = data.photoUrl,
-                        isLogin = data.isLogin
+                        isLogin = data.isLogin,
+                        isNewUser = data.isNewUser,
                     )
                     _uiState.value = UiState.Success(loginModel)
                 }
