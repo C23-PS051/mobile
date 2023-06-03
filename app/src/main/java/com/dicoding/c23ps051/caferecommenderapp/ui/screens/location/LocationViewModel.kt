@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.os.Looper
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
@@ -54,6 +55,7 @@ class LocationViewModel : ViewModel() {
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null) {
+                    Log.d("MyLogger", "${location.latitude}, ${location.longitude}")
                     _location.value = retrievePlaceName(context, location.latitude, location.longitude)
                 } else {
                     _location.value = FAILED

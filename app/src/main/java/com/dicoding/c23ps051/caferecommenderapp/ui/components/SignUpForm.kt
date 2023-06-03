@@ -112,6 +112,7 @@ fun SignUpForm(
             label = stringResource(id = R.string.name),
             text = state.nameText,
             hasError = state.nameHasError,
+            enableErrorCheck = true,
             onValueChange = { newText ->
                 state.nameText = newText
                 val nameRegex = Regex("^(?=.*[a-zA-Z])[a-zA-Z0-9\\s]+\$")
@@ -133,6 +134,7 @@ fun SignUpForm(
         EmailTextField(
             text = state.emailText,
             hasError = state.emailHasError,
+            enableErrorCheck = true,
             onValueChange = { newText: String ->
                 state.emailText = newText
                 val emailRegex = Regex("^([a-zA-Z0-9_.+-])+@([a-zA-Z0-9-])+\\.([a-zA-Z0-9-.])+$")
@@ -154,6 +156,7 @@ fun SignUpForm(
         PasswordTextField(
             text = state.passwordText,
             hasError = state.passwordHasError,
+            enableErrorCheck = true,
             showPassword = state.showPassword,
             onValueChange = { newText: String ->
                 state.passwordText = newText
@@ -178,6 +181,7 @@ fun SignUpForm(
         ConfirmPasswordTextField(
             confirmText = state.repasswordText,
             hasError = state.repasswordHasError,
+            enableErrorCheck = true,
             showPassword = state.showRepassword,
             onValueChange = { newText: String ->
                 state.repasswordText = newText

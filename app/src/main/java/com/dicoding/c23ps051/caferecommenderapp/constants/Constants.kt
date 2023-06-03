@@ -12,7 +12,7 @@ val REGIONS = listOf(
     "Kota Jakarta Barat",
     "Kota Jakarta Timur",
     "Kota Jakarta Pusat",
-    "Kota Bandung" // TODO: For experiment purposes only, remember to remove when done
+//    "Kota Bandung" // TODO: For experiment purposes only, remember to remove when done
 )
 
 val FACILITIES = listOf(

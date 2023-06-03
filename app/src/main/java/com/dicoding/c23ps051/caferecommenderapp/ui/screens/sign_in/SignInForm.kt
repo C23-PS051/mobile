@@ -34,6 +34,7 @@ fun SignInForm(
         EmailTextField(
             text = emailText,
             hasError = emailHasError,
+            enableErrorCheck = true,
             onValueChange = emailOnValueChange,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Email,
@@ -52,6 +53,7 @@ fun SignInForm(
             text = passwordText,
             hasError = passwordHasError,
             showPassword = showPassword,
+            enableErrorCheck = false,
             onValueChange = passwordOnValueChange,
             onClick = { onVisibilityClick() },
             keyboardOptions = KeyboardOptions.Default.copy(
