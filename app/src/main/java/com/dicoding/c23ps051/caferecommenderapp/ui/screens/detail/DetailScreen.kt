@@ -25,12 +25,16 @@ import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.di.Injection
 import com.dicoding.c23ps051.caferecommenderapp.ui.RepositoryViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeDetailInfoItem
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.FavoriteButton
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.Section
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.SectionBig
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.ErrorScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
+import com.google.maps.android.compose.GoogleMap
 
 @Composable
 fun DetailScreen(
@@ -128,6 +132,7 @@ fun DetailContent(
             )
             Text(
                 text = address,
+                style = MaterialTheme.typography.bodyMedium
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -156,12 +161,40 @@ fun DetailContent(
                     )
                 }
             }
-            Divider(modifier = Modifier.padding(24.dp))
-            Text(stringResource(id = R.string.description), style = MaterialTheme.typography.titleSmall)
-            Text(address + address + address) /* TODO: CHANGE TO DESCRIPTION */
-            Divider(modifier = Modifier.padding(24.dp))
-            Text(stringResource(id = R.string.location), style = MaterialTheme.typography.titleSmall)
-            /* TODO: ADD GOOGLE MAPS */
+            Divider(modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp, bottom = 16.dp))
+            SectionBig(
+                title = stringResource(id = R.string.description),
+                content = {
+                    Text(
+                        text = address + address + address,
+                        style = MaterialTheme.typography.bodyMedium
+                    ) /* TODO: CHANGE TO DESCRIPTION */
+                }
+            )
+//            Divider(modifier = Modifier.padding(16.dp))
+            SectionBig(
+                title = stringResource(id = R.string.facilities),
+                content = {
+                    Text(
+                        text = address + address,
+                        style = MaterialTheme.typography.bodyMedium
+                    ) /* TODO: CHANGE TO FACILITIES */
+                }
+            )
+            Divider(modifier = Modifier.padding(16.dp))
+            SectionBig(
+                title = stringResource(id = R.string.location),
+                content = {
+                    GoogleMap(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(240.dp)
+                    )
+                }
+            )
+            Button(text = stringResource(id = R.string.view_on_google_maps)) {
+                /* TODO: INTENT TO GOOGLE MAPS */
+            }
         }
     }
 }

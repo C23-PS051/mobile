@@ -111,4 +111,5 @@
     <string name="high_price">$$$</string>
     <string name="facilities">Facilities</string>
     <string name="location_not_valid">We are currently unavailable in your area. But you can still browse and try our service.</string>
+    <string name="view_on_google_maps">View on Google Maps</string>
 </resources>
