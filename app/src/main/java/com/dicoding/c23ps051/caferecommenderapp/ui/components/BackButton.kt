@@ -33,7 +33,7 @@ fun BackButton(
             tint = if (showBackground) {
                 MaterialTheme.colorScheme.onPrimary
             } else {
-                Black
+                MaterialTheme.colorScheme.onBackground
             }
         )
     }
