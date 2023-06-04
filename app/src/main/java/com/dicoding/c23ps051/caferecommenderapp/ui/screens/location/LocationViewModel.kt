@@ -28,8 +28,6 @@ import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
-
 class LocationViewModel : ViewModel() {
 
     private val _location: MutableLiveData<String?> = MutableLiveData(UNKNOWN)

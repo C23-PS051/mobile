@@ -48,84 +48,40 @@ fun HomeScreen(
 ) {
     var backPressState by remember { mutableStateOf<BackPress>(BackPress.Idle) }
     val context = LocalContext.current
+    var photoUrl = "" // "" photoUrl will display default profile picture
 
-    var nearbyCafes = emptyList<Cafe>()
-    var open24HoursCafes = emptyList<Cafe>()
-    var onBudgetCafes = emptyList<Cafe>()
-    var photoUrl = ""
+    val uiStateNearby = viewModel.uiStateNearby.collectAsState(initial = UiState.Loading).value
+    val uiStateOpen24Hours = viewModel.uiStateOpen24Hours.collectAsState(initial = UiState.Loading).value
+    val uiStateOnBudget = viewModel.uiStateOnBudget.collectAsState(initial = UiState.Loading).value
 
-    viewModel.uiStateNearby.collectAsState(initial = UiState.Loading).value.let { uiState ->
-        when (uiState) {
-            is UiState.Loading -> {
-                LoadingScreen(stringResource(id = R.string.exploring_cafe_options))
-                viewModel.getNearbyCafes()
-            }
-            is UiState.Success -> {
-                nearbyCafes = uiState.data
-                notifyHomeContent(
-                    onProfileClick = onProfileClick,
-                    nearbyCafes = nearbyCafes,
-                    open24HoursCafes = open24HoursCafes,
-                    onBudgetCafes = onBudgetCafes,
-                    navigateToDetail = navigateToDetail,
-                    navigateToSearchCafe = navigateToSearchCafe,
-                    userLocation = userLocation,
-                    photoUrl = photoUrl
-                )
-            }
-            is UiState.Error -> {
-                /*TODO*/
-            }
+    val nearbyCafes = if (uiStateNearby is UiState.Success) uiStateNearby.data else emptyList()
+    val open24HoursCafes = if (uiStateOpen24Hours is UiState.Success) uiStateOpen24Hours.data else emptyList()
+    val onBudgetCafes = if (uiStateOnBudget is UiState.Success) uiStateOnBudget.data else emptyList()
+
+    val allCafesLoaded = nearbyCafes.isNotEmpty() && open24HoursCafes.isNotEmpty() && onBudgetCafes.isNotEmpty()
+
+    if (allCafesLoaded) {
+        HomeContent(
+            navigateToDetail = navigateToDetail,
+            navigateToSearchCafe = navigateToSearchCafe,
+            onProfileClick = onProfileClick,
+            nearbyCafes = nearbyCafes,
+            open24HoursCafes = open24HoursCafes,
+            onBudgetCafes = onBudgetCafes,
+            userLocation = userLocation,
+            photoUrl = photoUrl
+        )
+    } else {
+        LoadingScreen(stringResource(id = R.string.exploring_cafe_options))
+
+        if (uiStateNearby is UiState.Loading) {
+            viewModel.getNearbyCafes()
         }
-    }
-
-    viewModel.uiStateOpen24Hours.collectAsState(initial = UiState.Loading).value.let { uiState ->
-        when (uiState) {
-            is UiState.Loading -> {
-                LoadingScreen(stringResource(id = R.string.exploring_cafe_options))
-                viewModel.getOpen24HoursCafes()
-            }
-            is UiState.Success -> {
-                open24HoursCafes = uiState.data
-                notifyHomeContent(
-                    onProfileClick = onProfileClick,
-                    nearbyCafes = nearbyCafes,
-                    open24HoursCafes = open24HoursCafes,
-                    onBudgetCafes = onBudgetCafes,
-                    navigateToDetail = navigateToDetail,
-                    navigateToSearchCafe = navigateToSearchCafe,
-                    userLocation = userLocation,
-                    photoUrl = photoUrl
-                )
-            }
-            is UiState.Error -> {
-                /*TODO*/
-            }
+        if (uiStateOpen24Hours is UiState.Loading) {
+            viewModel.getOpen24HoursCafes()
         }
-    }
-
-    viewModel.uiStateOnBudget.collectAsState(initial = UiState.Loading).value.let { uiState ->
-        when (uiState) {
-            is UiState.Loading -> {
-                LoadingScreen(stringResource(id = R.string.exploring_cafe_options))
-                viewModel.getOnBudgetCafes()
-            }
-            is UiState.Success -> {
-                onBudgetCafes = uiState.data
-                notifyHomeContent(
-                    onProfileClick = onProfileClick,
-                    nearbyCafes = nearbyCafes,
-                    open24HoursCafes = open24HoursCafes,
-                    onBudgetCafes = onBudgetCafes,
-                    navigateToDetail = navigateToDetail,
-                    navigateToSearchCafe = navigateToSearchCafe,
-                    userLocation = userLocation,
-                    photoUrl = photoUrl
-                )
-            }
-            is UiState.Error -> {
-                /*TODO*/
-            }
+        if (uiStateOnBudget is UiState.Loading) {
+            viewModel.getOnBudgetCafes()
         }
     }
 
@@ -136,16 +92,6 @@ fun HomeScreen(
             }
             is UiState.Success -> {
                 photoUrl = uiState.data.photoUrl
-                notifyHomeContent(
-                    onProfileClick = onProfileClick,
-                    nearbyCafes = nearbyCafes,
-                    open24HoursCafes = open24HoursCafes,
-                    onBudgetCafes = onBudgetCafes,
-                    navigateToDetail = navigateToDetail,
-                    navigateToSearchCafe = navigateToSearchCafe,
-                    userLocation = userLocation,
-                    photoUrl = photoUrl
-                )
             }
             is UiState.Error -> {
                 /*TODO*/
@@ -165,31 +111,6 @@ fun HomeScreen(
         }
     ) {
         Toast.makeText(context, context.getText(R.string.press_again_to_exit), Toast.LENGTH_SHORT).show()
-    }
-}
-
-@Composable
-fun notifyHomeContent(
-    onProfileClick: () -> Unit,
-    nearbyCafes: List<Cafe>,
-    open24HoursCafes: List<Cafe>,
-    onBudgetCafes: List<Cafe>,
-    navigateToDetail: (Long) -> Unit,
-    navigateToSearchCafe: () -> Unit,
-    userLocation: String?,
-    photoUrl: String,
-) {
-    if (nearbyCafes.isNotEmpty() && open24HoursCafes.isNotEmpty() && onBudgetCafes.isNotEmpty()) {
-        HomeContent(
-            navigateToDetail = navigateToDetail,
-            navigateToSearchCafe = navigateToSearchCafe,
-            onProfileClick = onProfileClick,
-            nearbyCafes = nearbyCafes,
-            open24HoursCafes = open24HoursCafes,
-            onBudgetCafes = onBudgetCafes,
-            userLocation = userLocation,
-            photoUrl = photoUrl
-        )
     }
 }
 
@@ -241,11 +162,3 @@ fun HomeContent(
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun AppPreview() {
-//    CafeRecommenderAppTheme {
-//        HomeScreen(onCafeItemClick = {})
-//    }
-//}

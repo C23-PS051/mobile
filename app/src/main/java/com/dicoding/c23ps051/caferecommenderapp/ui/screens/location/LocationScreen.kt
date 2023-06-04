@@ -24,38 +24,6 @@ fun LocationScreen(
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-
-//    viewModel.uiState.collectAsState().value.let { uiState ->
-//        when (uiState) {
-//            is UiState.Loading -> {
-//                // do nothing
-//            }
-//            is UiState.Success -> {
-//                navigateToHome()
-//            }
-//            is UiState.Error -> {
-//                /*TODO*/
-//            }
-//        }
-//    }
-
-//    val requestForPermissionLauncher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.RequestMultiplePermissions()
-//    ) { permissions ->
-//        when {
-//            permissions[ACCESS_FINE_LOCATION] == true -> {
-//                getUserLocation(context)
-//            }
-//            permissions[ACCESS_COARSE_LOCATION] == true -> {
-//                getUserLocation(context)
-//            }
-//            else -> {
-//                // Handle permission denial
-//            }
-//        }
-//    }
-
     Column(
         modifier = modifier
             .fillMaxSize()
