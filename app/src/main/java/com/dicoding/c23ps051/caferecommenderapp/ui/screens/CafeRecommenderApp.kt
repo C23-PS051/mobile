@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -73,7 +74,13 @@ fun CafeRecommenderApp(
                 HomeScreen(
                     userPreference = userPreference,
                     onProfileClick = {
-                        navController.navigate(Screen.Profile.route)
+                        navController.navigate(Screen.Profile.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            restoreState = true
+                            launchSingleTop = true
+                        }
                     },
                     navigateToDetail = { id ->
                         navController.navigate(Screen.Detail.createRoute(id))
