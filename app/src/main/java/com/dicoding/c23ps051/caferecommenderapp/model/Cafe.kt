@@ -11,4 +11,5 @@ data class Cafe(
     val isOpen: Boolean,
     val minPrice: Long,
     val maxPrice: Long,
+    val region: String,
 )

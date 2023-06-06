@@ -93,6 +93,7 @@ fun CafeRecommenderApp(
             }
             composable(Screen.Recommended.route) {
                 RecommendedScreen(
+                    userPreference = userPreference,
                     navigateToDetail = { id ->
                         navController.navigate(Screen.Detail.createRoute(id))
                     }

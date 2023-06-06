@@ -23,6 +23,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.di.Injection
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
+import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
+import com.dicoding.c23ps051.caferecommenderapp.ui.RepositoryPreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.RepositoryViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackPressHandler
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeLargeList
@@ -38,22 +40,22 @@ import kotlinx.coroutines.launch
 @Composable
 fun RecommendedScreen(
     navigateToDetail: (Long) -> Unit,
+    userPreference: UserPreference,
     viewModel: RecommendedViewModel = viewModel(
-        factory = RepositoryViewModelFactory(Injection.provideRepository())
+        factory = RepositoryPreferenceViewModelFactory(Injection.provideRepository(), userPreference)
     ),
-    state: HomeState = rememberHomeState(
-        expanded = false,
-        selectedText = stringResource(id = R.string.sort_by),
-        regionChip = false,
-        openChip = false
-    )
 ) {
     val focusManager = LocalFocusManager.current
     val listState = rememberLazyListState()
     var isFirstIndexVisible by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     var backPressState by remember { mutableStateOf<BackPress>(BackPress.Idle) }
+
     val query by viewModel.query
+    val expanded by viewModel.expanded
+    val selectedText by viewModel.selectedText
+    val regionChip by viewModel.regionChip
+    val openChip by viewModel.openChip
 
     viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
@@ -72,25 +74,15 @@ fun RecommendedScreen(
                     navigateToDetail = navigateToDetail,
                     focusManager = focusManager,
                     listState = listState,
-                    expanded = state.expanded,
-                    selectedText = state.selectedText,
-                    setExpandedState = { expanded ->
-                        state.expanded = expanded
-                    },
-                    setSelectedTextState = { selectedText ->
-                        state.selectedText = selectedText
-                    },
-                    onDismissRequest = {
-                        state.expanded = false
-                    },
-                    isRegionChipChecked = state.regionChip,
-                    onRegionChipClicked = {
-                        state.regionChip = !state.regionChip
-                    },
-                    isOpenChipChecked = state.openChip,
-                    onOpenChipClicked = {
-                        state.openChip = !state.openChip
-                    },
+                    expanded = expanded,
+                    selectedText = selectedText,
+                    setExpandedState = { viewModel.setExpandedState(it) },
+                    setSelectedTextState = { viewModel.setSelectedTextState(it) },
+                    onDismissRequest = { viewModel.setExpandedState(false) },
+                    isRegionChipChecked = regionChip,
+                    onRegionChipClicked = { viewModel.setRegionChipState(!regionChip) },
+                    isOpenChipChecked = openChip,
+                    onOpenChipClicked = { viewModel.setOpenChipState(!openChip) },
                 )
             }
             is UiState.Error -> {
@@ -107,26 +99,9 @@ fun RecommendedScreen(
             }
     }
 
-//    Log.d("MyLogger", state.expanded.toString())
-//
-//    if (state.expanded) {
-//        BackPressHandler(
-//            backPressState = BackPress.InitialTouch,
-//            toggleBackPressState = {
-//                backPressState = if (backPressState == BackPress.Idle) {
-//                    BackPress.InitialTouch
-//                } else {
-//                    BackPress.Idle
-//                }
-//            }
-//        ) {
-//            state.expanded = false
-//        }
-//    }
-
     // When there is query on the search bar or user has scrolled down the list or state is not the same as initial
     // Then handle the back press differently: Clear the search bar and scroll back to the top
-    if (query != "" || !isFirstIndexVisible || !state.isDefaultState()) {
+    if (query != "" || !isFirstIndexVisible || !viewModel.isDefaultStates()) {
         backPressState = BackPress.Idle
         BackPressHandler(
             backPressState = backPressState,
@@ -141,80 +116,12 @@ fun RecommendedScreen(
             viewModel.getAllRecommendedCafes()
             viewModel.searchCafes("")
             focusManager.clearFocus()
-            state.resetStates()
+            viewModel.resetStates()
             scope.launch {
                 listState.animateScrollToItem(0)
             }
         }
     }
-
-    @Composable
-    fun ScrollToTop() {
-        LaunchedEffect(listState) {
-            scope.launch {
-                listState.scrollToItem(0)
-            }
-        }
-    }
-
-    // Handle search sorting
-    if (state.selectedText == stringResource(id = R.string.highest_rating)) {
-        viewModel.getHighestRatingCafes()
-        ScrollToTop()
-    }
-    if (state.selectedText == stringResource(id = R.string.nearest)) {
-        viewModel.getNearestCafes()
-        ScrollToTop()
-    }
-    if (state.selectedText == stringResource(id = R.string.highest_price_range)) {
-        viewModel.getHighestPriceRangeCafes()
-        ScrollToTop()
-    }
-    if (state.selectedText == stringResource(id = R.string.lowest_price_range)) {
-        viewModel.getLowestPriceRangeCafes()
-        ScrollToTop()
-    }
-}
-
-class HomeState(
-    initialExpandedState: Boolean,
-    initialSelectedTextState: String,
-    initialRegionChipState: Boolean,
-    initialOpenChipState: Boolean,
-) {
-    private val expandedState = initialExpandedState
-    private val selectedTextState = initialSelectedTextState
-    private val regionChipState = initialRegionChipState
-    private val openChipState = initialOpenChipState
-
-    var expanded by mutableStateOf(expandedState)
-    var selectedText by mutableStateOf(selectedTextState)
-    var regionChip by mutableStateOf(regionChipState)
-    var openChip by mutableStateOf(openChipState)
-
-    fun resetStates() {
-        expanded = expandedState
-        selectedText = selectedTextState
-        regionChip = regionChipState
-        openChip = openChipState
-    }
-
-    fun isDefaultState(): Boolean {
-        return expanded == expandedState && selectedText == selectedTextState &&
-                regionChip == regionChipState && openChip == openChipState
-    }
-}
-
-@Composable
-fun rememberHomeState(
-    expanded: Boolean,
-    selectedText: String,
-    regionChip: Boolean,
-    openChip: Boolean,
-): HomeState = remember(
-    expanded, selectedText, regionChip, openChip
-) {
-    HomeState(expanded, selectedText, regionChip, openChip)
 }
 
 @Composable
@@ -225,9 +132,9 @@ fun RecommendedContent(
     navigateToDetail: (Long) -> Unit,
     focusManager: FocusManager,
     listState: LazyListState,
-    selectedText: String,
+    selectedText: Int,
     expanded: Boolean,
-    setSelectedTextState: (String) -> Unit,
+    setSelectedTextState: (Int) -> Unit,
     setExpandedState: (Boolean) -> Unit,
     onDismissRequest: () -> Unit,
     isRegionChipChecked: Boolean,
@@ -268,13 +175,5 @@ fun RecommendedContent(
                 state = listState
             )
         }
-    }
-}
-
-@Preview
-@Composable
-fun RecommendedPreview() {
-    CafeRecommenderAppTheme {
-        RecommendedScreen(navigateToDetail = {})
     }
 }

@@ -1,5 +1,7 @@
 package com.dicoding.c23ps051.caferecommenderapp.model
 
+private const val region = "South Jakarta"
+
 object CafeDummy {
     val cafeList = listOf(
         Cafe(
@@ -12,7 +14,8 @@ object CafeDummy {
             0.9,
             true,
             15000,
-            40000
+            40000,
+            region
         ),
         Cafe(
             2,
@@ -24,7 +27,8 @@ object CafeDummy {
             2.2,
             false,
             10000,
-            70000
+            70000,
+            region
         ),
         Cafe(
             3,
@@ -36,7 +40,8 @@ object CafeDummy {
             1.0,
             true,
             25000,
-            100000
+            100000,
+            region
         ),
         Cafe(
             4,
@@ -48,7 +53,8 @@ object CafeDummy {
             1.4,
             false,
             18000,
-            85000
+            85000,
+            region
         ),
         Cafe(
             5,
@@ -60,7 +66,8 @@ object CafeDummy {
             2.7,
             true,
             5000,
-            50000
+            50000,
+            region
         ),
         Cafe(
             6,
@@ -72,7 +79,8 @@ object CafeDummy {
             2.5,
             false,
             5000,
-            50000
+            50000,
+            region
         )
     )
 }

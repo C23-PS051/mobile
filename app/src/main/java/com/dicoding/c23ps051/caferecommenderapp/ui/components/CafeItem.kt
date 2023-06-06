@@ -2,6 +2,7 @@ package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -135,49 +140,76 @@ fun CafeItemLarge(
             .clickable { onClick(id) },
         shape = MaterialTheme.shapes.large,
     ) {
-        Row(
-//            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.cafe),
-                contentDescription = "Image of $name",
-                contentScale = ContentScale.Crop,
+        Box {
+//            IconButton(
+//                onClick = { /*TODO*/ },
+//                modifier = Modifier
+//                    .align(Alignment.TopEnd)
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Default.FavoriteBorder,
+//                    contentDescription = stringResource(id = R.string.add_to_favorite),
+//                    modifier = Modifier.size(20.dp)
+//                )
+//            }
+            FavoriteButton(
+                onClick = { /*TODO*/ },
+                isFavorite = false,
                 modifier = Modifier
-                    .size(112.dp)
+                    .align(Alignment.TopEnd)
+                    .size(40.dp),
+                size = 16,
             )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.labelLarge
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.cafe),
+                    contentDescription = "Image of $name",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(104.dp)
                 )
-                Text(
-                    text = newAddress,
-                    fontSize = 13.sp,
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Row (
-                    verticalAlignment = Alignment.CenterVertically,
+                Column(
+                    modifier = Modifier.padding(start = 12.dp, end = 28.dp)
                 ) {
-                    Image(
-                        painterResource(id = R.drawable.star),
-                        contentDescription = stringResource(id = R.string.rating_count)
+                    Text(
+                        text = name,
+                        style = MaterialTheme.typography.labelLarge
                     )
                     Text(
-                        text = buildAnnotatedString {
-                            append("$rating/5 ($ratingCount)")
-                            withStyle(SpanStyle(color = Gray)) {
-                                append(" | ")
-                            }
-                            append("$distance km")
-                            withStyle(SpanStyle(color = Gray)) {
-                                append(" | ")
-                            }
-                            append(if (condition) "buka" else "tutup")
-                        },
-                        fontSize = 14.sp,
+                        text = newAddress,
+                        style = MaterialTheme.typography.bodySmall
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row (
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Image(
+                            painterResource(id = R.drawable.star),
+                            contentDescription = stringResource(id = R.string.rating_count)
+                        )
+                        Text(
+                            text = buildAnnotatedString {
+                                append("$rating/5 ($ratingCount)")
+                                withStyle(SpanStyle(color = Gray)) {
+                                    append(" | ")
+                                }
+                                append("$distance km")
+                                withStyle(SpanStyle(color = Gray)) {
+                                    append(" | ")
+                                }
+                                append(
+                                    if (condition) {
+                                        stringResource(id = R.string.open)
+                                    } else {
+                                        stringResource(id = R.string.closed)
+                                    }
+                                )
+                            },
+                            fontSize = 14.sp,
+                        )
+                    }
                 }
             }
         }

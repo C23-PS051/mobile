@@ -46,6 +46,7 @@ class PreferenceViewModel(private val pref: UserPreference) : ViewModel() {
                         photoUrl = data.photoUrl,
                         isLogin = data.isLogin,
                         isNewUser = data.isNewUser,
+                        userLocation = data.userLocation,
                     )
                     _uiState.value = UiState.Success(loginModel)
                 }

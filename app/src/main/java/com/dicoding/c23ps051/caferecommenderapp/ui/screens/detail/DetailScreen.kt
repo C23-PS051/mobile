@@ -113,6 +113,7 @@ fun DetailContent(
                     .padding(8.dp),
                 onClick = toggleFavorite,
                 isFavorite = isFavorite,
+                showBackground = true,
             )
             BackButton(
                 modifier = Modifier

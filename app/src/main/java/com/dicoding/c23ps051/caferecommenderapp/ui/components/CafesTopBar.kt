@@ -23,9 +23,9 @@ fun CafesTopBar(
     onQueryChange: (String) -> Unit,
     title: String,
     focusManager: FocusManager,
-    selectedText: String,
+    selectedText: Int,
     expanded: Boolean,
-    setSelectedTextState: (String) -> Unit,
+    setSelectedTextState: (Int) -> Unit,
     setExpandedState: (Boolean) -> Unit,
     onDismissRequest: () -> Unit,
     isRegionChipChecked: Boolean,
@@ -110,24 +110,25 @@ fun CafesTopBarOutlinedSearchBar(
 
 @Composable
 fun CafesTopBarDropDown(
-    selectedText: String,
+    selectedText: Int,
     expanded: Boolean,
-    setSelectedTextState: (String) -> Unit,
+    setSelectedTextState: (Int) -> Unit,
     setExpandedState: (Boolean) -> Unit,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val options = listOf(
+        stringResource(id = R.string.sort_by),
         stringResource(id = R.string.highest_rating),
         stringResource(id = R.string.nearest),
         stringResource(id = R.string.lowest_price_range),
         stringResource(id = R.string.highest_price_range),
     )
 
-    val actions = options.map { option ->
+    val actions = List(options.size) { index ->
         {
-            if (selectedText != option) {
-                setSelectedTextState(option)
+            if (selectedText != index) {
+                setSelectedTextState(index)
             }
             setExpandedState(false)
         }
@@ -135,7 +136,7 @@ fun CafesTopBarDropDown(
 
     OutlinedDropDownTextField(
         modifier = modifier,
-        text = selectedText,
+        text = options[selectedText],
         onClick = {
             setExpandedState(!expanded)
         },

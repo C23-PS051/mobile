@@ -1,7 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in
 
 import android.app.Activity
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement

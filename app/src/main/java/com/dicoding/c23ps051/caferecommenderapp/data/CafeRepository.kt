@@ -23,7 +23,8 @@ class CafeRepository {
                     address = it.address,
                     isOpen = it.isOpen,
                     minPrice = it.minPrice,
-                    maxPrice = it.maxPrice
+                    maxPrice = it.maxPrice,
+                    region = it.region
                 )
                 cafeList.add(cafe)
             }
