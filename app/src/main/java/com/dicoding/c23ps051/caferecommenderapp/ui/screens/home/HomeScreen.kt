@@ -32,6 +32,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.HomeSection
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SearchCafe
 import com.dicoding.c23ps051.caferecommenderapp.ui.event.BackPress
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.ErrorScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 
 @Composable
@@ -82,6 +83,10 @@ fun HomeScreen(
         }
         if (uiStateOnBudget is UiState.Loading) {
             viewModel.getOnBudgetCafes()
+        }
+
+        if (uiStateNearby is UiState.Error || uiStateOpen24Hours is UiState.Error || uiStateOnBudget is UiState.Error) {
+            // TODO: HANDLE ERROR
         }
     }
 

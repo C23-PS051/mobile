@@ -53,7 +53,6 @@ class LocationViewModel : ViewModel() {
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null) {
-                    Log.d("MyLogger", "${location.latitude}, ${location.longitude}")
                     _location.value = retrievePlaceName(context, location.latitude, location.longitude)
                 } else {
                     _location.value = FAILED
@@ -81,5 +80,9 @@ class LocationViewModel : ViewModel() {
 
     fun setLocationToUnknown() {
         _location.value = UNKNOWN
+    }
+
+    fun setLocationTo(value: String) {
+        _location.value = value
     }
 }

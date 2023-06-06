@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,16 +16,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.c23ps051.caferecommenderapp.constants.FAILED
 import com.dicoding.c23ps051.caferecommenderapp.constants.NOT_GRANTED
 import com.dicoding.c23ps051.caferecommenderapp.constants.UNKNOWN
-import com.dicoding.c23ps051.caferecommenderapp.constants.REGIONS
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
@@ -45,10 +45,21 @@ class MainActivity : ComponentActivity() {
     private lateinit var locationViewModel: LocationViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    private lateinit var regions: Map<String, String>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        regions = mapOf(
+            getString(R.string.jakarta_utara) to getString(R.string.north_jakarta),
+            getString(R.string.jakarta_selatan) to getString(R.string.south_jakarta),
+            getString(R.string.jakarta_barat) to getString(R.string.west_jakarta),
+            getString(R.string.jakarta_timur) to getString(R.string.east_jakarta),
+            getString(R.string.jakarta_pusat) to getString(R.string.central_jakarta),
+//            "Kota Bandung" to "Bandung City"// TODO: For experiment purposes only, remember to remove when done
+        )
 
         viewModel = ViewModelProvider(
             this,
@@ -113,8 +124,11 @@ class MainActivity : ComponentActivity() {
                             var isValidRegion = true
                             if (locationViewModel.location.value != null) {
                                 isValidRegion = false
-                                REGIONS.forEach { region ->
-                                    if (locationViewModel.location.value.equals(region)) {
+                                regions.forEach { region ->
+                                    if (locationViewModel.location.value == region.key) {
+                                        locationViewModel.setLocationTo(region.value)
+                                        isValidRegion = true
+                                    } else if(locationViewModel.location.value == region.value) {
                                         isValidRegion = true
                                     }
                                 }

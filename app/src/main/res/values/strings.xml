@@ -66,6 +66,7 @@
     <string name="serving_up_cafe_info">Serving up cafe information..</string>
     <string name="retry">RETRY</string>
     <string name="error_loading_cafe_detail">Oops! Couldn\'t fetch cafe details. Please try again.</string>
+    <string name="view_on_google_maps">View on Google Maps</string>
 
     <!-- Profile Page -->
     <string name="yes">YES</string>
@@ -87,6 +88,8 @@
     <string name="cannot_sign_in">Can\'t sign in</string>
     <string name="wrong_email_password">Wrong email or password!</string>
     <string name="please_try_again">Please try again later!</string>
+
+    <!-- Location Page -->
     <string name="need_location_permission">To continue, we need to access your location</string>
     <string name="turn_on_location">TURN ON LOCATION</string>
     <string name="location_permission_not_granted">It looks like you have denied giving location permission. For the best experience, consider give access to your location. You can go to settings to change the permission.</string>
@@ -95,6 +98,19 @@
     <string name="go_to_settings">GO TO SETTINGS</string>
     <string name="skip">SKIP</string>
     <string name="not_set">Not set</string>
+    <string name="location_not_valid">We are currently unavailable in your area. But you can still browse and try our service.</string>
+    <string name="jakarta_utara">Kota Jakarta Utara</string>
+    <string name="jakarta_selatan">Kota Jakarta Selatan</string>
+    <string name="jakarta_barat">Kota Jakarta Barat</string>
+    <string name="jakarta_timur">Kota Jakarta Timur</string>
+    <string name="jakarta_pusat">Kota Jakarta Pusat</string>
+    <string name="north_jakarta">North Jakarta</string>
+    <string name="south_jakarta">South Jakarta</string>
+    <string name="west_jakarta">West Jakarta</string>
+    <string name="east_jakarta">East Jakarta</string>
+    <string name="central_jakarta">Central Jakarta</string>
+
+    <!-- Search Page -->
     <string name="what_are_we_looking_for">What are we looking for today?</string>
     <string name="region">Region</string>
     <string name="all">All</string>
@@ -110,6 +126,18 @@
     <string name="mid_price">$$</string>
     <string name="high_price">$$$</string>
     <string name="facilities">Facilities</string>
-    <string name="location_not_valid">We are currently unavailable in your area. But you can still browse and try our service.</string>
-    <string name="view_on_google_maps">View on Google Maps</string>
+    <string name="indoor">Indoor</string>
+    <string name="outdoor">Outdoor</string>
+    <string name="wifi">Wi-Fi</string>
+    <string name="kid_friendly">Kid-friendly</string>
+    <string name="pet_friendly">Pet-friendly</string>
+    <string name="takeaway">Takeaway</string>
+    <string name="smoking_area">Smoking area</string>
+    <string name="parking_area">Parking area</string>
+    <string name="toilets">Toilets</string>
+    <string name="live_music">Live music</string>
+    <string name="in_mall">In mall</string>
+    <string name="vip_room">VIP room</string>
+    <string name="reservation">Reservation</string>
+    <string name="alcohol">Alcohol</string>
 </resources>

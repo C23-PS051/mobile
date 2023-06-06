@@ -27,10 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.dicoding.c23ps051.caferecommenderapp.R
-import com.dicoding.c23ps051.caferecommenderapp.constants.FACILITIES
-import com.dicoding.c23ps051.caferecommenderapp.constants.PRICE_RANGE
-import com.dicoding.c23ps051.caferecommenderapp.constants.RATINGS
-import com.dicoding.c23ps051.caferecommenderapp.constants.REGIONS
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Chip
@@ -39,6 +35,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.OutlinedDropDownTe
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Section
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 
+private const val facilitiesSize = 14
 private const val ratingSize = 5
 private const val priceSize = 3
 
@@ -50,7 +47,7 @@ fun SearchScreen(
     state: SearchState = rememberSearchState(
         expanded = false,
         selectedText = region ?: stringResource(id = R.string.all),
-        checkedCheckbox = List(FACILITIES.size) { false },
+        checkedCheckbox = List(facilitiesSize) { false },
         checkedRatingChip = List(ratingSize) { false },
         checkedPriceChip = List(priceSize) { false },
     )
@@ -132,6 +129,37 @@ fun SearchContent(
     onPriceChipClicked: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val ratings = listOf(
+        stringResource(id = R.string.one_star_rating),
+        stringResource(id = R.string.two_star_rating),
+        stringResource(id = R.string.three_star_rating),
+        stringResource(id = R.string.four_star_rating),
+        stringResource(id = R.string.five_star_rating),
+    )
+
+    val priceRange = listOf(
+        stringResource(id = R.string.low_price),
+        stringResource(id = R.string.mid_price),
+        stringResource(id = R.string.high_price),
+    )
+
+    val facilities = listOf(
+        stringResource(id = R.string.indoor),
+        stringResource(id = R.string.outdoor),
+        stringResource(id = R.string.wifi),
+        stringResource(id = R.string.kid_friendly),
+        stringResource(id = R.string.pet_friendly),
+        stringResource(id = R.string.takeaway),
+        stringResource(id = R.string.smoking_area),
+        stringResource(id = R.string.parking_area),
+        stringResource(id = R.string.toilets),
+        stringResource(id = R.string.live_music),
+        stringResource(id = R.string.in_mall),
+        stringResource(id = R.string.vip_room),
+        stringResource(id = R.string.reservation),
+        stringResource(id = R.string.alcohol),
+    )
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -187,7 +215,7 @@ fun SearchContent(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        RATINGS.forEachIndexed { index, rating ->
+                        ratings.forEachIndexed { index, rating ->
                             SearchChip(
                                 text = rating,
                                 isChecked = isCheckedRatingChip[index],
@@ -204,7 +232,7 @@ fun SearchContent(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        PRICE_RANGE.forEachIndexed { index, price_range ->
+                        priceRange.forEachIndexed { index, price_range ->
                             SearchChip(
                                 text = price_range,
                                 isChecked = isCheckedPriceChip[index],
@@ -218,7 +246,7 @@ fun SearchContent(
                 title = stringResource(id = R.string.facilities),
                 content = {
                     Column {
-                        FACILITIES.forEachIndexed { index, facility ->
+                        facilities.forEachIndexed { index, facility ->
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
@@ -262,7 +290,14 @@ fun DropDown(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val options = REGIONS
+    val options = listOf(
+        stringResource(id = R.string.all),
+        stringResource(id = R.string.central_jakarta),
+        stringResource(id = R.string.south_jakarta),
+        stringResource(id = R.string.north_jakarta),
+        stringResource(id = R.string.west_jakarta),
+        stringResource(id = R.string.east_jakarta),
+    )
 
     val actions = options.map { option ->
         {
