@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 
 @Composable
 fun ProgressBar(
@@ -15,6 +16,7 @@ fun ProgressBar(
 ) {
     Box(
         modifier = modifier
+            .zIndex(1f)
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {

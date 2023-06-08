@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -45,6 +46,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var locationObserver: Observer<PermissionState>
 
     private lateinit var regions: Map<String, String>
+    private var isLocationHandled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +73,6 @@ class MainActivity : ComponentActivity() {
             PreferenceViewModelFactory(UserPreference.getInstance(dataStore))
         )[LocationViewModel::class.java]
 
-        var isLocationHandled = false
         viewModel.getLoginAsLiveData().observe(this) { user ->
             if (user.isLogin) {
                 if (isLocationHandled) {
@@ -91,11 +92,10 @@ class MainActivity : ComponentActivity() {
                     }
                 } else {
                     handleUserLocation(user.isNewUser)
-                    isLocationHandled = true
                 }
             } else {
-                setDefaultContent(false)
                 isLocationHandled = false
+                setDefaultContent(false)
             }
         }
     }
@@ -130,6 +130,7 @@ class MainActivity : ComponentActivity() {
                             },
                             secondaryAction = {
                                 locationViewModel.setLocationTo(getString(R.string.all))
+                                isLocationHandled = true
                             }
                         )
                     }
@@ -146,6 +147,7 @@ class MainActivity : ComponentActivity() {
                             },
                             secondaryAction = {
                                 locationViewModel.setLocationTo(getString(R.string.all))
+                                isLocationHandled = true
                             }
                         )
                     }
@@ -182,6 +184,7 @@ class MainActivity : ComponentActivity() {
                         }
                         removeLocationObserver()
                     }
+                    isLocationHandled = true
                 }
             }
         }
@@ -202,8 +205,6 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun checkRegion(location: String): Boolean {
-        if (location == getString(R.string.all)) return true
-
         regions.forEach { region ->
             if (location == region.key) {
                 locationViewModel.saveLocation(region.value)
