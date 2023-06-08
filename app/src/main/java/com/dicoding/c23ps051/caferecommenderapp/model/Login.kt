@@ -7,5 +7,4 @@ data class Login(
     val photoUrl: String,
     val isLogin: Boolean,
     val isNewUser: Boolean,
-    val userLocation: String,
 )

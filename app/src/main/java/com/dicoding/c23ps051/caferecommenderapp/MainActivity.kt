@@ -19,18 +19,17 @@ import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.dicoding.c23ps051.caferecommenderapp.constants.FAILED
-import com.dicoding.c23ps051.caferecommenderapp.constants.NOT_GRANTED
-import com.dicoding.c23ps051.caferecommenderapp.constants.UNKNOWN
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.CafeRecommenderApp
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.PermissionState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.InfoScreen
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.location.LocationScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.location.LocationViewModel
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended.SearchScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.location.RequestLocationScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.search.SearchScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -42,6 +41,8 @@ class MainActivity : ComponentActivity() {
     private lateinit var viewModel: PreferenceViewModel
     private lateinit var locationViewModel: LocationViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var userPreference: UserPreference
+    private lateinit var locationObserver: Observer<PermissionState>
 
     private lateinit var regions: Map<String, String>
 
@@ -49,6 +50,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        userPreference = UserPreference.getInstance(dataStore)
 
         regions = mapOf(
             getString(R.string.jakarta_utara) to getString(R.string.north_jakarta),
@@ -64,121 +66,154 @@ class MainActivity : ComponentActivity() {
             PreferenceViewModelFactory(UserPreference.getInstance(dataStore))
         )[PreferenceViewModel::class.java]
 
-        locationViewModel = ViewModelProvider(this)[LocationViewModel::class.java]
+        locationViewModel = ViewModelProvider(
+            this,
+            PreferenceViewModelFactory(UserPreference.getInstance(dataStore))
+        )[LocationViewModel::class.java]
 
+        var isLocationHandled = false
         viewModel.getLoginAsLiveData().observe(this) { user ->
             if (user.isLogin) {
-                locationViewModel.location.observe(this) {
-                    when (locationViewModel.location.value) {
-                        UNKNOWN -> {
-                            if (checkPermission(ACCESS_FINE_LOCATION) &&
-                                checkPermission(ACCESS_COARSE_LOCATION)) {
-                                getUserLocation()
-                            } else {
-                                setComposable {
-                                    LocationScreen(
-                                        onButtonClick = {
-                                            getUserLocation()
-                                        }
-                                    )
-                                }
-                            }
+                if (isLocationHandled) {
+                    if (user.isNewUser) {
+                        setComposable {
+                            SearchScreen(
+                                userPreference = userPreference,
+                                navigateUp = { setDefaultContent(true) },
+                                onSubmit = {
+                                    viewModel.setNotNewUser()
+                                    setDefaultContent(true)
+                                },
+                            )
                         }
+                    } else {
+                        setDefaultContent(true)
+                    }
+                } else {
+                    handleUserLocation(user.isNewUser)
+                    isLocationHandled = true
+                }
+            } else {
+                setDefaultContent(false)
+                isLocationHandled = false
+            }
+        }
+    }
 
-                        FAILED -> {
-                            setComposable {
-                                InfoScreen(
-                                    text = getString(R.string.get_location_failed),
-                                    actionText = getString(R.string.retry),
-                                    secondaryActionText = getString(R.string.skip),
-                                    action = {
-                                        getUserLocation()
-                                    },
-                                    secondaryAction = {
-                                        locationViewModel.setLocationToNull()
-                                    }
-                                )
-                            }
-                        }
-
-                        NOT_GRANTED -> {
-                            setComposable {
-                                InfoScreen(
-                                    text = getString(R.string.location_permission_not_granted),
-                                    actionText = getString(R.string.go_to_settings),
-                                    secondaryActionText = getString(R.string.skip),
-                                    action = {
-                                        val intent = Intent(ACTION_LOCATION_SOURCE_SETTINGS)
-                                        startActivityForResult(intent, REQUEST_LOCATION_SETTINGS)
-                                    },
-                                    secondaryAction = {
-                                        locationViewModel.setLocationToNull()
-                                    }
-                                )
-                            }
-                        }
-
-                        else -> {
-                            var isValidRegion = true
-                            if (locationViewModel.location.value != null) {
-                                isValidRegion = false
-                                regions.forEach { region ->
-                                    if (locationViewModel.location.value == region.key) {
-                                        locationViewModel.setLocationTo(region.value)
-                                        isValidRegion = true
-                                    } else if(locationViewModel.location.value == region.value) {
-                                        isValidRegion = true
-                                    }
+    private fun handleUserLocation(isNewUser: Boolean) {
+        locationObserver = Observer { permission ->
+            when (permission) {
+                PermissionState.Initial -> {
+                    if (checkPermission(ACCESS_FINE_LOCATION) &&
+                        checkPermission(ACCESS_COARSE_LOCATION)
+                    ) {
+                        getUserLocation()
+                    } else {
+                        setComposable {
+                            RequestLocationScreen(
+                                onButtonClick = {
+                                    getUserLocation()
                                 }
-                            }
-
-                            if (isValidRegion) {
-                                if (user.isNewUser) {
-                                    setComposable {
-                                        SearchScreen(
-                                            region = locationViewModel.location.value,
-                                            navigateUp = { setDefaultContent(true, locationViewModel.location.value) },
-                                            onSubmit = {
-                                                viewModel.setNotNewUser()
-                                                setDefaultContent(true, locationViewModel.location.value)
-                                            }
-                                        )
-                                    }
-                                } else {
-                                    setDefaultContent(true, locationViewModel.location.value)
-                                }
-                            } else {
-                                setComposable {
-                                    InfoScreen(
-                                        text = getString(R.string.location_not_valid),
-                                        actionText = getString(R.string.ok),
-                                        action = {
-                                            locationViewModel.setLocationToNull()
-                                            if (user.isNewUser) {
-                                                setComposable {
-                                                    SearchScreen(
-                                                        region = locationViewModel.location.value,
-                                                        navigateUp = { setDefaultContent(true, locationViewModel.location.value) },
-                                                        onSubmit = {
-                                                            viewModel.setNotNewUser()
-                                                            setDefaultContent(true, locationViewModel.location.value)
-                                                        }
-                                                    )
-                                                }
-                                            } else {
-                                                setDefaultContent(true, locationViewModel.location.value)
-                                            }
-                                        }
-                                    )
-                                }
-                            }
+                            )
                         }
                     }
                 }
-            } else {
-                setDefaultContent(false, null)
+                PermissionState.NotGranted -> {
+                    setComposable {
+                        InfoScreen(
+                            text = getString(R.string.location_permission_not_granted),
+                            actionText = getString(R.string.go_to_settings),
+                            secondaryActionText = getString(R.string.skip),
+                            action = {
+                                val intent = Intent(ACTION_LOCATION_SOURCE_SETTINGS)
+                                startActivityForResult(intent, REQUEST_LOCATION_SETTINGS)
+                            },
+                            secondaryAction = {
+                                locationViewModel.setLocationTo(getString(R.string.all))
+                            }
+                        )
+                    }
+                }
+                is PermissionState.Failed -> {
+                    val errorMessage = permission.errorMessage
+                    setComposable {
+                        InfoScreen(
+                            text = errorMessage + " " + getString(R.string.get_location_failed),
+                            actionText = getString(R.string.retry),
+                            secondaryActionText = getString(R.string.skip),
+                            action = {
+                                getUserLocation()
+                            },
+                            secondaryAction = {
+                                locationViewModel.setLocationTo(getString(R.string.all))
+                            }
+                        )
+                    }
+                }
+                is PermissionState.Granted -> {
+                    val isValidRegion = checkRegion(permission.location)
+
+                    if (!isValidRegion) {
+                        setComposable {
+                            InfoScreen(
+                                text = getString(R.string.location_not_valid),
+                                actionText = getString(R.string.ok),
+                                action = {
+                                    locationViewModel.setLocationTo(getString(R.string.all))
+                                    locationViewModel.saveLocation(getString(R.string.all))
+                                    removeLocationObserver()
+                                }
+                            )
+                        }
+                    } else {
+                        if (isNewUser) {
+                            setComposable {
+                                SearchScreen(
+                                    userPreference = userPreference,
+                                    navigateUp = { setDefaultContent(true) },
+                                    onSubmit = {
+                                        viewModel.setNotNewUser()
+                                        setDefaultContent(true)
+                                    },
+                                )
+                            }
+                        } else {
+                            setDefaultContent(true)
+                        }
+                        removeLocationObserver()
+                    }
+                }
             }
         }
+
+        locationViewModel.locationPermission.observe(this, locationObserver)
+    }
+
+    private fun removeLocationObserver() {
+        locationViewModel.locationPermission.removeObserver(locationObserver)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_LOCATION_SETTINGS) {
+            locationViewModel.setPermissionToInitial()
+        }
+    }
+
+    private fun checkRegion(location: String): Boolean {
+        if (location == getString(R.string.all)) return true
+
+        regions.forEach { region ->
+            if (location == region.key) {
+                locationViewModel.saveLocation(region.value)
+                return true
+            } else if (location == region.value) {
+                locationViewModel.saveLocation(region.value)
+                return true
+            }
+        }
+        return false
     }
 
     private fun setComposable(content: @Composable () -> Unit) {
@@ -194,21 +229,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun setDefaultContent(isLogin: Boolean, userLocation: String?) {
+    private fun setDefaultContent(isLogin: Boolean) {
         setComposable {
             CafeRecommenderApp(
-                userPreference = UserPreference.getInstance(dataStore),
+                userPreference = userPreference,
                 isLogin = isLogin,
-                userLocation = userLocation
             )
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == REQUEST_LOCATION_SETTINGS) {
-            locationViewModel.setLocationToUnknown()
         }
     }
 
@@ -224,7 +250,7 @@ class MainActivity : ComponentActivity() {
                     locationViewModel.getUserLocation(this)
                 }
                 else -> {
-                    locationViewModel.setLocationToNotGranted()
+                    locationViewModel.setPermissionToNotGranted()
                 }
             }
         }

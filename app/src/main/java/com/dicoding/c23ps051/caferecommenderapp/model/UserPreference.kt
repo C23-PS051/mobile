@@ -19,7 +19,6 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
                 preferences[PHOTO_KEY] ?: "",
                 preferences[STATE_KEY] ?: false,
                 preferences[NEW_USER_KEY] ?: false,
-                preferences[USER_LOCATION] ?: "South Jakarta"
             )
         }
     }
@@ -32,7 +31,12 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
             preferences[PHOTO_KEY] = login.photoUrl
             preferences[STATE_KEY] = login.isLogin
             preferences[NEW_USER_KEY] = login.isNewUser
-            preferences[USER_LOCATION] = login.userLocation
+        }
+    }
+
+    fun getIsLogin(): Flow<Boolean> {
+        return dataStore.data.map { preferences ->
+            preferences[STATE_KEY] ?: false
         }
     }
 

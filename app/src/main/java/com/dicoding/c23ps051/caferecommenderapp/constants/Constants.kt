@@ -4,3 +4,4 @@ const val MIN_PASSWORD_LENGTH = 8
 const val UNKNOWN = "unknown"
 const val FAILED = "failed"
 const val NOT_GRANTED = "not_granted"
+const val KNOWN = "known"

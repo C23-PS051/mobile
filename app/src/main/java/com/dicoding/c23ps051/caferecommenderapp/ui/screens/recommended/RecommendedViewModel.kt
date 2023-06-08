@@ -3,15 +3,12 @@ package com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.data.CafeRepository
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.launch
 
 class RecommendedViewModel(private val repository: CafeRepository, pref: UserPreference) : ViewModel() {
 
@@ -43,22 +40,9 @@ class RecommendedViewModel(private val repository: CafeRepository, pref: UserPre
     private var _openChip = mutableStateOf(initialOpenChipState)
     val openChip: State<Boolean> get() = _openChip
 
-    fun getAllRecommendedCafes() {
-        // TODO: TO BE UPDATED
-        viewModelScope.launch {
-            repository.getAllCafes()
-                .catch {
-                    _uiState.value = UiState.Error(it.message.toString())
-                }
-                .collect { cafes ->
-                    recommendedCafes = cafes
-                    _uiState.value = UiState.Success(cafes)
-                }
-        }
-    }
-
     fun searchCafes(newQuery: String) {
         _query.value = newQuery
+        recommendedCafes = repository.searchCafes(query.value).sortedBy { it.name }
         updateStates()
     }
 
@@ -83,10 +67,12 @@ class RecommendedViewModel(private val repository: CafeRepository, pref: UserPre
     }
 
     private fun updateStates() {
-        filteredRecommendedCafes = recommendedCafes.filter { it.name.contains(query.value, ignoreCase = true) }
+        filteredRecommendedCafes = recommendedCafes
 
         if (regionChip.value) {
-            filteredRecommendedCafes = filteredRecommendedCafes.filter { it.region == location }
+            if (location != "All") {
+                filteredRecommendedCafes = filteredRecommendedCafes.filter { it.region == location }
+            }
         }
         if (openChip.value) {
             filteredRecommendedCafes = filteredRecommendedCafes.filter { it.isOpen }

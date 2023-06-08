@@ -3,12 +3,11 @@ package com.dicoding.c23ps051.caferecommenderapp.ui.screens
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -17,7 +16,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BottomBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.navigation.Screen
@@ -26,7 +24,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.screens.favorite.FavoriteScre
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.home.HomeScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile.ProfileScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended.RecommendedScreen
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended.SearchScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.search.SearchScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in.SignInScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_up.SignUpScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.welcome.WelcomeScreen
@@ -36,7 +34,6 @@ fun CafeRecommenderApp(
     userPreference: UserPreference,
     isLogin: Boolean,
     modifier: Modifier = Modifier,
-    userLocation: String? = null,
     navController: NavHostController = rememberNavController(),
 ) {
     var bottomBarState by remember { mutableStateOf(true) }
@@ -88,7 +85,6 @@ fun CafeRecommenderApp(
                     navigateToSearchCafe = {
                         navController.navigate(Screen.Search.route)
                     },
-                    userLocation = userLocation
                 )
             }
             composable(Screen.Recommended.route) {
@@ -163,10 +159,13 @@ fun CafeRecommenderApp(
             }
             composable(Screen.Search.route) {
                 SearchScreen(
+                    userPreference = userPreference,
                     navigateUp = {
                         navController.navigateUp()
                     },
-                    onSubmit = { /*TODO*/ }
+                    onSubmit = {
+                        navController.navigate(Screen.Recommended.route)
+                    }
                 )
             }
         }

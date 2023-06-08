@@ -1,37 +1,26 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.location
 
-import android.Manifest
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
-import android.os.Looper
-import android.util.Log
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.R
-import com.dicoding.c23ps051.caferecommenderapp.constants.FAILED
-import com.dicoding.c23ps051.caferecommenderapp.constants.NOT_GRANTED
-import com.dicoding.c23ps051.caferecommenderapp.constants.UNKNOWN
-import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
+import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.PermissionState
 import com.google.android.gms.location.LocationServices
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-class LocationViewModel : ViewModel() {
+class LocationViewModel(private val pref: UserPreference) : ViewModel() {
 
-    private val _location: MutableLiveData<String?> = MutableLiveData(UNKNOWN)
-    val location: LiveData<String?> get() = _location
+    private var _locationPermission = MutableLiveData<PermissionState>(PermissionState.Initial)
+    val locationPermission: LiveData<PermissionState> get() = _locationPermission
 
     private fun retrievePlaceName(context: Context, lat: Double, lon: Double): String {
         val geocoder = Geocoder(context)
@@ -52,14 +41,26 @@ class LocationViewModel : ViewModel() {
         ) {
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                viewModelScope.launch {
                 if (location != null) {
-                    _location.value = retrievePlaceName(context, location.latitude, location.longitude)
-                } else {
-                    _location.value = FAILED
+                        val locationName = retrievePlaceName(context, location.latitude, location.longitude)
+                        if (locationName == context.getString(R.string.unknown)) {
+                            val errorMessage = "Failed to get user location."
+                            _locationPermission.value = PermissionState.Failed(errorMessage)
+                        } else {
+                            _locationPermission.value = PermissionState.Granted(locationName)
+                        }
+                    } else {
+                        val errorMessage = "Failed to get user location."
+                        _locationPermission.value = PermissionState.Failed(errorMessage)
+                    }
                 }
             }
+            fusedLocationClient.lastLocation.addOnFailureListener { exception ->
+                _locationPermission.value = exception.message?.let { PermissionState.Failed("$it.") }
+            }
         } else {
-            setLocationToNotGranted()
+            _locationPermission.value = PermissionState.NotGranted
         }
     }
 
@@ -70,19 +71,27 @@ class LocationViewModel : ViewModel() {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    fun setLocationToNull() {
-        _location.value = null
+    fun setPermissionToInitial() {
+        viewModelScope.launch {
+            _locationPermission.value = PermissionState.Initial
+        }
     }
 
-    fun setLocationToNotGranted() {
-        _location.value = NOT_GRANTED
+    fun setPermissionToNotGranted() {
+        viewModelScope.launch {
+            _locationPermission.value = PermissionState.NotGranted
+        }
     }
 
-    fun setLocationToUnknown() {
-        _location.value = UNKNOWN
+    fun setLocationTo(location: String) {
+        viewModelScope.launch {
+            _locationPermission.value = PermissionState.Granted(location)
+        }
     }
 
-    fun setLocationTo(value: String) {
-        _location.value = value
+    fun saveLocation(location: String) {
+        viewModelScope.launch {
+            pref.setUserLocation(location)
+        }
     }
 }

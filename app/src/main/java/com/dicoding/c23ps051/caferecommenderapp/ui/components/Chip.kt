@@ -1,6 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults

@@ -1,4 +1,4 @@
-package com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended
+package com.dicoding.c23ps051.caferecommenderapp.ui.screens.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -26,13 +27,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
+import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
+import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Chip
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OutlinedDropDown
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OutlinedDropDownTextField
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Section
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.ErrorScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 
 private const val facilitiesSize = 14
@@ -41,58 +48,82 @@ private const val priceSize = 3
 
 @Composable
 fun SearchScreen(
-    region: String? = stringResource(id = R.string.all),
+    userPreference: UserPreference,
     navigateUp: () -> Unit,
     onSubmit: () -> Unit,
+    viewModel: SearchViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
     state: SearchState = rememberSearchState(
         expanded = false,
-        selectedText = region ?: stringResource(id = R.string.all),
         checkedCheckbox = List(facilitiesSize) { false },
         checkedRatingChip = List(ratingSize) { false },
         checkedPriceChip = List(priceSize) { false },
     )
 ) {
-    SearchContent(
-        selectedText = state.selectedText,
-        expanded = state.expanded,
-        setSelectedTextState = { selectedText ->
-            state.selectedText = selectedText
-        },
-        setExpandedState = { expanded ->
-            state.expanded = expanded
-        },
-        navigateUp = navigateUp,
-        onDismissRequest = {
-            state.expanded = false
-        },
-        onSubmit = onSubmit,
-        checkedState = state.checkedCheckbox,
-        toggleCheckbox = { index ->
-            state.checkedCheckbox[index] = !state.checkedCheckbox[index]
-        },
-        onCheckedChange = { isChecked, index ->
-            state.checkedCheckbox[index] = isChecked
-        },
-        isCheckedRatingChip = state.checkedRatingChip,
-        onRatingChipClicked = { index ->
-            state.checkedRatingChip[index] = !state.checkedRatingChip[index]
-        },
-        isCheckedPriceChip = state.checkedPriceChip,
-        onPriceChipClicked = { index ->
-            state.checkedPriceChip[index] = !state.checkedPriceChip[index]
-        }
+    val regions = listOf(
+        stringResource(id = R.string.all),
+        stringResource(id = R.string.central_jakarta),
+        stringResource(id = R.string.south_jakarta),
+        stringResource(id = R.string.north_jakarta),
+        stringResource(id = R.string.west_jakarta),
+        stringResource(id = R.string.east_jakarta),
     )
+
+    viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
+        when (uiState) {
+            UiState.Loading -> {
+                LoadingScreen()
+                viewModel.getLocation()
+            }
+            is UiState.Success -> {
+                SearchContent(
+                    selectedText = uiState.data,
+                    expanded = state.expanded,
+                    setSelectedTextState = { selectedText ->
+                        viewModel.saveLocation(selectedText)
+                    },
+                    setExpandedState = { expanded ->
+                        state.expanded = expanded
+                    },
+                    navigateUp = navigateUp,
+                    onDismissRequest = { state.expanded = false },
+                    onSubmit = { onSubmit() },
+                    checkedState = state.checkedCheckbox,
+                    toggleCheckbox = { index ->
+                        state.checkedCheckbox[index] = !state.checkedCheckbox[index]
+                    },
+                    onCheckedChange = { isChecked, index ->
+                        state.checkedCheckbox[index] = isChecked
+                    },
+                    isCheckedRatingChip = state.checkedRatingChip,
+                    onRatingChipClicked = { index ->
+                        state.checkedRatingChip[index] = !state.checkedRatingChip[index]
+                    },
+                    isCheckedPriceChip = state.checkedPriceChip,
+                    onPriceChipClicked = { index ->
+                        state.checkedPriceChip[index] = !state.checkedPriceChip[index]
+                    },
+                    regions = regions
+                )
+            }
+            is UiState.Error -> {
+                ErrorScreen(
+                    text = uiState.errorMessage,
+                    onRetry = {
+                        viewModel.getLocation()
+                    }
+                )
+            }
+        }
+    }
 }
 
 class SearchState(
     initialExpandedState: Boolean,
-    initialSelectedTextState: String,
     initialCheckedCheckboxState: List<Boolean>,
     initialCheckedRatingChipState: List<Boolean>,
     initialCheckedPriceChipState: List<Boolean>,
 ) {
     var expanded by mutableStateOf(initialExpandedState)
-    var selectedText by mutableStateOf(initialSelectedTextState)
     var checkedCheckbox = mutableStateListOf<Boolean>().apply { addAll(initialCheckedCheckboxState) }
     var checkedRatingChip = mutableStateListOf<Boolean>().apply { addAll(initialCheckedRatingChipState) }
     var checkedPriceChip = mutableStateListOf<Boolean>().apply { addAll(initialCheckedPriceChipState) }
@@ -101,14 +132,13 @@ class SearchState(
 @Composable
 fun rememberSearchState(
     expanded: Boolean,
-    selectedText: String,
     checkedCheckbox: List<Boolean>,
     checkedRatingChip: List<Boolean>,
     checkedPriceChip: List<Boolean>,
 ): SearchState = remember(
-    expanded, selectedText, checkedCheckbox, checkedRatingChip, checkedPriceChip
+    expanded, checkedCheckbox, checkedRatingChip, checkedPriceChip
 ) {
-    SearchState(expanded, selectedText, checkedCheckbox, checkedRatingChip, checkedPriceChip)
+    SearchState(expanded, checkedCheckbox, checkedRatingChip, checkedPriceChip)
 }
 
 @Composable
@@ -127,6 +157,7 @@ fun SearchContent(
     onRatingChipClicked: (Int) -> Unit,
     isCheckedPriceChip: List<Boolean>,
     onPriceChipClicked: (Int) -> Unit,
+    regions: List<String>,
     modifier: Modifier = Modifier,
 ) {
     val ratings = listOf(
@@ -205,6 +236,7 @@ fun SearchContent(
                         setSelectedTextState = setSelectedTextState,
                         setExpandedState = setExpandedState,
                         onDismissRequest = onDismissRequest,
+                        regions = regions,
                     )
                 },
             )
@@ -288,21 +320,13 @@ fun DropDown(
     setSelectedTextState: (String) -> Unit,
     setExpandedState: (Boolean) -> Unit,
     onDismissRequest: () -> Unit,
+    regions: List<String>,
     modifier: Modifier = Modifier,
 ) {
-    val options = listOf(
-        stringResource(id = R.string.all),
-        stringResource(id = R.string.central_jakarta),
-        stringResource(id = R.string.south_jakarta),
-        stringResource(id = R.string.north_jakarta),
-        stringResource(id = R.string.west_jakarta),
-        stringResource(id = R.string.east_jakarta),
-    )
-
-    val actions = options.map { option ->
+    val actions = regions.map { region ->
         {
-            if (selectedText != option) {
-                setSelectedTextState(option)
+            if (selectedText != region) {
+                setSelectedTextState(region)
             }
             setExpandedState(false)
         }
@@ -325,7 +349,7 @@ fun DropDown(
 
     OutlinedDropDown(
         expanded = expanded,
-        options = options,
+        options = regions,
         actions = actions,
         onDismissRequest = onDismissRequest
     )

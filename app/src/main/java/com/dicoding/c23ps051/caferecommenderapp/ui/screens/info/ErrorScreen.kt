@@ -21,6 +21,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 @Composable
 fun ErrorScreen(
     text: String,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -45,7 +46,7 @@ fun ErrorScreen(
                 .padding(vertical = 24.dp)
         )
         Button(text = stringResource(id = R.string.retry)) {
-            /*TODO*/
+            onRetry()
         }
     }
 }

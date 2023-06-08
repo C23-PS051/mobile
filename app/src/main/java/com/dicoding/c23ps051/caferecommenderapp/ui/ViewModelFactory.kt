@@ -6,7 +6,9 @@ import com.dicoding.c23ps051.caferecommenderapp.data.CafeRepository
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.detail.DetailViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.home.HomeViewModel
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.location.LocationViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended.RecommendedViewModel
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.search.SearchViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in.SignInViewModel
 
 class RepositoryViewModelFactory(private val repository: CafeRepository) :
@@ -37,6 +39,12 @@ class PreferenceViewModelFactory(private val pref: UserPreference) :
             }
             modelClass.isAssignableFrom(PreferenceViewModel::class.java) -> {
                 PreferenceViewModel(pref) as T
+            }
+            modelClass.isAssignableFrom(LocationViewModel::class.java) -> {
+                LocationViewModel(pref) as T
+            }
+            modelClass.isAssignableFrom(SearchViewModel::class.java) -> {
+                SearchViewModel(pref) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

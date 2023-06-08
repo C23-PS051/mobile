@@ -17,22 +17,13 @@ class PreferenceViewModel(private val pref: UserPreference) : ViewModel() {
     private val _uiState: MutableStateFlow<UiState<Login>> = MutableStateFlow(UiState.Loading)
     val uiState: StateFlow<UiState<Login>> get() = _uiState
 
+    val location get() = pref.getUserLocation()
+
     fun getLoginAsLiveData(): LiveData<Login> {
         return pref.getLogin().asLiveData()
     }
 
-    fun getIsNewUserAsLiveData(): LiveData<Boolean> {
-        return pref.getIsNewUser().asLiveData()
-    }
-
-    fun setNotNewUser() {
-        viewModelScope.launch {
-            pref.setNotNewUser()
-        }
-    }
-
     fun getLogin() {
-        _uiState.value = UiState.Loading
         viewModelScope.launch {
             pref.getLogin()
                 .catch {
@@ -46,10 +37,15 @@ class PreferenceViewModel(private val pref: UserPreference) : ViewModel() {
                         photoUrl = data.photoUrl,
                         isLogin = data.isLogin,
                         isNewUser = data.isNewUser,
-                        userLocation = data.userLocation,
                     )
                     _uiState.value = UiState.Success(loginModel)
                 }
+        }
+    }
+
+    fun setNotNewUser() {
+        viewModelScope.launch {
+            pref.setNotNewUser()
         }
     }
 

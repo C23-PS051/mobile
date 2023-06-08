@@ -22,6 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.di.Injection
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
+import com.dicoding.c23ps051.caferecommenderapp.model.Login
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
@@ -40,7 +41,6 @@ fun HomeScreen(
     navigateToDetail: (Long) -> Unit,
     navigateToSearchCafe: () -> Unit,
     onProfileClick: () -> Unit,
-    userLocation: String?,
     viewModel: HomeViewModel = viewModel(
         factory = RepositoryViewModelFactory(Injection.provideRepository())
     ),
@@ -48,19 +48,23 @@ fun HomeScreen(
 ) {
     var backPressState by remember { mutableStateOf<BackPress>(BackPress.Idle) }
     val context = LocalContext.current
-    var photoUrl = "" // "" photoUrl will display default profile picture
+
+    val userLocation = preferenceViewModel.location.collectAsState(initial = stringResource(id = R.string.all)).value
 
     val uiStateNearby = viewModel.uiStateNearby.collectAsState(initial = UiState.Loading).value
     val uiStateOpen24Hours = viewModel.uiStateOpen24Hours.collectAsState(initial = UiState.Loading).value
     val uiStateOnBudget = viewModel.uiStateOnBudget.collectAsState(initial = UiState.Loading).value
+    val uiStateLogin = preferenceViewModel.uiState.collectAsState(initial = UiState.Loading).value
 
     val nearbyCafes = if (uiStateNearby is UiState.Success) uiStateNearby.data else emptyList()
     val open24HoursCafes = if (uiStateOpen24Hours is UiState.Success) uiStateOpen24Hours.data else emptyList()
     val onBudgetCafes = if (uiStateOnBudget is UiState.Success) uiStateOnBudget.data else emptyList()
+    val login = if (uiStateLogin is UiState.Success) uiStateLogin.data else null
 
-    val allCafesLoaded = nearbyCafes.isNotEmpty() && open24HoursCafes.isNotEmpty() && onBudgetCafes.isNotEmpty()
+    val loadCompleted = nearbyCafes.isNotEmpty() && open24HoursCafes.isNotEmpty() && onBudgetCafes.isNotEmpty() && login != null
 
-    if (allCafesLoaded) {
+    if (loadCompleted) {
+        val loginData = login as Login
         HomeContent(
             navigateToDetail = navigateToDetail,
             navigateToSearchCafe = navigateToSearchCafe,
@@ -69,7 +73,7 @@ fun HomeScreen(
             open24HoursCafes = open24HoursCafes,
             onBudgetCafes = onBudgetCafes,
             userLocation = userLocation,
-            photoUrl = photoUrl
+            photoUrl = loginData.photoUrl
         )
     } else {
         LoadingScreen(stringResource(id = R.string.exploring_cafe_options))
@@ -83,25 +87,28 @@ fun HomeScreen(
         if (uiStateOnBudget is UiState.Loading) {
             viewModel.getOnBudgetCafes()
         }
+        if (uiStateLogin is UiState.Loading) {
+            preferenceViewModel.getLogin()
+        }
 
         if (uiStateNearby is UiState.Error || uiStateOpen24Hours is UiState.Error || uiStateOnBudget is UiState.Error) {
             // TODO: HANDLE ERROR
         }
     }
 
-    preferenceViewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
-        when (uiState) {
-            is UiState.Loading -> {
-                preferenceViewModel.getLogin()
-            }
-            is UiState.Success -> {
-                photoUrl = uiState.data.photoUrl
-            }
-            is UiState.Error -> {
-                /*TODO*/
-            }
-        }
-    }
+//    preferenceViewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
+//        when (uiState) {
+//            is UiState.Loading -> {
+//                preferenceViewModel.getLogin()
+//            }
+//            is UiState.Success -> {
+//                photoUrl = uiState.data.photoUrl
+//            }
+//            is UiState.Error -> {
+//                /*TODO*/
+//            }
+//        }
+//    }
 
     // User needs to press back twice to exit
     BackPressHandler(

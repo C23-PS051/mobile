@@ -15,6 +15,7 @@ class DetailViewModel(private val repository: CafeRepository) : ViewModel() {
     val uiState: StateFlow<UiState<Cafe>> get() = _uiState
 
     fun getCafeById(id: Long) {
+        _uiState.value = UiState.Loading
         viewModelScope.launch {
             _uiState.value = UiState.Loading
             _uiState.value = UiState.Success(repository.getCafeById(id))

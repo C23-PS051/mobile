@@ -69,10 +69,10 @@ class CafeRepository {
             }
     }
 
-    fun searchCafes(query: String): Flow<List<Cafe>> {
-        return flowOf(cafeList.filter {
+    fun searchCafes(query: String): List<Cafe> {
+        return cafeList.filter {
             it.name.contains(query, ignoreCase = true)
-        })
+        }
     }
 
     companion object {

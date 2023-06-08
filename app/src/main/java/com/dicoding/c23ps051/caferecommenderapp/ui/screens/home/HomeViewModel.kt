@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.data.CafeRepository
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -60,16 +59,4 @@ class HomeViewModel(private val repository: CafeRepository) : ViewModel() {
                 }
         }
     }
-
-//    fun getAllCafesNeeded() {
-//        viewModelScope.launch {
-//            val nearbyCafes = repository.getAllCafes()
-//            val open24HoursCafes = repository.getAllCafes()
-//            val onBudgetCafes = repository.getAllCafes()
-//            val result = combine(nearbyCafes, open24HoursCafes, onBudgetCafes) { nearby, open24Hours, onBudget ->
-//                nearby.isNotEmpty() && open24Hours.isNotEmpty() && onBudget.isNotEmpty()
-//            }
-//            _uiState.value = UiState.Success(HomeCafe(nearbyCafes, open24HoursCafes, onBudgetCafes))
-//        }
-//    }
 }
