@@ -205,6 +205,11 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun checkRegion(location: String): Boolean {
+        if (location == getString(R.string.all)) {
+            locationViewModel.saveLocation(location)
+            return true
+        }
+
         regions.forEach { region ->
             if (location == region.key) {
                 locationViewModel.saveLocation(region.value)

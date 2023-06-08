@@ -1,14 +1,18 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.data.CafeRepository
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class RecommendedViewModel(private val repository: CafeRepository, pref: UserPreference) : ViewModel() {
 
@@ -18,7 +22,7 @@ class RecommendedViewModel(private val repository: CafeRepository, pref: UserPre
     private var recommendedCafes = listOf<Cafe>()
     private var filteredRecommendedCafes = listOf<Cafe>()
 
-    private val location: String = pref.getUserLocation().toString()
+    private lateinit var location: String
 
     private val initialExpandedState = false
     private val initialSelectedTextState = 0
@@ -39,6 +43,14 @@ class RecommendedViewModel(private val repository: CafeRepository, pref: UserPre
 
     private var _openChip = mutableStateOf(initialOpenChipState)
     val openChip: State<Boolean> get() = _openChip
+
+    init {
+        viewModelScope.launch {
+            pref.getUserLocation().collect {
+                location = it
+            }
+        }
+    }
 
     fun searchCafes(newQuery: String) {
         _query.value = newQuery
