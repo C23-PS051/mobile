@@ -16,7 +16,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 @Composable
 fun HomeSection(
     title: String,
-    onCafeItemClick: (Long) -> Unit,
+    onCafeItemClick: (String) -> Unit,
     cafes: List<Cafe>,
     modifier: Modifier = Modifier,
 ) {

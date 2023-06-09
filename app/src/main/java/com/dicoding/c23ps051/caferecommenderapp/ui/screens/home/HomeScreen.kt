@@ -38,7 +38,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 @Composable
 fun HomeScreen(
     userPreference: UserPreference,
-    navigateToDetail: (Long) -> Unit,
+    navigateToDetail: (String) -> Unit,
     navigateToSearchCafe: () -> Unit,
     onProfileClick: () -> Unit,
     viewModel: HomeViewModel = viewModel(
@@ -113,7 +113,7 @@ fun HomeScreen(
 
 @Composable
 fun HomeContent(
-    navigateToDetail: (Long) -> Unit,
+    navigateToDetail: (String) -> Unit,
     navigateToSearchCafe: () -> Unit,
     onProfileClick: () -> Unit,
     nearbyCafes: List<Cafe>,
