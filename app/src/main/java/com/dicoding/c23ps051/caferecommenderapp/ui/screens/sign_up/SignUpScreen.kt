@@ -70,6 +70,7 @@ fun SignUpScreen(
         radio = listOf(true, false),
     ),
 ) {
+    Log.d("MyLogger", photoUrl)
     cameraExecutor = Executors.newSingleThreadExecutor()
     var cameraSelector by remember { mutableStateOf(CameraSelector.DEFAULT_BACK_CAMERA) }
     var shouldShowCamera by remember { mutableStateOf(false) }
@@ -355,7 +356,7 @@ fun SignUpContent(
             )
             Spacer(modifier = Modifier.height(4.dp))
             ClickableText(
-                stringResource(id = R.string.add_profile_picture),
+                stringResource(id = R.string.change_profile_picture),
                 onClick = onAddProfilePicture
             )
             Spacer(modifier = Modifier.height(36.dp))
