@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun RecommendedScreen(
-    navigateToDetail: (Long) -> Unit,
+    navigateToDetail: (String) -> Unit,
     userPreference: UserPreference,
     viewModel: RecommendedViewModel = viewModel(
         factory = RepositoryPreferenceViewModelFactory(Injection.provideRepository(), userPreference)
@@ -124,7 +124,7 @@ fun RecommendedContent(
     text: String,
     onQueryChange: (String) -> Unit,
     cafes: List<Cafe>,
-    navigateToDetail: (Long) -> Unit,
+    navigateToDetail: (String) -> Unit,
     focusManager: FocusManager,
     listState: LazyListState,
     selectedText: Int,

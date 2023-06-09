@@ -27,6 +27,8 @@ private val DarkColorScheme = darkColorScheme(
     onSecondaryContainer = LightCream, // Selected navbar icon color
     onSurfaceVariant = Brown, // Navbar icon color
     onTertiary = White, // Text color on card
+    inverseSurface = LightCream,
+    inverseOnSurface = Black,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -41,6 +43,8 @@ private val LightColorScheme = lightColorScheme(
     onSecondaryContainer = DarkBrown, // Selected navbar icon color
     onSurfaceVariant = Brown, // Navbar icon color
     onTertiary = LightBlack, // Text color on card
+    inverseSurface = Brown,
+    inverseOnSurface = White,
 )
 
 @Composable

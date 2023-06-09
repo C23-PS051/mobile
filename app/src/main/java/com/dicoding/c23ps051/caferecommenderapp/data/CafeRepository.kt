@@ -18,13 +18,14 @@ class CafeRepository {
                     thumbnail = it.thumbnail,
                     name = it.name,
                     rating = it.rating,
-                    ratingCount = it.ratingCount,
-                    distance = it.distance,
+                    review = it.review,
                     address = it.address,
-                    isOpen = it.isOpen,
-                    minPrice = it.minPrice,
-                    maxPrice = it.maxPrice,
-                    region = it.region
+                    region = it.region,
+                    closingHour = it.closingHour,
+                    priceCategory = it.priceCategory,
+                    openingHour = it.openingHour,
+                    description = it.description,
+                    facilities = it.facilities,
                 )
                 cafeList.add(cafe)
             }
@@ -35,38 +36,38 @@ class CafeRepository {
         return flowOf(cafeList)
     }
 
-    fun getCafeById(id: Long): Cafe {
+    fun getCafeById(id: String): Cafe {
         return cafeList.first { it.id == id }
     }
 
     fun getNearbyCafes(): Flow<List<Cafe>> {
         // TODO: TO BE UPDATED
         return getAllCafes()
-            .map { cafes ->
-                cafes.filter { cafe ->
-                    cafe.distance <= 1000
-                }
-            }
+//            .map { cafes ->
+//                cafes.filter { cafe ->
+//                    cafe.distance <= 1000
+//                }
+//            }
     }
 
     fun getOpen24HoursCafes(): Flow<List<Cafe>> {
         // TODO: TO BE UPDATED
         return getAllCafes()
-            .map { cafes ->
-                cafes.filter { cafe ->
-                    cafe.isOpen
-                }
-            }
+//            .map { cafes ->
+//                cafes.filter { cafe ->
+//                    cafe.isOpen
+//                }
+//            }
     }
 
     fun getOnBudgetCafes(): Flow<List<Cafe>> {
         // TODO: TO BE UPDATED
         return getAllCafes()
-            .map { cafes ->
-                cafes.filter { cafe ->
-                    cafe.minPrice < 20000
-                }
-            }
+//            .map { cafes ->
+//                cafes.filter { cafe ->
+//                    cafe.minPrice < 20000
+//                }
+//            }
     }
 
     fun searchCafes(query: String): List<Cafe> {

@@ -4,14 +4,19 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import coil.size.Scale
 import com.dicoding.c23ps051.caferecommenderapp.R
 
@@ -24,11 +29,13 @@ fun ProfilePicture(
         painter = if (image == "") {
             painterResource(id = R.drawable.profile)
         } else {
-            rememberImagePainter(
-                data = Uri.parse(image),
-                builder = { scale(Scale.FILL) },
+            rememberAsyncImagePainter(
+                ImageRequest.Builder(LocalContext.current).data(data = Uri.parse(image)).apply(block = fun ImageRequest.Builder.() {
+                    scale(Scale.FILL)
+                }).build()
             )
-       },
+        },
+        colorFilter = if (image == "") ColorFilter.tint(MaterialTheme.colorScheme.primary) else null,
         contentDescription = stringResource(id = R.string.your_profile_picture),
         modifier = modifier
             .size(144.dp)

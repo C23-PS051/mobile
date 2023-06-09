@@ -154,9 +154,9 @@ fun CafeRecommenderApp(
             }
             composable(
                 route = Screen.Detail.route,
-                arguments = listOf(navArgument("id") {  type = NavType.LongType })
+                arguments = listOf(navArgument("id") {  type = NavType.StringType })
             ) {
-                val id = it.arguments?.getLong("id") ?: -1
+                val id = it.arguments?.getString("id") ?: ""
                 DetailScreen(
                     itemId = id,
                     navigateBack = {
@@ -171,6 +171,7 @@ fun CafeRecommenderApp(
                         navController.navigateUp()
                     },
                     onSubmit = {
+                        navController.popBackStack()
                         navController.navigate(Screen.Recommended.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true

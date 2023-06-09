@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.data.CafeRepository
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
+import com.dicoding.c23ps051.caferecommenderapp.ui.common.isOpen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -87,17 +88,17 @@ class RecommendedViewModel(private val repository: CafeRepository, pref: UserPre
             }
         }
         if (openChip.value) {
-            filteredRecommendedCafes = filteredRecommendedCafes.filter { it.isOpen }
+            filteredRecommendedCafes = filteredRecommendedCafes.filter { isOpen(it.openingHour, it.closingHour) }
         }
 
-        filteredRecommendedCafes = when (selectedText.value) {
-            0 -> filteredRecommendedCafes.sortedBy { it.name }
-            1 -> filteredRecommendedCafes.sortedBy { it.distance }
-            2 -> filteredRecommendedCafes.sortedByDescending { it.rating }
-            3 -> filteredRecommendedCafes.sortedBy { it.maxPrice - it.minPrice }
-            4 -> filteredRecommendedCafes.sortedByDescending { it.maxPrice - it.minPrice }
-            else -> filteredRecommendedCafes
-        }
+//        filteredRecommendedCafes = when (selectedText.value) {
+//            0 -> filteredRecommendedCafes.sortedBy { it.name }
+//            1 -> filteredRecommendedCafes.sortedBy { it.distance }
+//            2 -> filteredRecommendedCafes.sortedByDescending { it.rating }
+//            3 -> filteredRecommendedCafes.sortedBy { it.maxPrice - it.minPrice }
+//            4 -> filteredRecommendedCafes.sortedByDescending { it.maxPrice - it.minPrice }
+//            else -> filteredRecommendedCafes
+//        }
 
         _uiState.value = UiState.Success(filteredRecommendedCafes)
     }

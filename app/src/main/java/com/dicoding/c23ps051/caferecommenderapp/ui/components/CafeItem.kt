@@ -1,5 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -28,18 +29,25 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.dicoding.c23ps051.caferecommenderapp.R
+import com.dicoding.c23ps051.caferecommenderapp.model.CafeDummy
+import com.dicoding.c23ps051.caferecommenderapp.ui.common.isOpen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.Calendar
+import java.util.TimeZone
 
 @Composable
 fun CafeItem(
-    id: Long,
+    id: String,
     thumbnail: String,
     name: String,
     rating: Double,
-    ratingCount: Int,
-    onClick: (Long) -> Unit,
+    review: Int,
+    onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -51,8 +59,8 @@ fun CafeItem(
             modifier = Modifier
                 .clickable { onClick(id) },
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.cafe),
+            AsyncImage(
+                model = thumbnail,
                 contentDescription = "Image of a Cafe",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -76,7 +84,7 @@ fun CafeItem(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "$rating/5 ($ratingCount)",
+                        text = "$rating/5 ($review)",
                         fontSize = 12.sp
                     )
                 }
@@ -89,12 +97,13 @@ fun CafeItem(
 @Composable
 fun CafeItemPreview() {
     CafeRecommenderAppTheme {
+        val cafe = CafeDummy.cafeList[0]
         CafeItem(
-            id = 0,
-            thumbnail = "",
-            name = "Cafe",
-            rating = 4.0,
-            ratingCount = 100,
+            id = cafe.id,
+            thumbnail = cafe.thumbnail,
+            name = cafe.name,
+            rating = cafe.rating,
+            review = cafe.review,
             onClick = {}
         )
     }
@@ -102,17 +111,18 @@ fun CafeItemPreview() {
 
 @Composable
 fun CafeItemLarge(
-    id: Long,
+    id: String,
     thumbnail: String,
     name: String,
     address: String,
     rating: Double,
-    ratingCount: Int,
-    distance: Double,
-    condition: Boolean,
+    review: Int,
+    priceCategory: String,
+    openingHour: Int,
+    closingHour: Int,
     modifier: Modifier = Modifier,
     enableFavoriteIcon: Boolean = false,
-    onClick: (Long) -> Unit = {},
+    onClick: (String) -> Unit = {},
 ) {
     val addressLetterLimit = 50
     var newAddress = ""
@@ -138,17 +148,6 @@ fun CafeItemLarge(
         shape = MaterialTheme.shapes.large,
     ) {
         Box {
-//            IconButton(
-//                onClick = { /*TODO*/ },
-//                modifier = Modifier
-//                    .align(Alignment.TopEnd)
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.FavoriteBorder,
-//                    contentDescription = stringResource(id = R.string.add_to_favorite),
-//                    modifier = Modifier.size(20.dp)
-//                )
-//            }
             if (enableFavoriteIcon) {
                 FavoriteButton(
                     onClick = { /*TODO*/ },
@@ -162,8 +161,8 @@ fun CafeItemLarge(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.cafe),
+                AsyncImage(
+                    model = thumbnail,
                     contentDescription = "Image of $name",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -190,23 +189,23 @@ fun CafeItemLarge(
                         )
                         Text(
                             text = buildAnnotatedString {
-                                append("$rating/5 ($ratingCount)")
+                                append("$rating/5.0 ($review)")
                                 withStyle(SpanStyle(color = Gray)) {
                                     append(" | ")
                                 }
-                                append("$distance km")
+                                append(priceCategory)
                                 withStyle(SpanStyle(color = Gray)) {
                                     append(" | ")
                                 }
                                 append(
-                                    if (condition) {
+                                    if (isOpen(openingHour, closingHour)) {
                                         stringResource(id = R.string.open)
                                     } else {
                                         stringResource(id = R.string.closed)
                                     }
                                 )
                             },
-                            fontSize = 14.sp,
+                            style = MaterialTheme.typography.bodySmall
                         )
                     }
                 }
@@ -219,15 +218,17 @@ fun CafeItemLarge(
 @Composable
 fun CafeItemLargePreview() {
     CafeRecommenderAppTheme {
+        val cafe = CafeDummy.cafeList[0]
         CafeItemLarge(
-            id = 1,
-            thumbnail = "",
-            name = "Cafe",
-            address = "Jl. Raya Ragunan No. 57, Kec. Pasar Minggu, RT.5/RW.4, Kota Jakarta Selatan",
-            rating = 4.7,
-            ratingCount = 10,
-            distance = 2.0,
-            condition = true,
+            id = cafe.id,
+            thumbnail = cafe.thumbnail,
+            name = cafe.name,
+            address = cafe.address,
+            rating = cafe.rating,
+            review = cafe.review,
+            openingHour = cafe.openingHour,
+            closingHour = cafe.closingHour,
+            priceCategory = cafe.priceCategory,
         )
     }
 }

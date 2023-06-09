@@ -1,8 +1,10 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.detail
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,6 +16,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -21,29 +27,34 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.di.Injection
+import com.dicoding.c23ps051.caferecommenderapp.model.Facility
 import com.dicoding.c23ps051.caferecommenderapp.ui.RepositoryViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeDetailInfoItem
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.FacilitiesItem
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.FavoriteButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SectionBig
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.ErrorScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
+import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
 import com.google.maps.android.compose.GoogleMap
 
 @Composable
 fun DetailScreen(
-    itemId: Long,
+    itemId: String,
     navigateBack: () -> Unit,
     viewModel: DetailViewModel = viewModel(
         factory = RepositoryViewModelFactory(
             Injection.provideRepository()
         )
-    )
+    ),
+    state: DetailState = rememberDetailState(isFavorite = false),
 ) {
     viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
@@ -58,13 +69,14 @@ fun DetailScreen(
                     name = cafe.name,
                     address = cafe.address,
                     rating = cafe.rating,
-                    ratingCount = cafe.ratingCount,
-                    distance = cafe.distance,
-                    isOpen = cafe.isOpen,
-                    minPrice = cafe.minPrice,
-                    maxPrice = cafe.maxPrice,
-                    toggleFavorite = { /*TODO*/ },
-                    isFavorite = false,
+                    review = cafe.review,
+                    openingHour = cafe.openingHour,
+                    closingHour = cafe.closingHour,
+                    priceCategory = cafe.priceCategory,
+                    region = cafe.region,
+                    facilities = cafe.facilities,
+                    toggleFavorite = { state.isFavorite = !state.isFavorite },
+                    isFavorite = state.isFavorite,
                     navigateBack = navigateBack
                 )
             }
@@ -78,20 +90,31 @@ fun DetailScreen(
             }
         }
     }
-
 }
 
+class DetailState(initialIsFavorite: Boolean) {
+    var isFavorite by mutableStateOf(initialIsFavorite)
+}
+
+@Composable
+fun rememberDetailState(isFavorite: Boolean): DetailState =
+    remember(isFavorite) {
+        DetailState(isFavorite)
+    }
+
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DetailContent(
     thumbnail: String,
     name: String,
     address: String,
     rating: Double,
-    ratingCount: Int,
-    distance: Double,
-    isOpen: Boolean,
-    minPrice: Long,
-    maxPrice: Long,
+    review: Int,
+    openingHour: Int,
+    closingHour: Int,
+    priceCategory: String,
+    region: String,
+    facilities: List<Pair<Facility, Boolean>>,
     toggleFavorite: () -> Unit,
     isFavorite: Boolean,
     navigateBack: () -> Unit,
@@ -101,8 +124,8 @@ fun DetailContent(
         Box(
             modifier = Modifier
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.img),
+            AsyncImage(
+                model = thumbnail,
                 contentDescription = "Image of $name",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -135,7 +158,8 @@ fun DetailContent(
             )
             Text(
                 text = address,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                color = Gray,
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -145,22 +169,22 @@ fun DetailContent(
             ) {
                 Column (modifier.weight(1f)) {
                     CafeDetailInfoItem(
-                        icon = painterResource(id = R.drawable.location),
-                        text = "$distance km"
+                        icon = painterResource(id = R.drawable.location_border),
+                        text = region
                     )
                     CafeDetailInfoItem(
-                        icon = painterResource(id = R.drawable.star),
-                        text = "$rating/5 ($ratingCount)"
+                        icon = painterResource(id = R.drawable.star_border),
+                        text = "$rating/5.0 ($review)"
                     )
                 }
                 Column (modifier.weight(1f)) {
                     CafeDetailInfoItem(
                         icon = painterResource(id = R.drawable.time),
-                        text = "$rating" /* TODO: CHANGE TO TIME */
+                        text = "$openingHour - $closingHour" /* TODO: CHANGE TO TIME */
                     )
                     CafeDetailInfoItem(
-                        icon = "Rp",
-                        text = "$minPrice-$maxPrice"
+                        icon = painterResource(id = R.drawable.price_category),
+                        text = priceCategory
                     )
                 }
             }
@@ -170,18 +194,24 @@ fun DetailContent(
                 content = {
                     Text(
                         text = address + address + address,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Gray,
                     ) /* TODO: CHANGE TO DESCRIPTION */
                 }
             )
-//            Divider(modifier = Modifier.padding(16.dp))
             SectionBig(
                 title = stringResource(id = R.string.facilities),
                 content = {
-                    Text(
-                        text = address + address,
-                        style = MaterialTheme.typography.bodyMedium
-                    ) /* TODO: CHANGE TO FACILITIES */
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        facilities.forEach { (facility, value) ->
+                            if (value) {
+                                FacilitiesItem(text = facility.displayName)
+                            }
+                        }
+                    }
                 }
             )
             Divider(modifier = Modifier.padding(16.dp))
