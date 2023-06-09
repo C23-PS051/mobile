@@ -143,4 +143,7 @@
     <string name="alcohol">Alcohol</string>
 
     <string name="loading">Loading..</string>
+    <string name="add_profile_picture">Add profile picture</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
 </resources>
