@@ -93,7 +93,7 @@
     <!-- Location Page -->
     <string name="need_location_permission">To continue, we need to access your location</string>
     <string name="turn_on_location">TURN ON LOCATION</string>
-    <string name="location_permission_not_granted">It looks like you have denied giving location permission. For the best experience, consider give access to your location. You can go to settings to change the permission.</string>
+    <string name="location_permission_not_granted">You have not given location permission. For the best experience, consider give access to your location. You can go to settings to change the permission.</string>
     <string name="getting_location">Getting your location</string>
     <string name="get_location_failed">You can retry or skip this to continue without location information.</string>
     <string name="go_to_settings">GO TO SETTINGS</string>
@@ -146,4 +146,14 @@
     <string name="add_profile_picture">Add profile picture</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_not_granted">You have not given camera permission. You can go to settings to change the permission to upload images.</string>
+    <string name="take_picture">TAKE PICTURE</string>
+    <string name="choose_from_gallery">CHOOSE FROM GALLERY</string>
+    <string name="cancel">CANCEL</string>
+    <string name="picture_chooser">Choose how you want to upload your picture</string>
+    <string name="change_picture">Change Picture</string>
+    <string name="choose_gallery">Choose Gallery</string>
+    <string name="switch_camera_lens">Switch camera lens</string>
 </resources>

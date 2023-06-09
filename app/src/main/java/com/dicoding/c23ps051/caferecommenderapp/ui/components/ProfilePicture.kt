@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -25,10 +26,13 @@ fun ProfilePicture(
         } else {
             rememberImagePainter(
                 data = Uri.parse(image),
-                builder = { scale(Scale.FILL) }
+                builder = { scale(Scale.FILL) },
             )
        },
         contentDescription = stringResource(id = R.string.your_profile_picture),
-        modifier = modifier.size(144.dp).clip(CircleShape),
+        modifier = modifier
+            .size(144.dp)
+            .clip(CircleShape),
+        contentScale = ContentScale.Crop
     )
 }

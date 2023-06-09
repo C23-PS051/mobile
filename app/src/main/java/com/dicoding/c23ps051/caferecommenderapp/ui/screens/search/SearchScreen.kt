@@ -62,7 +62,7 @@ fun SearchScreen(
         checkedPriceChip = List(priceSize) { false },
     )
 ) {
-    var backPressState by remember { mutableStateOf<BackPress>(BackPress.InitialTouch) }
+    val backPressState by remember { mutableStateOf<BackPress>(BackPress.Idle) }
 
     val regions = listOf(
         stringResource(id = R.string.all),
@@ -123,13 +123,7 @@ fun SearchScreen(
 
     BackPressHandler(
         backPressState = backPressState,
-        toggleBackPressState = {
-            backPressState = if (backPressState == BackPress.Idle) {
-                BackPress.InitialTouch
-            } else {
-                BackPress.Idle
-            }
-        }
+        toggleBackPressState = {}
     ) {
         navigateUp()
     }

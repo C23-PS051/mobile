@@ -4,7 +4,7 @@ sealed class PermissionState {
 
     object Initial : PermissionState()
 
-    data class Granted(val location: String) : PermissionState()
+    data class Granted(val data: String) : PermissionState()
 
     object NotGranted : PermissionState()
 
