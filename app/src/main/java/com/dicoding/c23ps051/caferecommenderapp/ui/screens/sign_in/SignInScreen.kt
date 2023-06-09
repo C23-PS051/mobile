@@ -82,6 +82,7 @@ fun SignInScreen(
                     state.showProgressBar = false
                     val user = auth.currentUser
                     if (user != null) {
+                        /*TODO: CHECK IF USER ALREADY REGISTERED, IF NOT THEN NAVIGATE TO SIGN UP WITH PRE-POPULATE INPUTS*/
                         signInViewModel.signIn(
                             user.displayName,
                             user.email as String,
