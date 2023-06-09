@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -153,7 +152,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 is PermissionState.Granted -> {
-                    val isValidRegion = checkRegion(permission.location)
+                    val isValidRegion = checkRegion(permission.data)
 
                     if (!isValidRegion) {
                         setComposable {
