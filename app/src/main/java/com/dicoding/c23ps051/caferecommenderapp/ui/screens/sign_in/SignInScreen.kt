@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.constants.MIN_PASSWORD_LENGTH
+import com.dicoding.c23ps051.caferecommenderapp.model.Register
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.AuthViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
@@ -53,6 +54,7 @@ import com.google.firebase.ktx.Firebase
 fun SignInScreen(
     navigateUp: () -> Unit,
     navigateToSignUp: () -> Unit,
+    navigateToSignUpWithData: (String?, String?, String?) -> Unit,
     userPreference: UserPreference,
     modifier: Modifier = Modifier,
     signInViewModel: SignInViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
@@ -82,11 +84,10 @@ fun SignInScreen(
                     state.showProgressBar = false
                     val user = auth.currentUser
                     if (user != null) {
-                        /*TODO: CHECK IF USER ALREADY REGISTERED, IF NOT THEN NAVIGATE TO SIGN UP WITH PRE-POPULATE INPUTS*/
-                        signInViewModel.signIn(
+                        /* TODO: ADD CHECK IF ACCOUNT EXISTS THEN SIGN UP WITH THAT INFORMATION */
+                        navigateToSignUpWithData(
+                            user.email,
                             user.displayName,
-                            user.email as String,
-                            idToken,
                             user.photoUrl.toString(),
                         )
                     }
