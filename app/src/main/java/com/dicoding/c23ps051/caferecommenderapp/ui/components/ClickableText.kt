@@ -19,8 +19,8 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 
 @Composable
 fun ClickableText(
-    modifier: Modifier = Modifier,
     text: String,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
     Text(
@@ -39,8 +39,8 @@ fun ClickableText(
 
 @Composable
 fun ClickableText(
-    modifier: Modifier = Modifier,
     text: AnnotatedString,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
     Text(
