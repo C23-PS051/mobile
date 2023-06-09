@@ -40,22 +40,12 @@ fun CafeRecommenderApp(
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-    when (navBackStackEntry?.destination?.route) {
-        Screen.Home.route -> {
-            bottomBarState = true
-        }
-        Screen.Recommended.route -> {
-            bottomBarState = true
-        }
-        Screen.Favorite.route -> {
-            bottomBarState = true
-        }
-        Screen.Profile.route -> {
-            bottomBarState = true
-        }
-        else -> {
-            bottomBarState = false
-        }
+    bottomBarState = when (navBackStackEntry?.destination?.route) {
+        Screen.Home.route,
+        Screen.Recommended.route,
+        Screen.Favorite.route,
+        Screen.Profile.route -> true
+        else -> false
     }
 
     Scaffold(
