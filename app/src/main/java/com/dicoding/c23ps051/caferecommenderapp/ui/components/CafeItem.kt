@@ -111,6 +111,7 @@ fun CafeItemLarge(
     distance: Double,
     condition: Boolean,
     modifier: Modifier = Modifier,
+    enableFavoriteIcon: Boolean = false,
     onClick: (Long) -> Unit = {},
 ) {
     val addressLetterLimit = 50
@@ -148,14 +149,16 @@ fun CafeItemLarge(
 //                    modifier = Modifier.size(20.dp)
 //                )
 //            }
-            FavoriteButton(
-                onClick = { /*TODO*/ },
-                isFavorite = false,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .size(40.dp),
-                size = 16,
-            )
+            if (enableFavoriteIcon) {
+                FavoriteButton(
+                    onClick = { /*TODO*/ },
+                    isFavorite = true, /*TODO: CHANGE THIS, STILL DUMMY*/
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .size(40.dp),
+                    size = 16,
+                )
+            }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
