@@ -96,20 +96,6 @@ fun HomeScreen(
         }
     }
 
-//    preferenceViewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
-//        when (uiState) {
-//            is UiState.Loading -> {
-//                preferenceViewModel.getLogin()
-//            }
-//            is UiState.Success -> {
-//                photoUrl = uiState.data.photoUrl
-//            }
-//            is UiState.Error -> {
-//                /*TODO*/
-//            }
-//        }
-//    }
-
     // User needs to press back twice to exit
     BackPressHandler(
         backPressState = backPressState,

@@ -1,5 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.search
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,11 +33,13 @@ import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackPressHandler
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Chip
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OutlinedDropDown
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OutlinedDropDownTextField
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Section
+import com.dicoding.c23ps051.caferecommenderapp.ui.event.BackPress
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.ErrorScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
@@ -59,6 +62,8 @@ fun SearchScreen(
         checkedPriceChip = List(priceSize) { false },
     )
 ) {
+    var backPressState by remember { mutableStateOf<BackPress>(BackPress.InitialTouch) }
+
     val regions = listOf(
         stringResource(id = R.string.all),
         stringResource(id = R.string.central_jakarta),
@@ -114,6 +119,19 @@ fun SearchScreen(
                 )
             }
         }
+    }
+
+    BackPressHandler(
+        backPressState = backPressState,
+        toggleBackPressState = {
+            backPressState = if (backPressState == BackPress.Idle) {
+                BackPress.InitialTouch
+            } else {
+                BackPress.Idle
+            }
+        }
+    ) {
+        navigateUp()
     }
 }
 

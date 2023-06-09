@@ -164,7 +164,13 @@ fun CafeRecommenderApp(
                         navController.navigateUp()
                     },
                     onSubmit = {
-                        navController.navigate(Screen.Recommended.route)
+                        navController.navigate(Screen.Recommended.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            restoreState = true
+                            launchSingleTop = true
+                        }
                     }
                 )
             }
