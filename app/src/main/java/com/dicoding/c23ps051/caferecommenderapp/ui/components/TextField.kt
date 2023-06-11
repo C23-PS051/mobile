@@ -64,6 +64,7 @@ fun OutlinedFormTextField(
         unfocusedBorderColor = Gray,
         focusedTextColor = MaterialTheme.colorScheme.onBackground,
         unfocusedTextColor = Gray,
+        errorTextColor = Red,
         cursorColor = MaterialTheme.colorScheme.onBackground,
         unfocusedLabelColor = Gray,
         focusedTrailingIconColor = MaterialTheme.colorScheme.onBackground,
