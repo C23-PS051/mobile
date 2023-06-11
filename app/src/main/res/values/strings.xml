@@ -156,4 +156,6 @@
     <string name="change_picture">Change Picture</string>
     <string name="choose_gallery">Choose Gallery</string>
     <string name="switch_camera_lens">Switch camera lens</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="i_want_to_change_password">I want to change password</string>
 </resources>

@@ -15,4 +15,5 @@ sealed class Screen(val route: String) {
         fun createRoute(id: String) = "detail/$id"
     }
     object Search : Screen("search")
+    object EditProfile : Screen("edit_profile")
 }
