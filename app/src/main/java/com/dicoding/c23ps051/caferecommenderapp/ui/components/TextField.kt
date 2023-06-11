@@ -113,7 +113,7 @@ fun LabeledOutlinedFormTextField(
     Column {
         Text(
             text = label,
-            color = if (enabled) Color.Unspecified else Gray,
+            color = if (enabled) Color.Unspecified else MaterialTheme.colorScheme.outlineVariant,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .fillMaxWidth()
@@ -132,7 +132,7 @@ fun LabeledOutlinedFormTextField(
                     color = if (enabled) {
                         if (hasError) Red else MaterialTheme.colorScheme.onBackground
                     } else {
-                        Gray
+                        MaterialTheme.colorScheme.outlineVariant
                     },
                     shape = shape
                 ),
@@ -142,7 +142,7 @@ fun LabeledOutlinedFormTextField(
                 color = if (enabled) {
                     if (hasError) Red else Color.Unspecified
                 } else {
-                    Gray
+                    MaterialTheme.colorScheme.outlineVariant
                 }
             ),
             onValueChange = onValueChange,
@@ -210,7 +210,7 @@ fun PasswordLabeledOutlinedTextField(
                     contentDescription = stringResource(id = R.string.visibility),
                     tint = if (enabled) {
                         if (hasError) Red else MaterialTheme.colorScheme.onBackground
-                    } else Gray
+                    } else MaterialTheme.colorScheme.outlineVariant
                 )
             }
         },
