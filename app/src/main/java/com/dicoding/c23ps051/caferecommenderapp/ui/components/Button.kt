@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Black
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
-import com.dicoding.c23ps051.caferecommenderapp.ui.theme.LightGray
+import com.dicoding.c23ps051.caferecommenderapp.ui.theme.VeryLightGray
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.White
 
 @Composable
@@ -84,7 +84,7 @@ fun GoogleButton(
     ){
         Button(
             text = stringResource(id = R.string.google_sign_in),
-            color = LightGray,
+            color = VeryLightGray,
             textColor = Black,
         ) {
             onClick()
