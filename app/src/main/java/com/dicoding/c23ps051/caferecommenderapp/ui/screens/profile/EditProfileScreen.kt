@@ -4,7 +4,6 @@ import android.Manifest
 import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -50,7 +49,6 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.screens.camera.CameraPermissi
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.camera.CameraView
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.camera.IntentGalleryLauncher
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.InfoScreen
-import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.STARTER_CONTENT_PADDING
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus

@@ -1,6 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
-import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -35,10 +34,6 @@ import com.dicoding.c23ps051.caferecommenderapp.model.CafeDummy
 import com.dicoding.c23ps051.caferecommenderapp.ui.common.isOpen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.Calendar
-import java.util.TimeZone
 
 @Composable
 fun CafeItem(

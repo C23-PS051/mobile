@@ -1,6 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -12,7 +11,6 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.common.isOpen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class RecommendedViewModel(private val repository: CafeRepository, pref: UserPreference) : ViewModel() {

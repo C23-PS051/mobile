@@ -3,7 +3,6 @@ package com.dicoding.c23ps051.caferecommenderapp.ui.screens.camera
 import android.app.Application
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException

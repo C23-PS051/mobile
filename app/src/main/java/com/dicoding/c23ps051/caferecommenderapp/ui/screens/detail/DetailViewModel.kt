@@ -3,7 +3,6 @@ package com.dicoding.c23ps051.caferecommenderapp.ui.screens.detail
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.R
