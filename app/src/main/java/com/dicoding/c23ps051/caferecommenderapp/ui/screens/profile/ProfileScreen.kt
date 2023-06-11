@@ -42,6 +42,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 @Composable
 fun ProfileScreen(
     userPreference: UserPreference,
+    navigateToEditProfile: () -> Unit,
     navigateToPrivacyPolicy: () -> Unit,
     navigateToHelpCenter: () -> Unit,
     navigateToApplicationInfo: () -> Unit,
@@ -70,9 +71,7 @@ fun ProfileScreen(
                         state.showDialog = true
                     },
                     buttonText = stringResource(id = R.string.edit_profile),
-                    onButtonClick = {
-                        /*TODO: NAVIGATE TO EDIT PROFILE*/
-                    },
+                    onButtonClick = navigateToEditProfile,
                     onPrivacyPolicyClick = navigateToPrivacyPolicy,
                     onHelpCenterClick = navigateToHelpCenter,
                     onApplicationInfoClick = navigateToApplicationInfo,

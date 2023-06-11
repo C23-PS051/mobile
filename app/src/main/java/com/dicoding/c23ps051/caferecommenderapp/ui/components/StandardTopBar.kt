@@ -1,8 +1,7 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,17 +18,20 @@ fun StandardTopBar(
     modifier: Modifier = Modifier,
     title: String,
     showBackButton: Boolean = false,
+    onBack: () -> Unit = {},
 ) {
-    Row(
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
             .padding(APP_CONTENT_PADDING),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
+        contentAlignment = Alignment.Center
     ) {
         if (showBackButton) {
-            BackButton(onClick = { /* TODO */ })
+            BackButton(
+                onClick = onBack,
+                modifier = Modifier.align(Alignment.CenterStart)
+            )
             Spacer(modifier = Modifier.width(4.dp))
         }
         TopBarTitle(title = title)
