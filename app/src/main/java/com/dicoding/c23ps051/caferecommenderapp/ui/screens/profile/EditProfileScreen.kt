@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -139,6 +140,7 @@ fun EditProfileScreen(
         showInfoScreen -> {
             InfoScreen(
                 text = stringResource(R.string.camera_permission_not_granted),
+                image = painterResource(R.drawable.img),
                 actionText = stringResource(R.string.go_to_settings),
                 secondaryActionText = stringResource(R.string.skip),
                 action = {

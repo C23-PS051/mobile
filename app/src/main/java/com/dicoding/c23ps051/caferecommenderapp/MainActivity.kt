@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -121,6 +122,7 @@ class MainActivity : ComponentActivity() {
                     setComposable {
                         InfoScreen(
                             text = getString(R.string.location_permission_not_granted),
+                            image = painterResource(id = R.drawable.location_off),
                             actionText = getString(R.string.go_to_settings),
                             secondaryActionText = getString(R.string.skip),
                             action = {
@@ -139,6 +141,7 @@ class MainActivity : ComponentActivity() {
                     setComposable {
                         InfoScreen(
                             text = errorMessage + " " + getString(R.string.get_location_failed),
+                            image = painterResource(id = R.drawable.location_off),
                             actionText = getString(R.string.retry),
                             secondaryActionText = getString(R.string.skip),
                             action = {
@@ -158,6 +161,7 @@ class MainActivity : ComponentActivity() {
                         setComposable {
                             InfoScreen(
                                 text = getString(R.string.location_not_valid),
+                                image = painterResource(id = R.drawable.location_off),
                                 actionText = getString(R.string.ok),
                                 action = {
                                     locationViewModel.setLocationTo(getString(R.string.all))

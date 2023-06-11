@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -125,6 +126,7 @@ fun SignUpScreen(
         showInfoScreen -> {
             InfoScreen(
                 text = stringResource(R.string.camera_permission_not_granted),
+                image = painterResource(R.drawable.img),
                 actionText = stringResource(R.string.go_to_settings),
                 secondaryActionText = stringResource(R.string.skip),
                 action = {
