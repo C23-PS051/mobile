@@ -158,4 +158,7 @@
     <string name="switch_camera_lens">Switch camera lens</string>
     <string name="save_changes">Save Changes</string>
     <string name="i_want_to_change_password">I want to change password</string>
+    <string name="failed_to_get_location">Failed to get location.</string>
+    <string name="cannot_open_google_maps">Can\'t open Google Maps</string>
+    <string name="google_maps_not_installed">It looks like Google Maps is not installed on your device</string>
 </resources>
