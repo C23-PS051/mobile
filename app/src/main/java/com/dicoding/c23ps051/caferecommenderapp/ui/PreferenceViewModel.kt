@@ -33,8 +33,8 @@ class PreferenceViewModel(private val pref: UserPreference) : ViewModel() {
                     val loginModel = Login(
                         name = data.name,
                         email = data.email,
-                        token = data.token,
                         photoUrl = data.photoUrl,
+                        token = data.token,
                         isLogin = data.isLogin,
                         isNewUser = data.isNewUser,
                     )

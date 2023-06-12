@@ -22,6 +22,7 @@
     <string name="get_recommendation">Discover my recommendations</string>
     <string name="exploring_cafe_options">Exploring cafe options..</string>
     <string name="unknown">Unknown</string>
+    <string name="failed_to_load_cafes">Failed to load cafes</string>
 
     <!-- Login Page -->
     <string name="sign_in">SIGN IN</string>
@@ -31,6 +32,7 @@
     <string name="or">OR</string>
     <string name="sign_up">SIGN UP</string>
     <string name="google_sign_in">GOOGLE SIGN IN</string>
+    <string name="failed_to_sign_in">Failed to sign in</string>
 
     <!-- Register Page -->
     <string name="no_account">Don\'t have an account yet?</string>
@@ -71,6 +73,9 @@
     <string name="error_loading_cafe_detail">Oops! Couldn\'t fetch cafe details. Please try again.</string>
     <string name="view_on_google_maps">View on Google Maps</string>
     <string name="closed">Closed</string>
+    <string name="failed_to_get_location">Failed to get location.</string>
+    <string name="cannot_open_google_maps">Can\'t open Google Maps</string>
+    <string name="google_maps_not_installed">It looks like Google Maps is not installed on your device</string>
 
     <!-- Profile Page -->
     <string name="yes">YES</string>
@@ -92,6 +97,10 @@
     <string name="cannot_sign_in">Can\'t sign in</string>
     <string name="wrong_email_password">Wrong email or password!</string>
     <string name="please_try_again">Please try again later!</string>
+
+    <!-- Edit Profile Page -->
+    <string name="save_changes">Save Changes</string>
+    <string name="i_want_to_change_password">I want to change password</string>
 
     <!-- Location Page -->
     <string name="need_location_permission">To continue, we need to access your location</string>
@@ -156,6 +165,4 @@
     <string name="change_picture">Change Picture</string>
     <string name="choose_gallery">Choose Gallery</string>
     <string name="switch_camera_lens">Switch camera lens</string>
-    <string name="failed_to_load_cafes">Failed to load cafes</string>
-    <string name="failed_to_sign_in">Failed to sign in</string>
 </resources>

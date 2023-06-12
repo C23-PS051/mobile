@@ -1,6 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.search
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

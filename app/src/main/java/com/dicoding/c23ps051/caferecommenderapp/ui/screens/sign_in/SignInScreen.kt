@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.constants.MIN_PASSWORD_LENGTH
-import com.dicoding.c23ps051.caferecommenderapp.model.Register
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.AuthViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory

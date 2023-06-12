@@ -3,17 +3,11 @@ package com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_up
 import android.Manifest.permission.CAMERA
 import android.util.Log
 import androidx.camera.core.CameraSelector
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -22,24 +16,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.dicoding.c23ps051.caferecommenderapp.R
+import com.dicoding.c23ps051.caferecommenderapp.constants.EMAIL_REGEX
 import com.dicoding.c23ps051.caferecommenderapp.constants.MIN_PASSWORD_LENGTH
+import com.dicoding.c23ps051.caferecommenderapp.constants.NAME_REGEX
+import com.dicoding.c23ps051.caferecommenderapp.constants.PASSWORD_REGEX
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.ChangeProfilePicture
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ClickableText
-import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProfilePicture
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.PictureChooserDialog
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.camera.CameraPermissionScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.camera.CameraView
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.camera.IntentGalleryLauncher
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.InfoScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
-import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.STARTER_CONTENT_PADDING
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
@@ -70,7 +64,6 @@ fun SignUpScreen(
         radio = listOf(true, false),
     ),
 ) {
-    Log.d("MyLogger", photoUrl)
     cameraExecutor = Executors.newSingleThreadExecutor()
     var cameraSelector by remember { mutableStateOf(CameraSelector.DEFAULT_BACK_CAMERA) }
     var shouldShowCamera by remember { mutableStateOf(false) }
@@ -156,7 +149,7 @@ fun SignUpScreen(
                     cameraSelector = if (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) CameraSelector.DEFAULT_FRONT_CAMERA
                     else CameraSelector.DEFAULT_BACK_CAMERA
                 },
-                onError = { Log.d("MyLogger", "Error: $it") },
+                onError = { Log.e("MyLogger", "Error: $it") },
                 navigateUp = {
                     showCameraView = false
                 }
@@ -177,19 +170,19 @@ fun SignUpScreen(
                 navigateToSignIn = navigateToSignIn,
                 onNameValueChange = { newText ->
                     state.nameText = newText
-                    val nameRegex = Regex("^(?=.*[a-zA-Z])[a-zA-Z0-9\\s]+\$")
+                    val nameRegex = Regex(NAME_REGEX)
                     state.nameHasError = !nameRegex.matches(state.nameText)
 
                 },
                 onEmailValueChange = { newText: String ->
                     state.emailText = newText
                     val emailRegex =
-                        Regex("^([a-zA-Z0-9_.+-])+@([a-zA-Z0-9-])+\\.([a-zA-Z0-9-.])+$")
+                        Regex(EMAIL_REGEX)
                     state.emailHasError = !emailRegex.matches(state.emailText)
                 },
                 onPasswordValueChange = { newText: String ->
                     state.passwordText = newText
-                    val passwordRegex = Regex("^(?=.*[A-Za-z])[A-Za-z\\d](?!.*\\s).{8,}\$")
+                    val passwordRegex = Regex(PASSWORD_REGEX)
                     state.passwordHasError =
                         state.passwordText.length < MIN_PASSWORD_LENGTH || !passwordRegex.matches(
                             state.passwordText
@@ -213,58 +206,6 @@ fun SignUpScreen(
             )
         }
     }
-}
-
-@Composable
-fun PictureChooserDialog(
-    onTakePicture: () -> Unit,
-    onChooseFromGallery: () -> Unit,
-    onCancel: () -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .padding(APP_CONTENT_PADDING)
-            .clip(MaterialTheme.shapes.large)
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 32.dp, vertical = 20.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.change_picture),
-                style = MaterialTheme.typography.titleLarge
-            )
-            Text(
-                text = stringResource(id = R.string.picture_chooser),
-                color = Gray,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-            )
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        PictureChooserOption(text = stringResource(id = R.string.take_picture)) { onTakePicture() }
-        PictureChooserOption(text = stringResource(id = R.string.choose_from_gallery)) { onChooseFromGallery() }
-        PictureChooserOption(text = stringResource(id = R.string.cancel)) { onCancel() }
-        Spacer(modifier = Modifier.height(16.dp))
-    }
-}
-
-@Composable
-fun PictureChooserOption(
-    text: String,
-    onClick: () -> Unit,
-) {
-    Text(
-        text = text,
-        textAlign = TextAlign.Center,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(12.dp)
-    )
 }
 
 class SignUpFormState(
@@ -350,14 +291,9 @@ fun SignUpContent(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ProfilePicture(
-                image = photoUrl,
-                modifier = Modifier.size(112.dp)
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            ClickableText(
-                stringResource(id = R.string.change_profile_picture),
-                onClick = onAddProfilePicture
+            ChangeProfilePicture(
+                imageUrl = photoUrl,
+                onTextClick = onAddProfilePicture,
             )
             Spacer(modifier = Modifier.height(36.dp))
             SignUpForm(
