@@ -10,7 +10,7 @@ data class Cafe(
     val priceCategory: String,
     val rating: Double,
     val region: String,
-    val review: Int,
+    val review: String,
     val thumbnail: String,
     val facilities: List<Pair<Facility, Boolean>>,
 )

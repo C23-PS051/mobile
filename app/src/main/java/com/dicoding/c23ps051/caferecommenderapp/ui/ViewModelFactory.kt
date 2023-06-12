@@ -11,23 +11,6 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended.Recommend
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.search.SearchViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in.SignInViewModel
 
-class RepositoryViewModelFactory(private val repository: CafeRepository) :
-    ViewModelProvider.NewInstanceFactory() {
-
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return when {
-            modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
-                HomeViewModel(repository) as T
-            }
-            modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
-                DetailViewModel(repository) as T
-            }
-            else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
-        }
-    }
-}
-
 class PreferenceViewModelFactory(private val pref: UserPreference) :
     ViewModelProvider.NewInstanceFactory() {
 
@@ -45,6 +28,12 @@ class PreferenceViewModelFactory(private val pref: UserPreference) :
             }
             modelClass.isAssignableFrom(SearchViewModel::class.java) -> {
                 SearchViewModel(pref) as T
+            }
+            modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
+                HomeViewModel(pref) as T
+            }
+            modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
+                DetailViewModel(pref) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
