@@ -14,7 +14,7 @@ class ApiConfig {
                 .addInterceptor(loggingInterceptor)
                 .build()
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://firestore.googleapis.com/v1/projects/capstone-p51/databases/(default)/documents/")
+                .baseUrl("https://capstone-p51-388015.uc.r.appspot.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()

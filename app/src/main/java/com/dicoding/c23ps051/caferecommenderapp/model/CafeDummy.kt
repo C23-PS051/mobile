@@ -14,7 +14,7 @@ object CafeDummy {
             "$$",
             4.8,
             "West Jakarta",
-            2752,
+            "2752",
             "https://images.unsplash.com/photo-1685491107139-7d7f4f17b3eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80",
             listOf(
                 Facility.ALCOHOL to true,
@@ -43,7 +43,7 @@ object CafeDummy {
             "$",
             4.3,
             region,
-            10000,
+            "10000",
             "https://images.unsplash.com/photo-1685491107139-7d7f4f17b3eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80",
             listOf(
                 Facility.ALCOHOL to false,
@@ -72,7 +72,7 @@ object CafeDummy {
             "$$$",
             4.7,
             region,
-            25000,
+            "25000",
             "https://images.unsplash.com/photo-1685491107139-7d7f4f17b3eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80",
             listOf(
                 Facility.ALCOHOL to true,
@@ -101,7 +101,7 @@ object CafeDummy {
             "$",
             4.6,
             region,
-            18000,
+            "18000",
             "https://images.unsplash.com/photo-1685491107139-7d7f4f17b3eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80",
             listOf(
                 Facility.ALCOHOL to false,
@@ -130,7 +130,7 @@ object CafeDummy {
             "$",
             4.0,
             region,
-            5000,
+            "5000",
             "https://images.unsplash.com/photo-1685491107139-7d7f4f17b3eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80",
             listOf(
                 Facility.ALCOHOL to true,
@@ -159,7 +159,7 @@ object CafeDummy {
             "$$",
             3.7,
             region,
-            5000,
+            "5000",
             "https://images.unsplash.com/photo-1685491107139-7d7f4f17b3eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80",
             listOf(
                 Facility.ALCOHOL to false,
@@ -188,7 +188,7 @@ object CafeDummy {
             "$",
             4.3,
             region,
-            10000,
+            "10000",
             "https://images.unsplash.com/photo-1685491107139-7d7f4f17b3eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80",
             listOf(
                 Facility.ALCOHOL to false,
@@ -217,7 +217,7 @@ object CafeDummy {
             "$$$",
             4.7,
             "North Jakarta",
-            25000,
+            "25000",
             "https://images.unsplash.com/photo-1685491107139-7d7f4f17b3eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80",
             listOf(
                 Facility.ALCOHOL to true,
@@ -246,7 +246,7 @@ object CafeDummy {
             "$",
             4.6,
             "East Jakarta",
-            18000,
+            "18000",
             "https://images.unsplash.com/photo-1685491107139-7d7f4f17b3eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80",
             listOf(
                 Facility.ALCOHOL to false,
@@ -275,7 +275,7 @@ object CafeDummy {
             "$",
             4.0,
             "East Jakarta",
-            5000,
+            "5000",
             "https://images.unsplash.com/photo-1685491107139-7d7f4f17b3eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80",
             listOf(
                 Facility.ALCOHOL to true,
@@ -304,7 +304,7 @@ object CafeDummy {
             "$$",
             3.7,
             "Central Jakarta",
-            5000,
+            "5000",
             "https://images.unsplash.com/photo-1685491107139-7d7f4f17b3eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80",
             listOf(
                 Facility.ALCOHOL to false,

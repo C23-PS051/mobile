@@ -1,5 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.home
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,13 +27,13 @@ import com.dicoding.c23ps051.caferecommenderapp.model.Login
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
-import com.dicoding.c23ps051.caferecommenderapp.ui.RepositoryViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackPressHandler
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Header
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.HomeSection
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SearchCafe
 import com.dicoding.c23ps051.caferecommenderapp.ui.event.BackPress
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.ErrorScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 
 @Composable
@@ -42,7 +43,7 @@ fun HomeScreen(
     navigateToSearchCafe: () -> Unit,
     onProfileClick: () -> Unit,
     viewModel: HomeViewModel = viewModel(
-        factory = RepositoryViewModelFactory(Injection.provideRepository())
+        factory = PreferenceViewModelFactory(userPreference)
     ),
     preferenceViewModel: PreferenceViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
 ) {
@@ -76,23 +77,23 @@ fun HomeScreen(
             photoUrl = loginData.photoUrl
         )
     } else {
-        LoadingScreen(stringResource(id = R.string.exploring_cafe_options))
-
         if (uiStateNearby is UiState.Loading) {
-            viewModel.getNearbyCafes()
+            viewModel.getAllCafes()
         }
         if (uiStateOpen24Hours is UiState.Loading) {
-            viewModel.getOpen24HoursCafes()
+            viewModel.getAllCafes()
         }
         if (uiStateOnBudget is UiState.Loading) {
-            viewModel.getOnBudgetCafes()
+            viewModel.getAllCafes()
         }
         if (uiStateLogin is UiState.Loading) {
             preferenceViewModel.getLogin()
         }
 
         if (uiStateNearby is UiState.Error || uiStateOpen24Hours is UiState.Error || uiStateOnBudget is UiState.Error) {
-            // TODO: HANDLE ERROR
+            ErrorScreen(stringResource(id = R.string.failed_to_load_cafes), { /*TODO*/ })
+        } else {
+            LoadingScreen(stringResource(id = R.string.exploring_cafe_options))
         }
     }
 

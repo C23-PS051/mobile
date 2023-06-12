@@ -22,6 +22,7 @@
     <string name="get_recommendation">Discover my recommendations</string>
     <string name="exploring_cafe_options">Exploring cafe options..</string>
     <string name="unknown">Unknown</string>
+    <string name="failed_to_load_cafes">Failed to load cafes</string>
 
     <!-- Login Page -->
     <string name="sign_in">SIGN IN</string>
@@ -31,6 +32,7 @@
     <string name="or">OR</string>
     <string name="sign_up">SIGN UP</string>
     <string name="google_sign_in">GOOGLE SIGN IN</string>
+    <string name="failed_to_sign_in">Failed to sign in</string>
 
     <!-- Register Page -->
     <string name="no_account">Don\'t have an account yet?</string>
@@ -163,5 +165,4 @@
     <string name="change_picture">Change Picture</string>
     <string name="choose_gallery">Choose Gallery</string>
     <string name="switch_camera_lens">Switch camera lens</string>
-
 </resources>

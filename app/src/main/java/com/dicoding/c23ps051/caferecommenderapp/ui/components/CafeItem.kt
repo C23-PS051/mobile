@@ -41,7 +41,7 @@ fun CafeItem(
     thumbnail: String,
     name: String,
     rating: Double,
-    review: Int,
+    review: String,
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -56,7 +56,7 @@ fun CafeItem(
         ) {
             AsyncImage(
                 model = thumbnail,
-                contentDescription = "Image of a Cafe",
+                contentDescription = "Image of $name",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -79,7 +79,7 @@ fun CafeItem(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "$rating/5 ($review)",
+                        text = "$rating/5.0 ($review)",
                         fontSize = 12.sp
                     )
                 }
@@ -111,7 +111,7 @@ fun CafeItemLarge(
     name: String,
     address: String,
     rating: Double,
-    review: Int,
+    review: String,
     priceCategory: String,
     openingHour: Int,
     closingHour: Int,
