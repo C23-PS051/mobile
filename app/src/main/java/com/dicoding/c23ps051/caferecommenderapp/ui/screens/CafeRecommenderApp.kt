@@ -158,6 +158,7 @@ fun CafeRecommenderApp(
             ) {
                 val id = it.arguments?.getString("id") ?: ""
                 DetailScreen(
+                    userPreference = userPreference,
                     itemId = id,
                     navigateBack = {
                         navController.navigateUp()

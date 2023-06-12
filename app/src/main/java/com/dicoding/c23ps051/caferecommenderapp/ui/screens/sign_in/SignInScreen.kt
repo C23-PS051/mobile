@@ -84,12 +84,21 @@ fun SignInScreen(
                     state.showProgressBar = false
                     val user = auth.currentUser
                     if (user != null) {
-                        /* TODO: ADD CHECK IF ACCOUNT EXISTS THEN SIGN UP WITH THAT INFORMATION */
-                        navigateToSignUpWithData(
-                            user.email,
-                            user.displayName,
-                            user.photoUrl.toString(),
-                        )
+                        if (user.isAnonymous) {
+                            /* TODO: ADD CHECK IF ACCOUNT EXISTS THEN SIGN UP WITH THAT INFORMATION */
+                            navigateToSignUpWithData(
+                                user.email,
+                                user.displayName,
+                                user.photoUrl.toString(),
+                            )
+                        } else {
+                            signInViewModel.signIn(
+                                user.email,
+                                user.displayName as String,
+                                idToken,
+                                user.photoUrl.toString(),
+                            )
+                        }
                     }
                 } else {
                     state.showProgressBar = false
@@ -127,14 +136,22 @@ fun SignInScreen(
                 if (task.isSuccessful) {
                     state.showProgressBar = false
                     val user = auth.currentUser
-                    /*TODO: FIX THE TOKEN*/
-                    if (user != null) {
-                        signInViewModel.signIn(
-                            user.displayName,
-                            user.email as String,
-                            "idToken",
-                            user.photoUrl.toString(),
-                        )
+
+                    user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
+                        if (tokenTask.isSuccessful) {
+                            val idToken = tokenTask.result?.token
+                            if (idToken != null) {
+                                signInViewModel.signIn(
+                                    user.displayName,
+                                    user.email as String,
+                                    idToken,
+                                    user.photoUrl.toString(),
+                                )
+                            }
+                        } else {
+                            state.showErrorDialog = true
+                            state.errorMessage = context.getString(R.string.failed_to_sign_in)
+                        }
                     }
                 } else {
                     state.showProgressBar = false

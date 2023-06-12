@@ -31,7 +31,8 @@ import coil.compose.AsyncImage
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.di.Injection
 import com.dicoding.c23ps051.caferecommenderapp.model.Facility
-import com.dicoding.c23ps051.caferecommenderapp.ui.RepositoryViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
+import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeDetailInfoItem
@@ -47,12 +48,11 @@ import com.google.maps.android.compose.GoogleMap
 
 @Composable
 fun DetailScreen(
+    userPreference: UserPreference,
     itemId: String,
     navigateBack: () -> Unit,
     viewModel: DetailViewModel = viewModel(
-        factory = RepositoryViewModelFactory(
-            Injection.provideRepository()
-        )
+        factory = PreferenceViewModelFactory(userPreference)
     ),
     state: DetailState = rememberDetailState(isFavorite = false),
 ) {
@@ -109,7 +109,7 @@ fun DetailContent(
     name: String,
     address: String,
     rating: Double,
-    review: Int,
+    review: String,
     openingHour: Int,
     closingHour: Int,
     priceCategory: String,
