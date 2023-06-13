@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
+import com.dicoding.c23ps051.caferecommenderapp.constants.DEFAULT_PHOTO_URI
 import com.dicoding.c23ps051.caferecommenderapp.constants.EMAIL_REGEX
 import com.dicoding.c23ps051.caferecommenderapp.constants.MIN_PASSWORD_LENGTH
 import com.dicoding.c23ps051.caferecommenderapp.constants.NAME_REGEX
@@ -59,15 +60,12 @@ fun SignUpScreen(
     userPreference: UserPreference,
     navigateUp: () -> Unit,
     navigateToSignIn: () -> Unit,
-    nameText: String = "",
-    emailText: String = "",
-    photoUrl: String = "",
     state: SignUpFormState = rememberSignUpFormState(
-        photoUrl = photoUrl,
+        photoUri = DEFAULT_PHOTO_URI,
         showPictureChooserDialog = false,
-        nameText = nameText,
+        nameText = "",
         nameHasError = false,
-        emailText = emailText,
+        emailText = "",
         emailHasError = false,
         passwordText = "",
         passwordHasError = false,
@@ -147,7 +145,7 @@ fun SignUpScreen(
         launchIntentGallery -> {
             IntentGalleryLauncher(
                 postImage = { uri ->
-                    state.photoUrl = uri.toString()
+                    state.photoUri = uri.toString()
                     launchIntentGallery = false
                 },
                 navigateBack = { launchIntentGallery = false }
@@ -177,7 +175,7 @@ fun SignUpScreen(
                 cameraSelector = cameraSelector,
                 executor = cameraExecutor,
                 onImageCaptured = { uri ->
-                    state.photoUrl = uri.toString()
+                    state.photoUri = uri.toString()
                     shouldShowCamera = false
                     showCameraView = false
                 },
@@ -193,7 +191,7 @@ fun SignUpScreen(
         }
         else -> {
             SignUpContent(
-                photoUrl = state.photoUrl,
+                photoUri = state.photoUri,
                 nameText = state.nameText,
                 nameHasError = state.nameHasError,
                 emailText = state.emailText,
@@ -243,7 +241,7 @@ fun SignUpScreen(
                             email = state.emailText,
                             name = state.nameText,
                             password = state.passwordText,
-                            photoUri = state.photoUrl,
+                            photoUri = state.photoUri,
                             username = state.repasswordText
                         )
                     } else {
@@ -289,7 +287,7 @@ fun SignUpScreen(
 }
 
 class SignUpFormState(
-    initialPhotoUrlState: String,
+    initialPhotoUriState: String,
     initialPictureChooserState: Boolean,
     initialNameTextState: String,
     initialNameHasErrorState: Boolean,
@@ -306,7 +304,7 @@ class SignUpFormState(
     initialErrorMessageState: String,
 ) {
     /* Profile Picture Url State */
-    var photoUrl by mutableStateOf(initialPhotoUrlState)
+    var photoUri by mutableStateOf(initialPhotoUriState)
     var showPictureChooserDialog by mutableStateOf(initialPictureChooserState)
 
     /* Name Field State */
@@ -335,7 +333,7 @@ class SignUpFormState(
 
 @Composable
 fun rememberSignUpFormState(
-    photoUrl: String,
+    photoUri: String,
     showPictureChooserDialog: Boolean,
     nameText: String,
     nameHasError: Boolean,
@@ -351,18 +349,18 @@ fun rememberSignUpFormState(
     showProgressBar: Boolean,
     errorMessage: String,
 ): SignUpFormState = remember(
-    photoUrl, showPictureChooserDialog, nameText, nameHasError, emailText, emailHasError, passwordText,
+    photoUri, showPictureChooserDialog, nameText, nameHasError, emailText, emailHasError, passwordText,
     passwordHasError, showPassword, repasswordText, repasswordHasError, showRepassword, showErrorDialog,
     showProgressBar, errorMessage
 ) {
-    SignUpFormState(photoUrl, showPictureChooserDialog, nameText, nameHasError, emailText, emailHasError,
+    SignUpFormState(photoUri, showPictureChooserDialog, nameText, nameHasError, emailText, emailHasError,
         passwordText, passwordHasError, showPassword, repasswordText, repasswordHasError, showRepassword,
         showErrorDialog, showProgressBar, errorMessage)
 }
 
 @Composable
 fun SignUpContent(
-    photoUrl: String,
+    photoUri: String,
     nameText: String,
     nameHasError: Boolean,
     onNameValueChange: (String) -> Unit,
@@ -397,7 +395,7 @@ fun SignUpContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ChangeProfilePicture(
-                imageUrl = photoUrl,
+                imageUrl = photoUri,
                 onTextClick = onAddProfilePicture,
             )
             Spacer(modifier = Modifier.height(36.dp))

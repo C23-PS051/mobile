@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
+import com.dicoding.c23ps051.caferecommenderapp.model.Facility
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
@@ -90,7 +91,14 @@ fun SearchScreen(
                     },
                     navigateUp = navigateUp,
                     onDismissRequest = { state.expanded = false },
-                    onSubmit = { onSubmit() },
+                    onSubmit = {
+                        viewModel.editCafePreference(
+                            enumValues<Facility>().mapIndexed { index, facility ->
+                                facility to state.checkedCheckbox[index]
+                            }
+                        )
+                        onSubmit()
+                    },
                     checkedState = state.checkedCheckbox,
                     toggleCheckbox = { index ->
                         state.checkedCheckbox[index] = !state.checkedCheckbox[index]
@@ -179,22 +187,7 @@ fun SearchContent(
         stringResource(id = R.string.high_price),
     )
 
-    val facilities = listOf(
-        stringResource(id = R.string.indoor),
-        stringResource(id = R.string.outdoor),
-        stringResource(id = R.string.wifi),
-        stringResource(id = R.string.kid_friendly),
-        stringResource(id = R.string.pet_friendly),
-        stringResource(id = R.string.takeaway),
-        stringResource(id = R.string.smoking_area),
-        stringResource(id = R.string.parking_area),
-        stringResource(id = R.string.toilets),
-        stringResource(id = R.string.live_music),
-        stringResource(id = R.string.in_mall),
-        stringResource(id = R.string.vip_room),
-        stringResource(id = R.string.reservation),
-        stringResource(id = R.string.alcohol),
-    )
+    val facilities = enumValues<Facility>().map { it.displayName }
 
     Scaffold(
         modifier = modifier,

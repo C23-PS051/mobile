@@ -4,6 +4,7 @@ import com.dicoding.c23ps051.caferecommenderapp.model.User
 import com.dicoding.c23ps051.caferecommenderapp.response.CafeDetailResponse
 import com.dicoding.c23ps051.caferecommenderapp.response.CafeResponse
 import com.dicoding.c23ps051.caferecommenderapp.response.CafeResponseItem
+import com.dicoding.c23ps051.caferecommenderapp.response.Response
 import com.dicoding.c23ps051.caferecommenderapp.response.UserResponse
 import retrofit2.Call
 import retrofit2.http.Body
@@ -29,15 +30,20 @@ interface ApiService {
     ): CafeDetailResponse
 
     @PUT("users/{user-id}")
-    fun editProfile(
+    suspend fun editProfile(
         @Header("Authorization") idToken: String,
         @Path("user-id") userId: String,
         @Body user: User,
-    ): Call<UserResponse>
+    ): Response
 
     @GET("users/{user-id}")
     suspend fun getUserProfile(
         @Header("Authorization") idToken: String,
         @Path("user-id") userId: String,
     ): UserResponse
+
+    @GET("ml/recommend")
+    suspend fun getRecommendedCafes(
+        @Header("Authorization") idToken: String,
+    ): CafeResponse
 }

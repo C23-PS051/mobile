@@ -20,14 +20,14 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
-import com.dicoding.c23ps051.caferecommenderapp.di.Injection
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
-import com.dicoding.c23ps051.caferecommenderapp.ui.RepositoryPreferenceViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackPressHandler
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeLargeList
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafesTopBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.event.BackPress
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.ErrorScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
@@ -39,7 +39,7 @@ fun RecommendedScreen(
     navigateToDetail: (String) -> Unit,
     userPreference: UserPreference,
     viewModel: RecommendedViewModel = viewModel(
-        factory = RepositoryPreferenceViewModelFactory(Injection.provideRepository(), userPreference)
+        factory = PreferenceViewModelFactory(userPreference)
     ),
 ) {
     val focusManager = LocalFocusManager.current
@@ -54,38 +54,28 @@ fun RecommendedScreen(
     val regionChip by viewModel.regionChip
     val openChip by viewModel.openChip
 
-    viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
-        when (uiState) {
-            is UiState.Loading -> {
-                LoadingScreen(stringResource(id = R.string.loading_recommendations))
-                viewModel.searchCafes(query)
-            }
-            is UiState.Success -> {
-                RecommendedContent(
-                    text = query,
-                    onQueryChange = { newText ->
-                        viewModel.searchCafes(newText)
-                    },
-                    cafes = uiState.data,
-                    navigateToDetail = navigateToDetail,
-                    focusManager = focusManager,
-                    listState = listState,
-                    expanded = expanded,
-                    selectedText = selectedText,
-                    setExpandedState = { viewModel.setExpandedState(it) },
-                    setSelectedTextState = { viewModel.setSelectedTextState(it) },
-                    onDismissRequest = { viewModel.setExpandedState(false) },
-                    isRegionChipChecked = regionChip,
-                    onRegionChipClicked = { viewModel.setRegionChipState(!regionChip) },
-                    isOpenChipChecked = openChip,
-                    onOpenChipClicked = { viewModel.setOpenChipState(!openChip) },
-                )
-            }
-            is UiState.Error -> {
-                /* TODO */
-            }
-        }
-    }
+    val uiState = viewModel.uiState.collectAsState(initial = UiState.Loading).value
+    RecommendedContent(
+        uiState = uiState,
+        onLoading = { viewModel.getRecommendedCafes() },
+        onRetry = { viewModel.getRecommendedCafes() },
+        text = query,
+        onQueryChange = { newText ->
+            viewModel.searchCafes(newText)
+        },
+        navigateToDetail = navigateToDetail,
+        focusManager = focusManager,
+        listState = listState,
+        expanded = expanded,
+        selectedText = selectedText,
+        setExpandedState = { viewModel.setExpandedState(it) },
+        setSelectedTextState = { viewModel.setSelectedTextState(it) },
+        onDismissRequest = { viewModel.setExpandedState(false) },
+        isRegionChipChecked = regionChip,
+        onRegionChipClicked = { viewModel.setRegionChipState(!regionChip) },
+        isOpenChipChecked = openChip,
+        onOpenChipClicked = { viewModel.setOpenChipState(!openChip) },
+    )
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.firstVisibleItemIndex }
@@ -121,9 +111,11 @@ fun RecommendedScreen(
 
 @Composable
 fun RecommendedContent(
+    uiState: UiState<List<Cafe>>,
+    onLoading: () -> Unit,
+    onRetry: () -> Unit,
     text: String,
     onQueryChange: (String) -> Unit,
-    cafes: List<Cafe>,
     navigateToDetail: (String) -> Unit,
     focusManager: FocusManager,
     listState: LazyListState,
@@ -156,19 +148,39 @@ fun RecommendedContent(
                 isOpenChipChecked = isOpenChipChecked,
                 onOpenChipClicked = onOpenChipClicked,
             )
-         },
+        },
         modifier = modifier
     ) { innerPadding ->
+
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(horizontal = APP_CONTENT_PADDING),
         ) {
-            CafeLargeList(
-                cafes = cafes,
-                onCafeItemClick = navigateToDetail,
-                state = listState
-            )
+            uiState.let { state ->
+                when (state) {
+                    is UiState.Loading -> {
+                        LoadingScreen(stringResource(id = R.string.loading_recommendations))
+                        onLoading()
+                    }
+
+                    is UiState.Success -> {
+                        CafeLargeList(
+                            cafes = state.data,
+                            onCafeItemClick = navigateToDetail,
+                            state = listState
+                        )
+                        /*TODO: ALSO HANDLE EMPTY LIST */
+                    }
+
+                    is UiState.Error -> {
+                        ErrorScreen(
+                            text = stringResource(id = R.string.failed_to_load_cafe),
+                            onRetry = onRetry
+                        )
+                    }
+                }
+            }
         }
     }
 }

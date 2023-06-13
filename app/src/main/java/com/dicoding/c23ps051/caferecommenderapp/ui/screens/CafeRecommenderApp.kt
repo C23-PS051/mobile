@@ -128,22 +128,9 @@ fun CafeRecommenderApp(
                     },
                 )
             }
-            composable(
-                route = Screen.SignUp.route,
-                arguments = listOf(
-                    navArgument("email") { nullable = true },
-                    navArgument("name") { nullable = true },
-                    navArgument("photo_url") { nullable = true },
-                )
-            ) {
-                val email = it.arguments?.getString("email") ?: ""
-                val name = it.arguments?.getString("name") ?: ""
-                val photoUrl = it.arguments?.getString("photo_url") ?: ""
+            composable(route = Screen.SignUp.route) {
                 SignUpScreen(
                     userPreference = userPreference,
-                    emailText = email,
-                    nameText = name,
-                    photoUrl = photoUrl,
                     navigateToSignIn = {
                         navController.popBackStack()
                         navController.navigate(Screen.SignIn.route)

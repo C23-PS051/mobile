@@ -171,4 +171,5 @@
     <string name="failed_to_create_user_account">Failed to create user account</string>
     <string name="success">Success</string>
     <string name="your_account_signed_up_successfully">Your account signed up successfully</string>
+    <string name="failed_to_load_cafe">Failed to load cafe</string>
 </resources>

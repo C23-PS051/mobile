@@ -31,15 +31,18 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.InfoScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.location.LocationViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.location.RequestLocationScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.search.SearchScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in.SignInViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.auth.FirebaseAuth
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var viewModel: PreferenceViewModel
+    private lateinit var preferenceViewModel: PreferenceViewModel
+    private lateinit var signInViewModel: SignInViewModel
     private lateinit var locationViewModel: LocationViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var userPreference: UserPreference
@@ -63,17 +66,22 @@ class MainActivity : ComponentActivity() {
 //            "Kota Bandung" to "Bandung City"// TODO: For experiment purposes only, remember to remove when done
         )
 
-        viewModel = ViewModelProvider(
+        preferenceViewModel = ViewModelProvider(
             this,
             PreferenceViewModelFactory(UserPreference.getInstance(dataStore))
         )[PreferenceViewModel::class.java]
+
+        signInViewModel = ViewModelProvider(
+            this,
+            PreferenceViewModelFactory(UserPreference.getInstance(dataStore))
+        )[SignInViewModel::class.java]
 
         locationViewModel = ViewModelProvider(
             this,
             PreferenceViewModelFactory(UserPreference.getInstance(dataStore))
         )[LocationViewModel::class.java]
 
-        viewModel.getLoginAsLiveData().observe(this) { user ->
+        preferenceViewModel.getLoginAsLiveData().observe(this) { user ->
             if (user.isLogin) {
                 if (isLocationHandled) {
                     if (user.isNewUser) {
@@ -83,7 +91,7 @@ class MainActivity : ComponentActivity() {
                                 newUserScreen = true,
                                 navigateUp = { setDefaultContent(true) },
                                 onSubmit = {
-                                    viewModel.setNotNewUser()
+                                    preferenceViewModel.setNotNewUser()
                                     setDefaultContent(true)
                                 },
                             )
@@ -91,6 +99,7 @@ class MainActivity : ComponentActivity() {
                     } else {
                         setDefaultContent(true)
                     }
+                    getNewToken()
                 } else {
                     handleUserLocation(user.isNewUser)
                 }
@@ -179,7 +188,7 @@ class MainActivity : ComponentActivity() {
                                     navigateUp = { setDefaultContent(true) },
                                     newUserScreen = true,
                                     onSubmit = {
-                                        viewModel.setNotNewUser()
+                                        preferenceViewModel.setNotNewUser()
                                         setDefaultContent(true)
                                     },
                                 )
@@ -187,6 +196,7 @@ class MainActivity : ComponentActivity() {
                         } else {
                             setDefaultContent(true)
                         }
+                        getNewToken()
                         removeLocationObserver()
                     }
                     isLocationHandled = true
@@ -199,6 +209,23 @@ class MainActivity : ComponentActivity() {
 
     private fun removeLocationObserver() {
         locationViewModel.locationPermission.removeObserver(locationObserver)
+    }
+
+    private fun getNewToken() {
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+        firebaseUser?.getIdToken(true)?.addOnSuccessListener { tokenResult ->
+            val token = tokenResult.token
+            if (token != null) {
+                signInViewModel.signIn(
+                    name = firebaseUser.displayName,
+                    email = firebaseUser.email as String,
+                    token = token,
+                    photoUrl = firebaseUser.photoUrl.toString(),
+                    userId = firebaseUser.uid,
+                    isNewUser = false,
+                )
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

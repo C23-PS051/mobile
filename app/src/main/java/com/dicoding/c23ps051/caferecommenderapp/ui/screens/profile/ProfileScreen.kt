@@ -1,7 +1,10 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -26,16 +29,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
+import com.dicoding.c23ps051.caferecommenderapp.constants.DEFAULT_PHOTO_URI
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.AuthViewModel
-import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ButtonSmall
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProfilePicture
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProgressBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SettingsItem
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.StandardTopBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
@@ -49,53 +52,62 @@ fun ProfileScreen(
     navigateToPrivacyPolicy: () -> Unit,
     navigateToHelpCenter: () -> Unit,
     navigateToApplicationInfo: () -> Unit,
-    preferenceViewModel: PreferenceViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
+    profileViewModel: ProfileViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
     authViewModel: AuthViewModel = viewModel(),
-    state: ProfileState = rememberProfileState(showDialog = false)
+    state: ProfileState = rememberProfileState(
+        showDialog = false,
+        loadingState = true,
+        userName = "",
+        userEmail = "",
+        photoUri = "",
+        buttonAction = {},
+        buttonText = "",
+    )
 ) {
     val googleSignInClient: GoogleSignInClient
     val context = LocalContext.current
 
     googleSignInClient = authViewModel.initGoogleSignInClient(context)
 
-    preferenceViewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
+    ProfileContent(
+        loadingState = state.loadingState,
+        name = state.userName,
+        email = state.userEmail,
+        photoUri = state.photoUri,
+        onLogoutClick = {
+            state.showDialog = true
+        },
+        buttonText = state.buttonText,
+        onButtonClick = state.buttonAction,
+        onPrivacyPolicyClick = navigateToPrivacyPolicy,
+        onHelpCenterClick = navigateToHelpCenter,
+        onApplicationInfoClick = navigateToApplicationInfo,
+    )
+
+    profileViewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Loading -> {
-                LoadingScreen(stringResource(id = R.string.fetching_your_data))
-                preferenceViewModel.getLogin()
+                state.loadingState = true
+                profileViewModel.getUserProfile()
             }
             is UiState.Success -> {
+                state.loadingState = false
                 val data = uiState.data
-                ProfileContent(
-                    name = data.name,
-                    email = data.email,
-                    photoUrl = data.photoUrl,
-                    onLogoutClick = {
-                        state.showDialog = true
-                    },
-                    buttonText = stringResource(id = R.string.edit_profile),
-                    onButtonClick = navigateToEditProfile,
-                    onPrivacyPolicyClick = navigateToPrivacyPolicy,
-                    onHelpCenterClick = navigateToHelpCenter,
-                    onApplicationInfoClick = navigateToApplicationInfo,
-                )
+                state.userName = data.fullName
+                state.userEmail = data.email
+                state.photoUri = data.photoUri
+                state.buttonAction = navigateToEditProfile
+                state.buttonText = stringResource(id = R.string.edit_profile)
             }
             is UiState.Error -> {
-                ProfileContent(
-                    name = stringResource(id = R.string.cannot_load_name),
-                    email = stringResource(id = R.string.cannot_load_email),
-                    photoUrl = "",
-                    onLogoutClick = {
-                        state.showDialog = true
-                    },
-                    buttonText = stringResource(id = R.string.retry),
-                    onButtonClick = {
-                        preferenceViewModel.getLogin()
-                    },
-                    onPrivacyPolicyClick = navigateToPrivacyPolicy,
-                    onHelpCenterClick = navigateToHelpCenter,
-                    onApplicationInfoClick = navigateToApplicationInfo,
-                )
+                state.loadingState = false
+                state.userName = stringResource(id = R.string.cannot_load_name)
+                state.userEmail = stringResource(id = R.string.cannot_load_email)
+                state.photoUri = DEFAULT_PHOTO_URI
+                state.buttonAction = {
+                    profileViewModel.getUserProfile()
+                }
+                state.buttonText = stringResource(id = R.string.retry)
             }
         }
     }
@@ -109,12 +121,12 @@ fun ProfileScreen(
                         if (currentUser.providerData.any { it.providerId == GoogleAuthProvider.PROVIDER_ID }) {
                             googleSignInClient.signOut().addOnCompleteListener {
                                 googleSignInClient.revokeAccess().addOnCompleteListener {
-                                    preferenceViewModel.logout()
+                                    profileViewModel.logout()
                                 }
                             }
                         } else {
                             FirebaseAuth.getInstance().signOut()
-                            preferenceViewModel.logout()
+                            profileViewModel.logout()
                         }
                     }
                     state.showDialog = false
@@ -140,21 +152,44 @@ fun ProfileScreen(
     }
 }
 
-class ProfileState(initialShowDialog: Boolean) {
+class ProfileState(
+    initialShowDialog: Boolean,
+    initialLoadingState: Boolean,
+    initialUserNameState: String,
+    initialUserEmailState: String,
+    initialPhotoUriState: String,
+    initialButtonActionState: () -> Unit,
+    initialButtonTextState: String,
+) {
     var showDialog by mutableStateOf(initialShowDialog)
+    var loadingState by mutableStateOf(initialLoadingState)
+    var userName by mutableStateOf(initialUserNameState)
+    var userEmail by mutableStateOf(initialUserEmailState)
+    var photoUri by mutableStateOf(initialPhotoUriState)
+    var buttonAction by mutableStateOf(initialButtonActionState)
+    var buttonText by mutableStateOf(initialButtonTextState)
 }
 
 @Composable
-fun rememberProfileState(showDialog: Boolean): ProfileState =
-    remember(showDialog) {
-        ProfileState(showDialog)
+fun rememberProfileState(
+    showDialog: Boolean,
+    loadingState: Boolean,
+    userName: String,
+    userEmail: String,
+    photoUri: String,
+    buttonAction: () -> Unit,
+    buttonText: String
+): ProfileState =
+    remember(showDialog, loadingState, userName, userEmail, photoUri, buttonAction, buttonText) {
+        ProfileState(showDialog, loadingState, userName, userEmail, photoUri, buttonAction, buttonText)
     }
 
 @Composable
 fun ProfileContent(
+    loadingState: Boolean,
     name: String,
     email: String,
-    photoUrl: String,
+    photoUri: String,
     onLogoutClick: () -> Unit,
     buttonText: String,
     onButtonClick: () -> Unit,
@@ -179,16 +214,28 @@ fun ProfileContent(
                 .padding(APP_CONTENT_PADDING),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ProfilePicture(image = photoUrl)
-            Text(
-                text = name,
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Text(
-                text = email
-            )
-            ButtonSmall(text = buttonText) {
-                onButtonClick()
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(272.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (loadingState) {
+                    ProgressBar()
+                } else {
+                    ProfilePicture(image = photoUri)
+                    Text(
+                        text = name,
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                    Text(
+                        text = email
+                    )
+                    ButtonSmall(text = buttonText) {
+                        onButtonClick()
+                    }
+                }
             }
             Divider(modifier = Modifier.padding(vertical = 24.dp))
             SettingsItem(

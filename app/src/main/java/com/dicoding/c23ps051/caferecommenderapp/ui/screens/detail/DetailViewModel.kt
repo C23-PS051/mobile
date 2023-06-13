@@ -27,42 +27,46 @@ class DetailViewModel(private val pref: UserPreference) : ViewModel() {
     fun getCafeById(id: String) {
         viewModelScope.launch {
             pref.getToken().collect { token ->
-                val cafe = ApiConfig.getApiService()
-                    .getCafeById("Bearer $token", id)
-                if (cafe.status == 200) {
-                    val data = cafe.data
-                    val result = Cafe(
-                        id = data.cafeId,
-                        address = data.address,
-                        closingHour = data.closingHour,
-                        description = data.description,
-                        name = data.name,
-                        openingHour = data.openingHour,
-                        priceCategory = data.priceCategory,
-                        rating = data.rating as Double,
-                        region = data.region,
-                        review = data.review,
-                        thumbnail = data.thumbnailUrl,
-                        facilities = listOf(
-                            Facility.ALCOHOL to data.alcohol,
-                            Facility.INDOOR to data.indoor,
-                            Facility.IN_MALL to data.inMall,
-                            Facility.KID_FRIENDLY to data.kidFriendly,
-                            Facility.LIVE_MUSIC to data.liveMusic,
-                            Facility.OUTDOOR to data.outdoor,
-                            Facility.PET_FRIENDLY to data.petFriendly,
-                            Facility.PARKING_AREA to data.parkingArea,
-                            Facility.RESERVATION to data.reservation,
-                            Facility.SMOKING_AREA to data.smokingArea,
-                            Facility.TAKEAWAY to data.takeaway,
-                            Facility.TOILETS to data.toilets,
-                            Facility.VIP_ROOM to data.vipRoom,
-                            Facility.WIFI to (data.wifi != 0),
+                try {
+                    val cafe = ApiConfig.getApiService()
+                        .getCafeById("Bearer $token", id)
+                    if (cafe.status == 200) {
+                        val data = cafe.data
+                        val result = Cafe(
+                            id = data.cafeId,
+                            address = data.address,
+                            closingHour = data.closingHour,
+                            description = data.description,
+                            name = data.name,
+                            openingHour = data.openingHour,
+                            priceCategory = data.priceCategory,
+                            rating = data.rating as Double,
+                            region = data.region,
+                            review = data.review,
+                            thumbnail = data.thumbnailUrl,
+                            facilities = listOf(
+                                Facility.ALCOHOL to data.alcohol,
+                                Facility.INDOOR to data.indoor,
+                                Facility.IN_MALL to data.inMall,
+                                Facility.KID_FRIENDLY to data.kidFriendly,
+                                Facility.LIVE_MUSIC to data.liveMusic,
+                                Facility.OUTDOOR to data.outdoor,
+                                Facility.PET_FRIENDLY to data.petFriendly,
+                                Facility.PARKING_AREA to data.parkingArea,
+                                Facility.RESERVATION to data.reservation,
+                                Facility.SMOKING_AREA to data.smokingArea,
+                                Facility.TAKEAWAY to data.takeaway,
+                                Facility.TOILETS to data.toilets,
+                                Facility.VIP_ROOM to data.vipRoom,
+                                Facility.WIFI to (data.wifi != 0),
+                            )
                         )
-                    )
-                    _uiState.value = UiState.Success(result)
-                } else {
-                    _uiState.value = UiState.Error("Failed to load cafe")
+                        _uiState.value = UiState.Success(result)
+                    } else {
+                        _uiState.value = UiState.Error("Failed to load cafe")
+                    }
+                } catch (e: Exception) {
+                    _uiState.value = UiState.Error(e.message.toString())
                 }
             }
         }

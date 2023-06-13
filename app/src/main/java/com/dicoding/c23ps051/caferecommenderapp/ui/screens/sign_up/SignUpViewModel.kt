@@ -4,11 +4,11 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.api.ApiConfig
+import com.dicoding.c23ps051.caferecommenderapp.constants.DEFAULT_PHOTO_URI
 import com.dicoding.c23ps051.caferecommenderapp.model.Facility
 import com.dicoding.c23ps051.caferecommenderapp.model.Login
 import com.dicoding.c23ps051.caferecommenderapp.model.User
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
-import com.dicoding.c23ps051.caferecommenderapp.response.UserResponse
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.ResultState
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -16,9 +16,6 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class SignUpViewModel(private val pref: UserPreference) : ViewModel() {
 
@@ -50,7 +47,6 @@ class SignUpViewModel(private val pref: UserPreference) : ViewModel() {
                                         signUp(
                                             idToken,
                                             firebaseUser.uid,
-                                            username,
                                             email,
                                             password,
                                             name,
@@ -73,83 +69,69 @@ class SignUpViewModel(private val pref: UserPreference) : ViewModel() {
     }
 
     private fun signUp(
-        idToken: String, userId: String, username: String, email: String, password: String, name: String, photoUri: String
+        idToken: String, userId: String, email: String, password: String, name: String, photoUri: String
     ) {
         viewModelScope.launch {
             val user = User(
                 email = email,
-                full_name = name,
+                fullName = name,
                 photoUri = photoUri,
-                username = username,
                 preferences = enumValues<Facility>().map { it to false }
             )
 
-            val client = ApiConfig.getApiService().editProfile(
+            val response = ApiConfig.getApiService().editProfile(
                 idToken = idToken,
                 userId = userId,
                 user = user,
             )
 
-            client.enqueue(object: Callback<UserResponse> {
-                override fun onResponse(
-                    call: Call<UserResponse>,
-                    response: Response<UserResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        auth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    val currentUser = auth.currentUser
-                                    val isNewUser = true
+            if (response.status == 200) {
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val currentUser = auth.currentUser
 
-                                    currentUser?.getIdToken(true)
-                                        ?.addOnCompleteListener { tokenTask ->
-                                            if (tokenTask.isSuccessful) {
-                                                val token = tokenTask.result?.token
-                                                if (token != null) {
-                                                    signIn(
-                                                        name = name,
-                                                        email = email,
-                                                        token = token,
-                                                        photoUrl = photoUri,
-                                                        userId = userId,
-                                                        isNewUser = isNewUser,
-                                                    )
-                                                }
-                                            } else {
-                                                _resultState.value = ResultState.Error("Failed to create user account")
-                                            }
-                                        }?.addOnFailureListener {
-                                            _resultState.value = ResultState.Error(it.message.toString())
+                            currentUser?.getIdToken(true)
+                                ?.addOnCompleteListener { tokenTask ->
+                                    if (tokenTask.isSuccessful) {
+                                        val token = tokenTask.result?.token
+                                        if (token != null) {
+                                            signIn(
+                                                name = name,
+                                                email = email,
+                                                token = token,
+                                                photoUri = photoUri,
+                                                userId = userId,
+                                            )
                                         }
-                                } else {
-                                    _resultState.value = ResultState.Error("Failed to create user account")
+                                    } else {
+                                        _resultState.value = ResultState.Error("Failed to create user account")
+                                    }
+                                }?.addOnFailureListener {
+                                    _resultState.value = ResultState.Error(it.message.toString())
                                 }
-                            }.addOnFailureListener {
-                                _resultState.value = ResultState.Error(it.message.toString())
-                            }
-                    } else {
-                        _resultState.value = ResultState.Error("Failed to create user account")
+                        } else {
+                            _resultState.value = ResultState.Error("Failed to create user account")
+                        }
+                    }.addOnFailureListener {
+                        _resultState.value = ResultState.Error(it.message.toString())
                     }
-                }
-
-                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                    _resultState.value = ResultState.Error(t.message.toString())
-                }
-            })
+            } else {
+                _resultState.value = ResultState.Error("Failed to create user account")
+            }
         }
     }
 
-    fun signIn(name: String?, email: String, token: String, photoUrl: String, userId: String, isNewUser: Boolean) {
+    private fun signIn(name: String?, email: String, token: String, photoUri: String, userId: String) {
         val convName = name ?: ""
-        val convPhotoUrl = if (photoUrl == "null") "" else photoUrl
+        val convPhotoUrl = if (photoUri == "null") DEFAULT_PHOTO_URI else photoUri
         val loginData = Login(
             name = convName,
             email = email,
             photoUrl = convPhotoUrl,
             token = token,
             isLogin = true,
-            isNewUser = isNewUser,
+            isNewUser = true,
             userId = userId,
         )
 

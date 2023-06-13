@@ -32,7 +32,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
             preferences[TOKEN_KEY] = login.token
             preferences[STATE_KEY] = login.isLogin
             preferences[NEW_USER_KEY] = login.isNewUser
-            preferences[UID_KEY] ?: login.userId
+            preferences[UID_KEY] = login.userId
         }
     }
 

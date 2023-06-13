@@ -4,8 +4,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dicoding.c23ps051.caferecommenderapp.api.ApiConfig
 import com.dicoding.c23ps051.caferecommenderapp.data.CafeRepository
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
+import com.dicoding.c23ps051.caferecommenderapp.model.Facility
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.common.isOpen
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
@@ -13,12 +15,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class RecommendedViewModel(private val repository: CafeRepository, pref: UserPreference) : ViewModel() {
+class RecommendedViewModel(private val pref: UserPreference) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState<List<Cafe>>> = MutableStateFlow(UiState.Loading)
     val uiState: StateFlow<UiState<List<Cafe>>> get() = _uiState
 
-    private var recommendedCafes = listOf<Cafe>()
+    private var recommendedCafes = mutableListOf<Cafe>()
     private var filteredRecommendedCafes = listOf<Cafe>()
 
     private lateinit var location: String
@@ -49,11 +51,64 @@ class RecommendedViewModel(private val repository: CafeRepository, pref: UserPre
                 location = it
             }
         }
+
+//        getRecommendedCafes()
+    }
+
+    fun getRecommendedCafes() {
+        _uiState.value = UiState.Loading
+        viewModelScope.launch {
+            try {
+                pref.getLogin().collect {
+                    val response = ApiConfig.getApiService().getRecommendedCafes(it.token)
+
+                    if (response.status == 200) {
+                        val data = response.data
+                        data.forEach { item ->
+                            val cafe = Cafe(
+                                id = item.cafeId,
+                                address = item.address,
+                                closingHour = item.closingHour,
+                                description = item.description,
+                                name = item.name,
+                                openingHour = item.openingHour,
+                                priceCategory = item.priceCategory,
+                                rating = item.rating as Double,
+                                region = item.region,
+                                review = item.review,
+                                thumbnail = item.thumbnailUrl,
+                                facilities = listOf(
+                                    Facility.ALCOHOL to item.alcohol,
+                                    Facility.INDOOR to item.indoor,
+                                    Facility.IN_MALL to item.inMall,
+                                    Facility.KID_FRIENDLY to item.kidFriendly,
+                                    Facility.LIVE_MUSIC to item.liveMusic,
+                                    Facility.OUTDOOR to item.outdoor,
+                                    Facility.PET_FRIENDLY to item.petFriendly,
+                                    Facility.PARKING_AREA to item.parkingArea,
+                                    Facility.RESERVATION to item.reservation,
+                                    Facility.SMOKING_AREA to item.smokingArea,
+                                    Facility.TAKEAWAY to item.takeaway,
+                                    Facility.TOILETS to item.toilets,
+                                    Facility.VIP_ROOM to item.vipRoom,
+                                    Facility.WIFI to (item.wifi != 0),
+                                )
+                            )
+                            recommendedCafes.add(cafe)
+                        }
+                        updateStates()
+                    } else {
+                        _uiState.value = UiState.Error("Failed loading cafes")
+                    }
+                }
+            } catch (e: Exception) {
+                _uiState.value = UiState.Error(e.message.toString())
+            }
+        }
     }
 
     fun searchCafes(newQuery: String) {
         _query.value = newQuery
-        recommendedCafes = repository.searchCafes(query.value).sortedBy { it.name }
         updateStates()
     }
 
@@ -79,6 +134,14 @@ class RecommendedViewModel(private val repository: CafeRepository, pref: UserPre
 
     private fun updateStates() {
         filteredRecommendedCafes = recommendedCafes
+
+        if (query.value == "") {
+            filteredRecommendedCafes.sortedBy { it.name }
+        } else {
+            filteredRecommendedCafes.filter {
+                it.name.contains(query.value, ignoreCase = true)
+            }
+        }
 
         if (regionChip.value) {
             if (location != "All") {

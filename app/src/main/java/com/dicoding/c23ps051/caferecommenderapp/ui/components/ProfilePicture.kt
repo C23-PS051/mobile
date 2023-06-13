@@ -18,6 +18,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Scale
 import com.dicoding.c23ps051.caferecommenderapp.R
+import com.dicoding.c23ps051.caferecommenderapp.constants.DEFAULT_PHOTO_URI
 
 @Composable
 fun ProfilePicture(
@@ -26,7 +27,11 @@ fun ProfilePicture(
 ) {
     Image(
         painter = if (image == "") {
-            painterResource(id = R.drawable.profile)
+            rememberAsyncImagePainter(
+                ImageRequest.Builder(LocalContext.current).data(data = Uri.parse(DEFAULT_PHOTO_URI)).apply(block = fun ImageRequest.Builder.() {
+                    scale(Scale.FILL)
+                }).build()
+            )
         } else {
             rememberAsyncImagePainter(
                 ImageRequest.Builder(LocalContext.current).data(data = Uri.parse(image)).apply(block = fun ImageRequest.Builder.() {
