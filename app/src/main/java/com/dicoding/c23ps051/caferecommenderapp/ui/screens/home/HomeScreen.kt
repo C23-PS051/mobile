@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
@@ -21,18 +22,18 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
-import com.dicoding.c23ps051.caferecommenderapp.model.Login
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackPressHandler
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.ButtonSmall
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeList
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Header
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.HomeSection
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProgressBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SearchCafe
 import com.dicoding.c23ps051.caferecommenderapp.ui.event.BackPress
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.ErrorScreen
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 
 @Composable
 fun HomeScreen(
@@ -43,57 +44,86 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(
         factory = PreferenceViewModelFactory(userPreference)
     ),
-    preferenceViewModel: PreferenceViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
 ) {
     var backPressState by remember { mutableStateOf<BackPress>(BackPress.Idle) }
     val context = LocalContext.current
 
-    val userLocation = preferenceViewModel.location.collectAsState(initial = stringResource(id = R.string.all)).value
+    val userLocation = viewModel.location.collectAsState(initial = stringResource(id = R.string.all)).value
 
-    val uiStateNearby = viewModel.uiStateNearby.collectAsState(initial = UiState.Loading).value
+    val cafesState = viewModel.cafesState.collectAsState(initial = UiState.Loading).value
+    val uiStateMyRegion = viewModel.uiStateMyRegion.collectAsState(initial = UiState.Loading).value
     val uiStateOpen24Hours = viewModel.uiStateOpen24Hours.collectAsState(initial = UiState.Loading).value
-    val uiStateOnBudget = viewModel.uiStateOnBudget.collectAsState(initial = UiState.Loading).value
-    val uiStateLogin = preferenceViewModel.uiState.collectAsState(initial = UiState.Loading).value
+    val uiStatePopular = viewModel.uiStatePopular.collectAsState(initial = UiState.Loading).value
 
-    val nearbyCafes = if (uiStateNearby is UiState.Success) uiStateNearby.data else emptyList()
+    val cafes = if (cafesState is UiState.Success) cafesState.data else emptyList()
+    val myRegionCafes = if (uiStateMyRegion is UiState.Success) uiStateMyRegion.data else emptyList()
     val open24HoursCafes = if (uiStateOpen24Hours is UiState.Success) uiStateOpen24Hours.data else emptyList()
-    val onBudgetCafes = if (uiStateOnBudget is UiState.Success) uiStateOnBudget.data else emptyList()
-    val login = if (uiStateLogin is UiState.Success) uiStateLogin.data else null
+    val popularCafes = if (uiStatePopular is UiState.Success) uiStatePopular.data else emptyList()
+    val photoUri by viewModel.profileUri
 
-    val loadCompleted = nearbyCafes.isNotEmpty() && open24HoursCafes.isNotEmpty() && onBudgetCafes.isNotEmpty() && login != null
-
-    if (loadCompleted) {
-        val loginData = login as Login
-        HomeContent(
-            navigateToDetail = navigateToDetail,
-            navigateToSearchCafe = navigateToSearchCafe,
-            onProfileClick = onProfileClick,
-            nearbyCafes = nearbyCafes,
-            open24HoursCafes = open24HoursCafes,
-            onBudgetCafes = onBudgetCafes,
-            userLocation = userLocation,
-            photoUrl = loginData.photoUrl
-        )
-    } else {
-        if (uiStateNearby is UiState.Loading) {
-            viewModel.getAllCafes()
-        }
-        if (uiStateOpen24Hours is UiState.Loading) {
-            viewModel.getAllCafes()
-        }
-        if (uiStateOnBudget is UiState.Loading) {
-            viewModel.getAllCafes()
-        }
-        if (uiStateLogin is UiState.Loading) {
-            preferenceViewModel.getLogin()
-        }
-
-        if (uiStateNearby is UiState.Error || uiStateOpen24Hours is UiState.Error || uiStateOnBudget is UiState.Error) {
-            ErrorScreen(stringResource(id = R.string.failed_to_load_cafes), { /*TODO*/ })
-        } else {
-            LoadingScreen(stringResource(id = R.string.exploring_cafe_options))
+    cafesState.let { uiState ->
+        when (uiState) {
+            UiState.Loading -> {
+                viewModel.getAllCafes()
+            }
+            is UiState.Success -> {
+                if (myRegionCafes.isEmpty()) {
+                    viewModel.filterByRegion(uiState.data)
+                }
+                if (open24HoursCafes.isEmpty()) {
+                    viewModel.filterByOpen24Hours(uiState.data)
+                }
+                if (popularCafes.isEmpty()) {
+                    viewModel.filterByPopular(uiState.data)
+                }
+            }
+            is UiState.Error -> {
+                viewModel.setMyRegionCafesToError()
+                viewModel.setOn24HoursCafesToError()
+                viewModel.setPopularCafesToError()
+            }
         }
     }
+
+    HomeContent(
+        navigateToDetail = navigateToDetail,
+        navigateToSearchCafe = navigateToSearchCafe,
+        onProfileClick = onProfileClick,
+        myRegionCafes = uiStateMyRegion,
+        open24HoursCafes = uiStateOpen24Hours,
+        popularCafes = uiStatePopular,
+        onMyRegionCafesRetry = { viewModel.filterByRegion(cafes) },
+        onOpen24HoursCafesRetry = { viewModel.filterByOpen24Hours(cafes) },
+        onPopularCafesRetry = { viewModel.filterByPopular(cafes) },
+        userLocation = userLocation,
+        photoUri = photoUri
+    )
+
+//    val loadCompleted = nearbyCafes.isNotEmpty() && open24HoursCafes.isNotEmpty() && onBudgetCafes.isNotEmpty() && login != null
+//
+//    if (loadCompleted) {
+//
+//    } else {
+//        viewModel.getAllCafes()
+//        if (uiStateMyRegion is UiState.Loading) {
+//            state.loadingMyRegionCafes = true
+//        }
+//        if (uiStateOpen24Hours is UiState.Loading) {
+//            state.loadingOn24HoursCafes = true
+//        }
+//        if (uiStatePopular is UiState.Loading) {
+//            state.loadingPopularCafes = true
+//        }
+//        if (uiStateLogin is UiState.Loading) {
+//            preferenceViewModel.getLogin()
+//        }
+//
+//        if (uiStateMyRegion is UiState.Error || uiStateOpen24Hours is UiState.Error || uiStatePopular is UiState.Error) {
+//            ErrorScreen(stringResource(id = R.string.failed_to_load_cafes), { /*TODO*/ })
+//        } else {
+//            LoadingScreen(stringResource(id = R.string.exploring_cafe_options))
+//        }
+//    }
 
     // User needs to press back twice to exit
     BackPressHandler(
@@ -115,15 +145,18 @@ fun HomeContent(
     navigateToDetail: (String) -> Unit,
     navigateToSearchCafe: () -> Unit,
     onProfileClick: () -> Unit,
-    nearbyCafes: List<Cafe>,
-    open24HoursCafes: List<Cafe>,
-    onBudgetCafes: List<Cafe>,
+    myRegionCafes: UiState<List<Cafe>>,
+    open24HoursCafes: UiState<List<Cafe>>,
+    popularCafes: UiState<List<Cafe>>,
+    onMyRegionCafesRetry: () -> Unit,
+    onOpen24HoursCafesRetry: () -> Unit,
+    onPopularCafesRetry: () -> Unit,
     userLocation: String?,
-    photoUrl: String,
+    photoUri: String,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        topBar = { Header(userLocation, photoUrl, onProfileClick) },
+        topBar = { Header(userLocation, photoUri, onProfileClick) },
     ) { innerPadding ->
         Column(
             modifier = modifier
@@ -138,21 +171,69 @@ fun HomeContent(
                     .padding(horizontal = 16.dp),
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
-//                WelcomeText("Yen", modifier = Modifier.align(Alignment.CenterHorizontally))
+
                 HomeSection(
-                    title = stringResource(id = R.string.nearby),
-                    onCafeItemClick = navigateToDetail,
-                    cafes = nearbyCafes,
+                    title = stringResource(id = R.string.my_region),
+                    content = {
+                        myRegionCafes.let { uiState ->
+                            when (uiState) {
+                                UiState.Loading -> { ProgressBar(modifier.size(40.dp)) }
+                                is UiState.Success -> {
+                                    CafeList(
+                                        onCafeItemClick = navigateToDetail,
+                                        cafes = uiState.data,
+                                    )
+                                }
+                                is UiState.Error -> {
+                                    ButtonSmall(text = stringResource(id = R.string.retry)) {
+                                        onMyRegionCafesRetry()
+                                    }
+                                }
+                            }
+                        }
+                    },
                 )
                 HomeSection(
                     title = stringResource(id = R.string.open_24_hours),
-                    onCafeItemClick = navigateToDetail,
-                    cafes = open24HoursCafes,
+                    content = {
+                        open24HoursCafes.let { uiState ->
+                            when (uiState) {
+                                UiState.Loading -> { ProgressBar(modifier.size(40.dp)) }
+                                is UiState.Success -> {
+                                    CafeList(
+                                        onCafeItemClick = navigateToDetail,
+                                        cafes = uiState.data,
+                                    )
+                                }
+                                is UiState.Error -> {
+                                    ButtonSmall(text = stringResource(id = R.string.retry)) {
+                                        onOpen24HoursCafesRetry()
+                                    }
+                                }
+                            }
+                        }
+                    },
                 )
                 HomeSection(
-                    title = stringResource(id = R.string.on_budget),
-                    onCafeItemClick = navigateToDetail,
-                    cafes = onBudgetCafes,
+                    title = stringResource(id = R.string.popular),
+                    content = {
+                        popularCafes.let { uiState ->
+                            when (uiState) {
+                                UiState.Loading -> { ProgressBar(modifier.size(40.dp)) }
+                                is UiState.Success -> {
+                                    CafeList(
+                                        onCafeItemClick = navigateToDetail,
+                                        cafes = uiState.data,
+                                    )
+                                }
+                                is UiState.Error -> {
+                                    ButtonSmall(text = stringResource(id = R.string.retry)) {
+                                        onPopularCafesRetry()
+                                    }
+                                }
+                            }
+                        }
+                    }
                 )
             }
         }

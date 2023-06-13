@@ -17,8 +17,6 @@ class PreferenceViewModel(private val pref: UserPreference) : ViewModel() {
     private val _uiState: MutableStateFlow<UiState<Login>> = MutableStateFlow(UiState.Loading)
     val uiState: StateFlow<UiState<Login>> get() = _uiState
 
-    val location get() = pref.getUserLocation()
-
     fun getLoginAsLiveData(): LiveData<Login> {
         return pref.getLogin().asLiveData()
     }
