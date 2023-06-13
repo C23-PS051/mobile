@@ -3,6 +3,8 @@ package com.dicoding.c23ps051.caferecommenderapp.ui.screens.detail
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -71,7 +73,6 @@ fun DetailScreen(
         factory = PreferenceViewModelFactory(userPreference)
     ),
     state: DetailState = rememberDetailState(
-        isFavorite = false,
         showMapDialog = false,
         isGetLocationHandled = false,
     ),
@@ -79,11 +80,14 @@ fun DetailScreen(
     val context = LocalContext.current
     val mapsState = viewModel.mapsUiState.collectAsState().value
 
+    val isFavorite by viewModel.favoriteState.collectAsState()
+
     viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Loading -> {
                 LoadingScreen(stringResource(id = R.string.serving_up_cafe_info))
                 viewModel.getCafeById(itemId)
+                viewModel.getIsCafeFavorite(itemId)
             }
             is UiState.Success -> {
                 val cafe = uiState.data
@@ -103,8 +107,24 @@ fun DetailScreen(
                     priceCategory = cafe.priceCategory,
                     region = cafe.region,
                     facilities = cafe.facilities,
-                    toggleFavorite = { state.isFavorite = !state.isFavorite },
-                    isFavorite = state.isFavorite,
+                    toggleFavorite = {
+                        Log.d("MyLogger", "Toggle Favorite")
+                        val isSuccessful = if (isFavorite) {
+                            viewModel.removeFromFavorite(cafe.id)
+                        } else {
+                            viewModel.addToFavorite(cafe.id)
+                        }
+
+//                        if (isSuccessful) {
+//                            Log.d("MyLogger", "Favorite Success ")
+//                            if (isFavorite) {
+//                                Toast.makeText(context, "${cafe.name} has been removed from favorite", Toast.LENGTH_SHORT).show()
+//                            } else {
+//                                Toast.makeText(context, "${cafe.name} has been added to favorite", Toast.LENGTH_SHORT).show()
+//                            }
+//                        }
+                    },
+                    isFavorite = isFavorite,
                     navigateBack = navigateBack,
                     toggleShowMapDialog = { state.showMapDialog = !state.showMapDialog },
                     mapsState = mapsState,
@@ -141,23 +161,20 @@ fun DetailScreen(
 }
 
 class DetailState(
-    initialIsFavoriteState: Boolean,
     initialShowMapDialogState: Boolean,
     initialIsGetLocationHandledState: Boolean,
 ) {
-    var isFavorite by mutableStateOf(initialIsFavoriteState)
     var showMapDialog by mutableStateOf(initialShowMapDialogState)
     var isGetLocationHandled by mutableStateOf(initialIsGetLocationHandledState)
 }
 
 @Composable
 fun rememberDetailState(
-    isFavorite: Boolean,
     showMapDialog: Boolean,
     isGetLocationHandled: Boolean,
 ): DetailState =
-    remember(isFavorite, showMapDialog, isGetLocationHandled) {
-        DetailState(isFavorite, showMapDialog, isGetLocationHandled)
+    remember(showMapDialog, isGetLocationHandled) {
+        DetailState(showMapDialog, isGetLocationHandled)
     }
 
 @OptIn(ExperimentalLayoutApi::class)

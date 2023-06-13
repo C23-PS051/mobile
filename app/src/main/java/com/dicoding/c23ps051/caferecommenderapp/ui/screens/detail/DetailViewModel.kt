@@ -4,11 +4,13 @@ import com.dicoding.c23ps051.caferecommenderapp.api.ApiConfig
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.model.Facility
+import com.dicoding.c23ps051.caferecommenderapp.model.Favorite
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.google.android.gms.maps.model.LatLng
@@ -23,6 +25,9 @@ class DetailViewModel(private val pref: UserPreference) : ViewModel() {
 
     private val _mapsUiState: MutableStateFlow<UiState<LatLng>> = MutableStateFlow(UiState.Loading)
     val mapsUiState: StateFlow<UiState<LatLng>> get() = _mapsUiState
+
+    private val _favoriteState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val favoriteState: StateFlow<Boolean> get() = _favoriteState
 
     fun getCafeById(id: String) {
         viewModelScope.launch {
@@ -89,6 +94,50 @@ class DetailViewModel(private val pref: UserPreference) : ViewModel() {
             }
         } catch(e: Exception) {
             _mapsUiState.value = UiState.Error(context.getString(R.string.failed_to_get_location))
+        }
+    }
+
+    fun addToFavorite(cafeId: String) {
+        viewModelScope.launch {
+            try {
+                pref.getLogin().collect {
+                    val response = ApiConfig.getApiService().addToFavorite(it.token, Favorite(it.userId, cafeId))
+                    if (response.status == 200) _favoriteState.value = true
+                }
+            } catch (e: Exception) {
+                Log.e(this::class.java.simpleName, e.message.toString())
+            }
+        }
+    }
+
+    fun removeFromFavorite(cafeId: String) {
+        viewModelScope.launch {
+            try {
+                pref.getLogin().collect {
+                    val response = ApiConfig.getApiService().removeFromFavorite(it.token, Favorite(it.userId, cafeId))
+                    if (response.status == 200) _favoriteState.value = false
+                }
+            } catch (e: Exception) {
+                Log.e(this::class.java.simpleName, e.message.toString())
+            }
+        }
+    }
+
+    fun getIsCafeFavorite(cafeId: String) {
+        viewModelScope.launch {
+            try {
+                pref.getLogin().collect {
+                    val response = ApiConfig.getApiService().getFavoritesByUserId(it.token, it.userId)
+
+                    if (response.status == 200) {
+                        val data = response.data
+                        val result = data.filter { item -> item.cafeId == cafeId }
+                        _favoriteState.value = result.isNotEmpty()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(this::class.java.simpleName, e.message.toString())
+            }
         }
     }
 }
