@@ -6,7 +6,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.model.Login
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -37,6 +37,7 @@ class PreferenceViewModel(private val pref: UserPreference) : ViewModel() {
                         token = data.token,
                         isLogin = data.isLogin,
                         isNewUser = data.isNewUser,
+                        userId = data.userId,
                     )
                     _uiState.value = UiState.Success(loginModel)
                 }

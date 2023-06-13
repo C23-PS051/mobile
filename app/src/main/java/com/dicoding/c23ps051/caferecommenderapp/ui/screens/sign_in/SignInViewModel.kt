@@ -13,30 +13,7 @@ import kotlinx.coroutines.launch
 
 class SignInViewModel(private val pref: UserPreference) : ViewModel() {
 
-    private lateinit var loginModel: Login
-
-    private val _loginSuccess = mutableStateOf(false)
-    val loginSuccess: State<Boolean> get() = _loginSuccess
-
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
-
-//    fun signInWithEmail(email: String, password: String) {
-//        /* TODO: TO BE UPDATED WHEN API IS READY */
-//        if (email == "john_doe331@mail.com" && password == "password123") {
-//            _loginSuccess.value = true
-//
-//            val loginData = Login("John Doe", "john_doe331@mail.com", "ABCDEFGH12345678", true)
-//
-//            viewModelScope.launch {
-//                pref.saveLogin(loginData)
-//            }
-//        } else {
-//            _loginSuccess.value = false
-//        }
-//    }
-
-    fun signIn(name: String?, email: String, token: String, photoUrl: String) {
+    fun signIn(name: String?, email: String, token: String, photoUrl: String, userId: String, isNewUser: Boolean) {
         val convName = name ?: ""
         val convPhotoUrl = if (photoUrl == "null") "" else photoUrl
         val loginData = Login(
@@ -45,19 +22,13 @@ class SignInViewModel(private val pref: UserPreference) : ViewModel() {
             photoUrl = convPhotoUrl,
             token = token,
             isLogin = true,
-            isNewUser = true)
+            isNewUser = isNewUser,
+            userId = userId,
+        )
 
         viewModelScope.launch {
             pref.saveLogin(loginData)
         }
     }
-
-//    fun signInWithGoogle(name: String, email: String, token: String, photoUrl: Uri) {
-//        val loginData = Login(name, email, token, true)
-//
-//        viewModelScope.launch {
-//            pref.saveLogin(loginData)
-//        }
-//    }
 }
 

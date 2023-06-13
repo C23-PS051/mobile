@@ -28,7 +28,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackPressHandler
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeLargeList
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafesTopBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.event.BackPress
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import kotlinx.coroutines.flow.distinctUntilChanged

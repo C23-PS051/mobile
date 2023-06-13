@@ -54,7 +54,6 @@ import com.google.firebase.ktx.Firebase
 fun SignInScreen(
     navigateUp: () -> Unit,
     navigateToSignUp: () -> Unit,
-    navigateToSignUpWithData: (String?, String?, String?) -> Unit,
     userPreference: UserPreference,
     modifier: Modifier = Modifier,
     signInViewModel: SignInViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
@@ -83,34 +82,29 @@ fun SignInScreen(
                 if (task.isSuccessful) {
                     state.showProgressBar = false
                     val user = auth.currentUser
-                    if (user != null) {
-                        if (user.isAnonymous) {
-                            /* TODO: ADD CHECK IF ACCOUNT EXISTS THEN SIGN UP WITH THAT INFORMATION */
-                            navigateToSignUpWithData(
-                                user.email,
-                                user.displayName,
-                                user.photoUrl.toString(),
-                            )
-                        } else {
-                            user.getIdToken(true).addOnCompleteListener { tokenTask ->
-                                if (tokenTask.isSuccessful) {
-                                    val token = tokenTask.result?.token
-                                    if (token != null) {
-                                        signInViewModel.signIn(
-                                            name = user.displayName,
-                                            email = user.email as String,
-                                            token = token,
-                                            photoUrl = user.photoUrl.toString(),
-                                        )
-                                    } else {
-                                        state.showErrorDialog = true
-                                        state.errorMessage = context.getString(R.string.failed_to_sign_in)
-                                    }
-                                } else {
-                                    state.showErrorDialog = true
-                                    state.errorMessage = context.getString(R.string.failed_to_sign_in)
-                                }
+                    val isNewUser = task.result?.additionalUserInfo?.isNewUser ?: false
+
+                    user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
+                        if (tokenTask.isSuccessful) {
+                            val token = tokenTask.result?.token
+                            if (token != null) {
+                                signInViewModel.signIn(
+                                    name = user.displayName,
+                                    email = user.email as String,
+                                    token = token,
+                                    photoUrl = user.photoUrl.toString(),
+                                    userId = user.uid,
+                                    isNewUser = isNewUser,
+                                )
+                            } else {
+                                state.showErrorDialog = true
+                                state.errorMessage =
+                                    context.getString(R.string.failed_to_sign_in)
                             }
+                        } else {
+                            state.showErrorDialog = true
+                            state.errorMessage =
+                                context.getString(R.string.failed_to_sign_in)
                         }
                     }
                 } else {
@@ -149,6 +143,7 @@ fun SignInScreen(
                 if (task.isSuccessful) {
                     state.showProgressBar = false
                     val user = auth.currentUser
+                    val isNewUser = task.result?.additionalUserInfo?.isNewUser ?: false
 
                     user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
                         if (tokenTask.isSuccessful) {
@@ -159,6 +154,8 @@ fun SignInScreen(
                                     email = user.email as String,
                                     token = token,
                                     photoUrl = user.photoUrl.toString(),
+                                    userId = user.uid,
+                                    isNewUser = isNewUser,
                                 )
                             } else {
                                 state.showErrorDialog = true
@@ -176,13 +173,6 @@ fun SignInScreen(
                 }
             }
     }
-
-//    SignInContent(
-//        navigateUp = navigateUp,
-//        navigateToSignUp = navigateToSignUp,
-//        signInWithEmail = { firebaseAuthWithEmail(state.emailText, state.passwordText) },
-//        signInWithGoogle = { signInWithGoogle() },
-//    )
 
     if (state.showErrorDialog) {
         AlertDialog(
@@ -269,69 +259,6 @@ fun SignInScreen(
 fun isInputValid(email: String, password: String): Boolean {
     return email != "" && password != ""
 }
-
-//@Composable
-//fun SignInContent(
-//    navigateUp: () -> Unit,
-//    navigateToSignUp: () -> Unit,
-//    signInWithEmail: () -> Unit,
-//    signInWithGoogle: () -> Unit,
-//    modifier: Modifier = Modifier,
-//    state: SignInFormState = rememberSignInFormState(
-//        text = "",
-//        hasError = false,
-//        showPassword = false,
-//    ),
-//) {
-//    Column(
-//        modifier = modifier
-//            .verticalScroll(rememberScrollState())
-//            .padding(STARTER_CONTENT_PADDING),
-//        verticalArrangement = Arrangement.Center,
-//    ) {
-//        BackButton(onClick = { navigateUp() })
-//        AppLogo(modifier = Modifier.align(Alignment.CenterHorizontally))
-//        AppName()
-//        Spacer(modifier = Modifier.height(48.dp))
-//        SignInForm(
-//            emailText = state.emailText,
-//            emailHasError = state.emailHasError,
-//            emailOnValueChange = { newText: String ->
-//                state.emailText = newText
-//                val emailRegex = Regex("^([a-zA-Z0-9_.+-])+@([a-zA-Z0-9-])+\\.([a-zA-Z0-9-.])+$")
-//                state.emailHasError = !emailRegex.matches(state.emailText)
-//            },
-//            passwordText = state.passwordText,
-//            passwordHasError = state.passwordHasError,
-//            showPassword = state.showPassword,
-//            passwordOnValueChange = { newText: String ->
-//                state.passwordText = newText
-//                val passwordRegex = Regex("^(?=.*[A-Za-z])[A-Za-z\\d](?!.*\\s).{8,}\$")
-//
-//                state.passwordHasError = state.passwordText.length < MIN_PASSWORD_LENGTH || !passwordRegex.matches(state.passwordText)
-//            },
-//            onVisibilityClick = {
-//                state.showPassword = !state.showPassword
-//            }
-//        )
-//        Spacer(modifier = Modifier.height(24.dp))
-//        Button(text = stringResource(id = R.string.sign_in)) {
-//            signInWithEmail()
-//        }
-//        Spacer(modifier = Modifier.height(16.dp))
-//        ForgotPassword()
-//        Spacer(modifier = Modifier.height(48.dp))
-//        OrDivider()
-//        Spacer(modifier = Modifier.height(48.dp))
-//        GoogleButton(
-//            onClick = { signInWithGoogle() }
-//        )
-//        Spacer(modifier = Modifier.height(24.dp))
-//        ToSignUpText {
-//            navigateToSignUp()
-//        }
-//    }
-//}
 
 class SignInState(
     initialTextState: String,

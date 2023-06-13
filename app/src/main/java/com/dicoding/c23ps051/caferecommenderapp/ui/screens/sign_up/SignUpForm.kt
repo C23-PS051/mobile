@@ -14,10 +14,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.dicoding.c23ps051.caferecommenderapp.R
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.ConfirmPasswordTextField
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.EmailTextField
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.InputTextField
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.PasswordTextField
-import com.dicoding.c23ps051.caferecommenderapp.ui.components.RadioGroup
 
 @Composable
 fun SignUpForm(
@@ -32,8 +32,11 @@ fun SignUpForm(
     showPassword: Boolean,
     onPasswordValueChange: (String) -> Unit,
     onPasswordTrailingIconClick: () -> Unit,
-    radioState: List<Boolean>,
-    onRadioButtonClick: (Int) -> Unit,
+    repasswordText: String,
+    repasswordHasError: Boolean,
+    showRepassword: Boolean,
+    onRepasswordValueChange: (String) -> Unit,
+    onRepasswordTrailingIconClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
@@ -87,6 +90,26 @@ fun SignUpForm(
             onClick = onPasswordTrailingIconClick,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next,
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusManager.moveFocus(
+                        focusDirection = FocusDirection.Down,
+                    )
+                }
+            ),
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        ConfirmPasswordTextField(
+            confirmText = repasswordText,
+            hasError = repasswordHasError,
+            enableErrorCheck = true,
+            showPassword = showRepassword,
+            onValueChange = onRepasswordValueChange,
+            onClick = onRepasswordTrailingIconClick,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done,
             ),
             keyboardActions = KeyboardActions(
@@ -94,12 +117,6 @@ fun SignUpForm(
                     focusManager.clearFocus()
                 }
             ),
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        RadioGroup(
-            selected = radioState,
-            items = listOf(stringResource(id = R.string.male), stringResource(id = R.string.female)),
-            onClick = onRadioButtonClick,
         )
     }
 }

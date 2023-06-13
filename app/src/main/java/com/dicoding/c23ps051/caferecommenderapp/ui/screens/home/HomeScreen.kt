@@ -1,6 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.home
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
-import com.dicoding.c23ps051.caferecommenderapp.di.Injection
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.model.Login
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
@@ -32,7 +30,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.Header
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.HomeSection
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SearchCafe
 import com.dicoding.c23ps051.caferecommenderapp.ui.event.BackPress
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.ErrorScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 

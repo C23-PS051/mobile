@@ -1,4 +1,4 @@
-package com.dicoding.c23ps051.caferecommenderapp.ui.screens
+package com.dicoding.c23ps051.caferecommenderapp.ui.states
 
 sealed class UiState<out T: Any?> {
 

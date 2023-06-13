@@ -1,6 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.detail
 
-import android.util.Log
 import com.dicoding.c23ps051.caferecommenderapp.api.ApiConfig
 import android.content.Context
 import android.location.Address
@@ -8,15 +7,11 @@ import android.location.Geocoder
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.R
-import com.dicoding.c23ps051.caferecommenderapp.data.CafeRepository
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.model.Facility
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

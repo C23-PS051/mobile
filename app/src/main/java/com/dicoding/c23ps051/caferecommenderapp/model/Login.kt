@@ -7,4 +7,5 @@ data class Login(
     val token: String,
     val isLogin: Boolean,
     val isNewUser: Boolean,
+    val userId: String,
 )

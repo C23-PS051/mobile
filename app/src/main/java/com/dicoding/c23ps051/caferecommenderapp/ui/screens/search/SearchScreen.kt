@@ -39,7 +39,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.OutlinedDropDown
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OutlinedDropDownTextField
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Section
 import com.dicoding.c23ps051.caferecommenderapp.ui.event.BackPress
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.ErrorScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
@@ -51,6 +51,7 @@ private const val priceSize = 3
 @Composable
 fun SearchScreen(
     userPreference: UserPreference,
+    newUserScreen: Boolean,
     navigateUp: () -> Unit,
     onSubmit: () -> Unit,
     viewModel: SearchViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
@@ -61,8 +62,6 @@ fun SearchScreen(
         checkedPriceChip = List(priceSize) { false },
     )
 ) {
-    val backPressState by remember { mutableStateOf<BackPress>(BackPress.Idle) }
-
     val regions = listOf(
         stringResource(id = R.string.all),
         stringResource(id = R.string.central_jakarta),
@@ -80,6 +79,7 @@ fun SearchScreen(
             }
             is UiState.Success -> {
                 SearchContent(
+                    newUserScreen = newUserScreen,
                     selectedText = uiState.data,
                     expanded = state.expanded,
                     setSelectedTextState = { selectedText ->
@@ -119,13 +119,6 @@ fun SearchScreen(
             }
         }
     }
-
-    BackPressHandler(
-        backPressState = backPressState,
-        toggleBackPressState = {}
-    ) {
-        navigateUp()
-    }
 }
 
 class SearchState(
@@ -154,6 +147,7 @@ fun rememberSearchState(
 
 @Composable
 fun SearchContent(
+    newUserScreen: Boolean,
     selectedText: String,
     expanded: Boolean,
     setSelectedTextState: (String) -> Unit,
@@ -205,13 +199,15 @@ fun SearchContent(
     Scaffold(
         modifier = modifier,
         topBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(top = 8.dp)
-            ) {
-                BackButton(onClick = { navigateUp() })
+            if (!newUserScreen) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(top = 8.dp)
+                ) {
+                    BackButton(onClick = { navigateUp() })
+                }
             }
         },
         bottomBar = {

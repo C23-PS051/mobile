@@ -1,6 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -35,7 +34,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.ButtonSmall
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProfilePicture
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SettingsItem
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.StandardTopBar
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import com.google.android.gms.auth.api.signin.GoogleSignInClient

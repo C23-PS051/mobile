@@ -80,6 +80,7 @@ class MainActivity : ComponentActivity() {
                         setComposable {
                             SearchScreen(
                                 userPreference = userPreference,
+                                newUserScreen = true,
                                 navigateUp = { setDefaultContent(true) },
                                 onSubmit = {
                                     viewModel.setNotNewUser()
@@ -176,6 +177,7 @@ class MainActivity : ComponentActivity() {
                                 SearchScreen(
                                     userPreference = userPreference,
                                     navigateUp = { setDefaultContent(true) },
+                                    newUserScreen = true,
                                     onSubmit = {
                                         viewModel.setNotNewUser()
                                         setDefaultContent(true)

@@ -123,10 +123,6 @@ fun CafeRecommenderApp(
                         navController.popBackStack()
                         navController.navigate(Screen.SignUp.route)
                     },
-                    navigateToSignUpWithData = { email, name, photoUrl ->
-                        navController.popBackStack()
-                        navController.navigate(Screen.SignUp.createRoute(email, name, photoUrl))
-                    },
                     navigateUp = {
                         navController.navigateUp()
                     },
@@ -144,6 +140,7 @@ fun CafeRecommenderApp(
                 val name = it.arguments?.getString("name") ?: ""
                 val photoUrl = it.arguments?.getString("photo_url") ?: ""
                 SignUpScreen(
+                    userPreference = userPreference,
                     emailText = email,
                     nameText = name,
                     photoUrl = photoUrl,
@@ -172,6 +169,7 @@ fun CafeRecommenderApp(
             composable(Screen.Search.route) {
                 SearchScreen(
                     userPreference = userPreference,
+                    newUserScreen = false,
                     navigateUp = {
                         navController.navigateUp()
                     },

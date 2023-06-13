@@ -1,30 +1,23 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.api.ApiConfig
-import com.dicoding.c23ps051.caferecommenderapp.data.CafeRepository
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.model.Facility
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class HomeViewModel(private val pref: UserPreference) : ViewModel() {
 
     private val _uiStateNearby: MutableStateFlow<UiState<List<Cafe>>> = MutableStateFlow(UiState.Loading)
     val uiStateNearby: StateFlow<UiState<List<Cafe>>> get() = _uiStateNearby
 
-    private val _uiStateOpen24Hours: MutableStateFlow<UiState<List<Cafe>>> = MutableStateFlow(UiState.Loading)
+    private val _uiStateOpen24Hours: MutableStateFlow<UiState<List<Cafe>>> = MutableStateFlow(
+        UiState.Loading)
     val uiStateOpen24Hours: StateFlow<UiState<List<Cafe>>> get() = _uiStateOpen24Hours
 
     private val _uiStateOnBudget: MutableStateFlow<UiState<List<Cafe>>> = MutableStateFlow(UiState.Loading)

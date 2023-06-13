@@ -166,4 +166,9 @@
     <string name="change_picture">Change Picture</string>
     <string name="choose_gallery">Choose Gallery</string>
     <string name="switch_camera_lens">Switch camera lens</string>
+    <string name="username">Username</string>
+    <string name="cannot_sign_up">Can\'t sign up</string>
+    <string name="failed_to_create_user_account">Failed to create user account</string>
+    <string name="success">Success</string>
+    <string name="your_account_signed_up_successfully">Your account signed up successfully</string>
 </resources>
