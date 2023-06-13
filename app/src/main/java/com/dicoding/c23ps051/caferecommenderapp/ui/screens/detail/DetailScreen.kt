@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -304,7 +305,7 @@ fun DetailContent(
                                 is UiState.Error -> {
                                     Text(stringResource(id = R.string.failed_to_get_location))
                                     ButtonSmall(text = stringResource(id = R.string.retry)) {
-                                        getLocation()
+                                        if (state != UiState.Loading) getLocation()
                                     }
                                 }
                             }

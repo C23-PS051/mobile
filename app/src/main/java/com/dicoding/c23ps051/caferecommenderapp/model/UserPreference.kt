@@ -15,8 +15,8 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
             Login(
                 preferences[NAME_KEY] ?: "",
                 preferences[EMAIL_KEY] ?: "",
-                preferences[TOKEN_KEY] ?: "",
                 preferences[PHOTO_KEY] ?: "",
+                preferences[TOKEN_KEY] ?: "",
                 preferences[STATE_KEY] ?: false,
                 preferences[NEW_USER_KEY] ?: false,
             )
@@ -27,8 +27,8 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         dataStore.edit { preferences ->
             preferences[NAME_KEY] = login.name
             preferences[EMAIL_KEY] = login.email
-            preferences[TOKEN_KEY] = login.token
             preferences[PHOTO_KEY] = login.photoUrl
+            preferences[TOKEN_KEY] = login.token
             preferences[STATE_KEY] = login.isLogin
             preferences[NEW_USER_KEY] = login.isNewUser
         }
@@ -62,8 +62,8 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         dataStore.edit { preferences ->
             preferences[NAME_KEY] = ""
             preferences[EMAIL_KEY] = ""
-            preferences[TOKEN_KEY] = ""
             preferences[PHOTO_KEY] = ""
+            preferences[TOKEN_KEY] = ""
             preferences[STATE_KEY] = false
             preferences[NEW_USER_KEY] = false
             preferences[USER_LOCATION] = ""

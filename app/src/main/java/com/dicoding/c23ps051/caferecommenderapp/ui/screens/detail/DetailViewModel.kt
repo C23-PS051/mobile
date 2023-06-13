@@ -1,7 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.detail
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import com.dicoding.c23ps051.caferecommenderapp.api.ApiConfig
 import android.content.Context
 import android.location.Address
@@ -17,6 +16,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -30,7 +30,7 @@ class DetailViewModel(private val pref: UserPreference) : ViewModel() {
     val mapsUiState: StateFlow<UiState<LatLng>> get() = _mapsUiState
 
     fun getCafeById(id: String) {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             pref.getToken().collect { token ->
                 val cafe = ApiConfig.getApiService()
                     .getCafeById("Bearer $token", id)
@@ -68,7 +68,6 @@ class DetailViewModel(private val pref: UserPreference) : ViewModel() {
                     _uiState.value = UiState.Success(result)
                 } else {
                     _uiState.value = UiState.Error("Failed to load cafe")
-                    Log.d("MyLogger", cafe.status.toString())
                 }
             }
         }
@@ -79,10 +78,10 @@ class DetailViewModel(private val pref: UserPreference) : ViewModel() {
         val geocoder = Geocoder(context)
 
         try {
-            CoroutineScope(Dispatchers.IO).launch {
+            viewModelScope.launch {
                 val addresses = geocoder.getFromLocationName(address, 1) as List<Address>
                 if (addresses.isEmpty()) {
-                    _mapsUiState.value = UiState.Error(context.getString(R.string.failed_to_get_location))
+                    _mapsUiState.value = UiState.Error(context.getString(R.string.location_not_found))
                 } else {
                     val location = addresses[0]
                     _mapsUiState.value =

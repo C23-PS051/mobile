@@ -1,6 +1,7 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in
 
 import android.app.Activity
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -91,12 +92,25 @@ fun SignInScreen(
                                 user.photoUrl.toString(),
                             )
                         } else {
-                            signInViewModel.signIn(
-                                user.email,
-                                user.displayName as String,
-                                idToken,
-                                user.photoUrl.toString(),
-                            )
+                            user.getIdToken(true).addOnCompleteListener { tokenTask ->
+                                if (tokenTask.isSuccessful) {
+                                    val token = tokenTask.result?.token
+                                    if (token != null) {
+                                        signInViewModel.signIn(
+                                            name = user.displayName,
+                                            email = user.email as String,
+                                            token = token,
+                                            photoUrl = user.photoUrl.toString(),
+                                        )
+                                    } else {
+                                        state.showErrorDialog = true
+                                        state.errorMessage = context.getString(R.string.failed_to_sign_in)
+                                    }
+                                } else {
+                                    state.showErrorDialog = true
+                                    state.errorMessage = context.getString(R.string.failed_to_sign_in)
+                                }
+                            }
                         }
                     }
                 } else {
@@ -138,14 +152,17 @@ fun SignInScreen(
 
                     user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
                         if (tokenTask.isSuccessful) {
-                            val idToken = tokenTask.result?.token
-                            if (idToken != null) {
+                            val token = tokenTask.result?.token
+                            if (token != null) {
                                 signInViewModel.signIn(
-                                    user.displayName,
-                                    user.email as String,
-                                    idToken,
-                                    user.photoUrl.toString(),
+                                    name = user.displayName,
+                                    email = user.email as String,
+                                    token = token,
+                                    photoUrl = user.photoUrl.toString(),
                                 )
+                            } else {
+                                state.showErrorDialog = true
+                                state.errorMessage = context.getString(R.string.failed_to_sign_in)
                             }
                         } else {
                             state.showErrorDialog = true

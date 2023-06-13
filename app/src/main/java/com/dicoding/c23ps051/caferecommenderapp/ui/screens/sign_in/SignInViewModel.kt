@@ -1,5 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
@@ -38,7 +39,13 @@ class SignInViewModel(private val pref: UserPreference) : ViewModel() {
     fun signIn(name: String?, email: String, token: String, photoUrl: String) {
         val convName = name ?: ""
         val convPhotoUrl = if (photoUrl == "null") "" else photoUrl
-        val loginData = Login(convName, email, token, convPhotoUrl, isLogin = true, isNewUser = true)
+        val loginData = Login(
+            name = convName,
+            email = email,
+            photoUrl = convPhotoUrl,
+            token = token,
+            isLogin = true,
+            isNewUser = true)
 
         viewModelScope.launch {
             pref.saveLogin(loginData)

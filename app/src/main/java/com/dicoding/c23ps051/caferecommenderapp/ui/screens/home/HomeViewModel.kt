@@ -31,7 +31,7 @@ class HomeViewModel(private val pref: UserPreference) : ViewModel() {
     val uiStateOnBudget: StateFlow<UiState<List<Cafe>>> get() = _uiStateOnBudget
 
     fun getAllCafes() {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             pref.getToken().collect { token ->
                 val cafes = ApiConfig.getApiService()
                     .getAllCafes("Bearer $token")
@@ -75,7 +75,6 @@ class HomeViewModel(private val pref: UserPreference) : ViewModel() {
                     _uiStateOpen24Hours.value = UiState.Success(result)
                 } else {
                     _uiStateNearby.value = UiState.Error("Failed to load cafes")
-                    Log.d("MyLogger", cafes.status.toString())
                 }
             }
         }

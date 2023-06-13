@@ -1,5 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -38,6 +39,9 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.screens.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 
 @Composable
 fun ProfileScreen(
@@ -101,8 +105,16 @@ fun ProfileScreen(
         AlertDialog(
             confirmButton = {
                 TextButton(onClick = {
-                    googleSignInClient.signOut().addOnCompleteListener {
-                        googleSignInClient.revokeAccess().addOnCompleteListener {
+                    if (FirebaseAuth.getInstance().currentUser != null) {
+                        val currentUser = FirebaseAuth.getInstance().currentUser as FirebaseUser
+                        if (currentUser.providerData.any { it.providerId == GoogleAuthProvider.PROVIDER_ID }) {
+                            googleSignInClient.signOut().addOnCompleteListener {
+                                googleSignInClient.revokeAccess().addOnCompleteListener {
+                                    preferenceViewModel.logout()
+                                }
+                            }
+                        } else {
+                            FirebaseAuth.getInstance().signOut()
                             preferenceViewModel.logout()
                         }
                     }

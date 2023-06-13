@@ -76,6 +76,7 @@
     <string name="failed_to_get_location">Failed to get location.</string>
     <string name="cannot_open_google_maps">Can\'t open Google Maps</string>
     <string name="google_maps_not_installed">It looks like Google Maps is not installed on your device</string>
+    <string name="location_not_found">Location not found.</string>
 
     <!-- Profile Page -->
     <string name="yes">YES</string>
