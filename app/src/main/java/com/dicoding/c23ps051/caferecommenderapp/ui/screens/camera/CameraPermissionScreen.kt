@@ -16,7 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.PermissionState
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.PermissionState
 
 @Composable
 fun CameraPermissionScreen(

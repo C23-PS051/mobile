@@ -29,7 +29,7 @@ import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.MainViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.ViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.CafeRecommenderApp
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.PermissionState
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.PermissionState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.InfoScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.location.LocationViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.location.RequestLocationScreen
@@ -188,7 +188,7 @@ class MainActivity : ComponentActivity() {
                                 startActivityForResult(intent, REQUEST_APPLICATION_SETTINGS)
                             },
                             secondaryAction = {
-                                locationViewModel.setLocationTo(getString(R.string.all))
+                                locationViewModel.setPermissionTo(getString(R.string.all))
                                 isLocationHandled = true
                             }
                         )
@@ -206,7 +206,7 @@ class MainActivity : ComponentActivity() {
                                 getUserLocation(permissionToRequest.toTypedArray())
                             },
                             secondaryAction = {
-                                locationViewModel.setLocationTo(getString(R.string.all))
+                                locationViewModel.setPermissionTo(getString(R.string.all))
                                 isLocationHandled = true
                             }
                         )
@@ -222,7 +222,7 @@ class MainActivity : ComponentActivity() {
                                 image = painterResource(id = R.drawable.location_off),
                                 actionText = getString(R.string.ok),
                                 action = {
-                                    locationViewModel.setLocationTo(getString(R.string.all))
+                                    locationViewModel.setPermissionTo(getString(R.string.all))
                                     locationViewModel.saveLocation(getString(R.string.all))
                                     removeLocationObserver()
                                 }

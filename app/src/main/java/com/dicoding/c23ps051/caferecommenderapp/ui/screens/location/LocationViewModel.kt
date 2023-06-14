@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.PermissionState
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.PermissionState
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.launch
 
@@ -83,7 +83,7 @@ class LocationViewModel(private val pref: UserPreference) : ViewModel() {
         }
     }
 
-    fun setLocationTo(location: String) {
+    fun setPermissionTo(location: String) {
         viewModelScope.launch {
             _locationPermission.value = PermissionState.Granted(location)
         }
