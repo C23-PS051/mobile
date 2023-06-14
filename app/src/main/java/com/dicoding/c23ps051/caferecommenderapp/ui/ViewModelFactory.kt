@@ -22,8 +22,8 @@ class ViewModelFactory(private val pref: UserPreference) :
             modelClass.isAssignableFrom(SignInViewModel::class.java) -> {
                 SignInViewModel(pref) as T
             }
-            modelClass.isAssignableFrom(PreferenceViewModel::class.java) -> {
-                PreferenceViewModel(pref) as T
+            modelClass.isAssignableFrom(MainViewModel::class.java) -> {
+                MainViewModel(pref) as T
             }
             modelClass.isAssignableFrom(LocationViewModel::class.java) -> {
                 LocationViewModel(pref) as T

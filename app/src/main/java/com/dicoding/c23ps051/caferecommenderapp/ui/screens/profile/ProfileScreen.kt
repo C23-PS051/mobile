@@ -123,6 +123,7 @@ fun ProfileScreen(
                         if (currentUser.providerData.any { it.providerId == GoogleAuthProvider.PROVIDER_ID }) {
                             googleSignInClient.signOut().addOnCompleteListener {
                                 googleSignInClient.revokeAccess().addOnCompleteListener {
+                                    FirebaseAuth.getInstance().signOut()
                                     profileViewModel.logout()
                                 }
                             }
@@ -131,6 +132,13 @@ fun ProfileScreen(
                             profileViewModel.logout()
                         }
                     }
+
+//                    googleSignInClient.signOut().addOnCompleteListener {
+//                        googleSignInClient.revokeAccess().addOnCompleteListener {
+//                            FirebaseAuth.getInstance().signOut()
+//                            profileViewModel.logout()
+//                        }
+//                    }
                     state.showDialog = false
                 }) {
                     Text(text = stringResource(id = R.string.yes))

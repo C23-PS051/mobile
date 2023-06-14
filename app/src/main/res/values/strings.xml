@@ -173,4 +173,5 @@
     <string name="failed_to_load_cafe">Failed to load cafe</string>
     <string name="something_wrong_happened">Something wrong happened</string>
     <string name="changes_saved">Changes saved</string>
+    <string name="failed_to_save_preference">Failed to save preference. Set to default.</string>
 </resources>

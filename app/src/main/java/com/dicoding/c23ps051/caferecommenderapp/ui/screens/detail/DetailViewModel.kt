@@ -30,6 +30,7 @@ class DetailViewModel(private val pref: UserPreference) : ViewModel() {
     val favoriteState: StateFlow<Boolean> get() = _favoriteState
 
     fun getCafeById(id: String) {
+        Log.d("MyLogger", "DetailViewModel: getCafebyId")
         viewModelScope.launch {
             pref.getToken().collect { token ->
                 try {

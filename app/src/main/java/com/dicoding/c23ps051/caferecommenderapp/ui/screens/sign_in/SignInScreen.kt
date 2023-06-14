@@ -1,6 +1,7 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in
 
 import android.app.Activity
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -24,9 +25,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.constants.MIN_PASSWORD_LENGTH
+import com.dicoding.c23ps051.caferecommenderapp.model.Facility
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.AuthViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.ViewModelFactory
@@ -39,6 +42,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.GoogleButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OrDivider
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProgressBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ToSignUpText
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.ResultState
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.STARTER_CONTENT_PADDING
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -46,8 +50,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 
 @Composable
 fun SignInScreen(
@@ -79,33 +87,49 @@ fun SignInScreen(
         auth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    state.showProgressBar = false
+                    val user = task.result.user
+                    if (user != null) {
+                        state.showProgressBar = false
+                        val firestore = FirebaseFirestore.getInstance()
+                        val userDocument = firestore.collection("users").document(user.uid)
+
+                        val name = user.displayName
+                        val email = user.email
+                        val photoUrl = user.photoUrl
+                        val preferences = enumValues<Facility>().map { it to false }
+                        val userId = user.uid
+
+                        val userData = hashMapOf(
+                            "email" to email,
+                            "fullName" to name,
+                            "photoUri" to photoUrl,
+                            "preferences" to preferences,
+                            "username" to userId
+                        )
+
+                        userDocument.update(userData)
+                            .addOnSuccessListener {
+                                val profileUpdates = UserProfileChangeRequest.Builder()
+                                    .setDisplayName(name)
+                                    .setPhotoUri(photoUrl)
+                                    .build()
+
+                                user.updateProfile(profileUpdates)
+                                    .addOnSuccessListener {
+
+                                    }
+                                    .addOnFailureListener {
+                                        state.errorMessage = context.getString(R.string.failed_to_sign_in)
+                                        state.showErrorDialog = true
+                                    }
+                            }
+                            .addOnFailureListener {
+                                state.errorMessage = context.getString(R.string.failed_to_sign_in)
+                                state.showErrorDialog = true
+                            }
+                    }
 //                    val user = auth.currentUser
 //                    val isNewUser = task.result?.additionalUserInfo?.isNewUser ?: false
-//
-//                    user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
-//                        if (tokenTask.isSuccessful) {
-//                            val token = tokenTask.result?.token
-//                            if (token != null) {
-//                                signInViewModel.signIn(
-//                                    name = user.displayName as String,
-//                                    email = user.email as String,
-//                                    token = token,
-//                                    photoUrl = user.photoUrl.toString(),
-//                                    userId = user.uid,
-//                                    isNewUser = isNewUser,
-//                                )
-//                            } else {
-//                                state.showErrorDialog = true
-//                                state.errorMessage =
-//                                    context.getString(R.string.failed_to_sign_in)
-//                            }
-//                        } else {
-//                            state.showErrorDialog = true
-//                            state.errorMessage =
-//                                context.getString(R.string.failed_to_sign_in)
-//                        }
-//                    }
                 } else {
                     state.showProgressBar = false
                     state.showErrorDialog = true
@@ -141,30 +165,37 @@ fun SignInScreen(
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     state.showProgressBar = false
-//                    val user = auth.currentUser
+                    val user = auth.currentUser
 //                    val isNewUser = task.result?.additionalUserInfo?.isNewUser ?: false
-//
-//                    user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
-//                        if (tokenTask.isSuccessful) {
-//                            val token = tokenTask.result?.token
-//                            if (token != null) {
-//                                signInViewModel.signIn(
-//                                    name = user.displayName,
-//                                    email = user.email as String,
-//                                    token = token,
-//                                    photoUrl = user.photoUrl.toString(),
-//                                    userId = user.uid,
-//                                    isNewUser = isNewUser,
-//                                )
-//                            } else {
-//                                state.showErrorDialog = true
-//                                state.errorMessage = context.getString(R.string.failed_to_sign_in)
-//                            }
-//                        } else {
-//                            state.showErrorDialog = true
-//                            state.errorMessage = context.getString(R.string.failed_to_sign_in)
-//                        }
-//                    }
+
+                    user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
+                        if (tokenTask.isSuccessful) {
+                            val token = tokenTask.result?.token
+                            val userDocument = FirebaseFirestore.getInstance().collection("users").document(user.uid)
+
+                            userDocument.get().addOnSuccessListener { document ->
+                                if (document != null && document.exists()) {
+                                    val isNewUser = document.getBoolean("isNewUser")
+                                    if (token != null) {
+                                        signInViewModel.signIn(
+                                            name = user.displayName as String,
+                                            email = user.email as String,
+                                            token = token,
+                                            photoUrl = user.photoUrl.toString(),
+                                            userId = user.uid,
+                                            isNewUser = isNewUser as Boolean,
+                                        )
+                                    } else {
+                                        state.showErrorDialog = true
+                                        state.errorMessage = context.getString(R.string.failed_to_sign_in)
+                                    }
+                                }
+                            }
+                        } else {
+                            state.showErrorDialog = true
+                            state.errorMessage = context.getString(R.string.failed_to_sign_in)
+                        }
+                    }
                 } else {
                     state.showProgressBar = false
                     state.showErrorDialog = true
@@ -245,12 +276,12 @@ fun SignInScreen(
             Spacer(modifier = Modifier.height(16.dp))
             ForgotPassword()
             Spacer(modifier = Modifier.height(48.dp))
-            OrDivider()
-            Spacer(modifier = Modifier.height(48.dp))
-            GoogleButton(
-                onClick = { signInWithGoogle() }
-            )
-            Spacer(modifier = Modifier.height(24.dp))
+//            OrDivider()
+//            Spacer(modifier = Modifier.height(48.dp))
+//            GoogleButton(
+//                onClick = { signInWithGoogle() }
+//            )
+//            Spacer(modifier = Modifier.height(24.dp))
             ToSignUpText {
                 navigateToSignUp()
             }

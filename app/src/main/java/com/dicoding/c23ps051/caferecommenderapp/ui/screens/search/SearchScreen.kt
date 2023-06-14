@@ -1,5 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.search
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -37,10 +39,12 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Chip
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OutlinedDropDown
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OutlinedDropDownTextField
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProgressBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Section
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.ErrorScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.ResultState
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 
 private const val facilitiesSize = 14
@@ -61,6 +65,8 @@ fun SearchScreen(
         checkedPriceChip = List(priceSize) { false },
     )
 ) {
+    val context = LocalContext.current
+
     val regions = listOf(
         stringResource(id = R.string.all),
         stringResource(id = R.string.central_jakarta),
@@ -95,7 +101,6 @@ fun SearchScreen(
                                 facility to state.checkedCheckbox[index]
                             }
                         )
-                        onSubmit()
                     },
                     checkedState = state.checkedCheckbox,
                     toggleCheckbox = { index ->
@@ -123,6 +128,22 @@ fun SearchScreen(
                     }
                 )
             }
+        }
+    }
+
+    viewModel.resultState.collectAsState().value.let { resultState ->
+        when (resultState) {
+            ResultState.Loading -> {
+                ProgressBar()
+            }
+            ResultState.Success -> {
+                onSubmit()
+            }
+            is ResultState.Error -> {
+                Toast.makeText(context, stringResource(id = R.string.failed_to_save_preference), Toast.LENGTH_SHORT).show()
+                onSubmit()
+            }
+            ResultState.Initial -> { /* do nothing */ }
         }
     }
 }

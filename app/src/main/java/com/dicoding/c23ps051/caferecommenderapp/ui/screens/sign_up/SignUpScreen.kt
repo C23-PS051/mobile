@@ -74,6 +74,7 @@ fun SignUpScreen(
         repasswordHasError = false,
         showRepassword = false,
         showErrorDialog = false,
+        showSuccessDialog = false,
         showProgressBar = false,
         errorMessage = "",
     ),
@@ -98,6 +99,7 @@ fun SignUpScreen(
             }
             ResultState.Success -> {
                 state.showProgressBar = false
+                state.showSuccessDialog = true
             }
             is ResultState.Error -> {
                 state.showProgressBar = false
@@ -282,6 +284,29 @@ fun SignUpScreen(
         )
     }
 
+    if (state.showSuccessDialog) {
+        AlertDialog(
+            confirmButton = {
+                TextButton(onClick = {
+                    state.showSuccessDialog = false
+                    navigateUp()
+                }) {
+                    Text(text = stringResource(id = R.string.ok))
+                }
+            },
+            onDismissRequest = {
+                state.showSuccessDialog = false
+                navigateUp()
+            },
+            title = {
+                Text(text = stringResource(id = R.string.success))
+            },
+            text = {
+                Text(text = stringResource(id = R.string.your_account_signed_up_successfully))
+            },
+        )
+    }
+
     if (state.showProgressBar) { ProgressBar() }
 }
 
@@ -299,6 +324,7 @@ class SignUpFormState(
     initialRepasswordHasErrorState: Boolean,
     initialShowRepasswordState: Boolean,
     initialShowErrorDialogState: Boolean,
+    initialShowSuccessDialogState: Boolean,
     initialShowProgressBarState: Boolean,
     initialErrorMessageState: String,
 ) {
@@ -326,6 +352,7 @@ class SignUpFormState(
 
     /* Other States */
     var showErrorDialog by mutableStateOf(initialShowErrorDialogState)
+    var showSuccessDialog by mutableStateOf(initialShowSuccessDialogState)
     var showProgressBar by mutableStateOf(initialShowProgressBarState)
     var errorMessage by mutableStateOf(initialErrorMessageState)
 }
@@ -345,16 +372,17 @@ fun rememberSignUpFormState(
     repasswordHasError: Boolean,
     showRepassword: Boolean,
     showErrorDialog: Boolean,
+    showSuccessDialog: Boolean,
     showProgressBar: Boolean,
     errorMessage: String,
 ): SignUpFormState = remember(
     photoUri, showPictureChooserDialog, nameText, nameHasError, emailText, emailHasError, passwordText,
     passwordHasError, showPassword, repasswordText, repasswordHasError, showRepassword, showErrorDialog,
-    showProgressBar, errorMessage
+    showSuccessDialog, showProgressBar, errorMessage
 ) {
     SignUpFormState(photoUri, showPictureChooserDialog, nameText, nameHasError, emailText, emailHasError,
         passwordText, passwordHasError, showPassword, repasswordText, repasswordHasError, showRepassword,
-        showErrorDialog, showProgressBar, errorMessage)
+        showErrorDialog, showSuccessDialog, showProgressBar, errorMessage)
 }
 
 @Composable

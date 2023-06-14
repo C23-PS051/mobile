@@ -136,14 +136,7 @@ fun EditProfileScreen(
     }
 
     if (state.isLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .zIndex(1f),
-            contentAlignment = Alignment.Center,
-        ) {
-            ProgressBar()
-        }
+        ProgressBar()
     }
 
     if (state.showPictureChooserDialog) {

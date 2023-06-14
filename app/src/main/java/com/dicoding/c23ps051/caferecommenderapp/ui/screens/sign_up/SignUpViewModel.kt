@@ -10,6 +10,7 @@ import com.dicoding.c23ps051.caferecommenderapp.model.Facility
 import com.dicoding.c23ps051.caferecommenderapp.model.Login
 import com.dicoding.c23ps051.caferecommenderapp.model.User
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
+import com.dicoding.c23ps051.caferecommenderapp.response.UserResponseItem
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.ResultState
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -78,7 +79,8 @@ class SignUpViewModel(private val pref: UserPreference) : ViewModel() {
                 fullName = name.trim(),
                 photoUri = photoUri,
                 preferences = enumValues<Facility>().map { it to false },
-                username = userId
+                username = userId,
+                isNewUser = true
             )
 
             val response = ApiConfig.getApiService().editProfile(
@@ -88,36 +90,37 @@ class SignUpViewModel(private val pref: UserPreference) : ViewModel() {
             )
 
             if (response.status == 200) {
-                auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val currentUser = auth.currentUser
-
-                            currentUser?.getIdToken(true)
-                                ?.addOnCompleteListener { tokenTask ->
-                                    if (tokenTask.isSuccessful) {
-                                        val token = tokenTask.result?.token
-                                        if (token != null) {
-                                            signIn(
-                                                name = name,
-                                                email = email,
-                                                token = token,
-                                                photoUri = photoUri,
-                                                userId = userId,
-                                            )
-                                        }
-                                    } else {
-                                        _resultState.value = ResultState.Error("Failed to create user account")
-                                    }
-                                }?.addOnFailureListener {
-                                    _resultState.value = ResultState.Error(it.message.toString())
-                                }
-                        } else {
-                            _resultState.value = ResultState.Error("Failed to create user account")
-                        }
-                    }.addOnFailureListener {
-                        _resultState.value = ResultState.Error(it.message.toString())
-                    }
+                _resultState.value = ResultState.Success
+//                auth.signInWithEmailAndPassword(email, password)
+//                    .addOnCompleteListener { task ->
+//                        if (task.isSuccessful) {
+//                            val currentUser = auth.currentUser
+//
+//                            currentUser?.getIdToken(true)
+//                                ?.addOnCompleteListener { tokenTask ->
+//                                    if (tokenTask.isSuccessful) {
+//                                        val token = tokenTask.result?.token
+//                                        if (token != null) {
+//                                            signIn(
+//                                                name = name,
+//                                                email = email,
+//                                                token = token,
+//                                                photoUri = photoUri,
+//                                                userId = userId,
+//                                            )
+//                                        }
+//                                    } else {
+//                                        _resultState.value = ResultState.Error("Failed to create user account")
+//                                    }
+//                                }?.addOnFailureListener {
+//                                    _resultState.value = ResultState.Error(it.message.toString())
+//                                }
+//                        } else {
+//                            _resultState.value = ResultState.Error("Failed to create user account")
+//                        }
+//                    }.addOnFailureListener {
+//                        _resultState.value = ResultState.Error(it.message.toString())
+//                    }
             } else {
                 _resultState.value = ResultState.Error("Failed to create user account")
             }

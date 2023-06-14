@@ -19,7 +19,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -27,7 +26,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
-import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
+import com.dicoding.c23ps051.caferecommenderapp.ui.MainViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.ViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.CafeRecommenderApp
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.PermissionState
@@ -39,16 +38,15 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in.SignInViewMod
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.firebase.auth.FirebaseAuth
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var authStateListener: FirebaseAuth.AuthStateListener
+//    private lateinit var auth: FirebaseAuth
+//    private lateinit var authStateListener: FirebaseAuth.AuthStateListener
 //    private lateinit var tokenStateListener: FirebaseAuth.IdTokenListener
-    private lateinit var preferenceViewModel: PreferenceViewModel
+    private lateinit var mainViewModel: MainViewModel
     private lateinit var signInViewModel: SignInViewModel
     private lateinit var locationViewModel: LocationViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -74,10 +72,10 @@ class MainActivity : ComponentActivity() {
 //            "Kota Bandung" to "Bandung City"// TODO: For experiment purposes only, remember to remove when done
         )
 
-        preferenceViewModel = ViewModelProvider(
+        mainViewModel = ViewModelProvider(
             this,
             ViewModelFactory(UserPreference.getInstance(dataStore))
-        )[PreferenceViewModel::class.java]
+        )[MainViewModel::class.java]
 
         signInViewModel = ViewModelProvider(
             this,
@@ -89,53 +87,17 @@ class MainActivity : ComponentActivity() {
             ViewModelFactory(UserPreference.getInstance(dataStore))
         )[LocationViewModel::class.java]
 
-        auth = FirebaseAuth.getInstance()
-
-        authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
-            val user = firebaseAuth.currentUser
-            if (user != null) {
-                val isNewUser =
-                    user.metadata?.creationTimestamp == user.metadata?.lastSignInTimestamp
-                user.getIdToken(true).addOnCompleteListener { tokenTask ->
-                    if (tokenTask.isSuccessful) {
-                        val token = tokenTask.result.token
-                        if (user.displayName != null && user.email != null && token != null && user.photoUrl != null) {
-                            signInViewModel.signIn(
-                                name = user.displayName as String,
-                                email = user.email as String,
-                                token = token,
-                                photoUrl = user.photoUrl.toString(),
-                                userId = user.uid,
-                                isNewUser = isNewUser
-                            )
-                        } else {
-                            setComposable {
-                                InfoScreen(
-                                    text = stringResource(R.string.something_wrong_happened),
-                                    image = painterResource(R.drawable.img),
-                                    actionText = stringResource(R.string.ok),
-                                    action = { auth.signOut() })
-                            }
-                        }
-                    } else {
-                        setComposable {
-                            InfoScreen(
-                                text = stringResource(R.string.something_wrong_happened),
-                                image = painterResource(R.drawable.img),
-                                actionText = stringResource(R.string.ok),
-                                action = { auth.signOut() })
-                        }
-                    }
-                }
+        mainViewModel.getLoginAsLiveData().observe(this) { user ->
+            if (user.isLogin) {
                 if (isLocationHandled) {
-                    if (isNewUser) {
+                    if (user.isNewUser) {
                         setComposable {
                             SearchScreen(
                                 userPreference = userPreference,
                                 newUserScreen = true,
                                 navigateUp = { setDefaultContent(true) },
                                 onSubmit = {
-                                    preferenceViewModel.setNotNewUser()
+                                    mainViewModel.setNotNewUser()
                                     setDefaultContent(true)
                                 },
                             )
@@ -144,7 +106,7 @@ class MainActivity : ComponentActivity() {
                         setDefaultContent(true)
                     }
                 } else {
-                    handleUserLocation(isNewUser)
+                    handleUserLocation(user.isNewUser)
                 }
             } else {
                 isLocationHandled = false
@@ -168,7 +130,7 @@ class MainActivity : ComponentActivity() {
 //            }
 //        }
 
-        auth.addAuthStateListener(authStateListener)
+//        auth.addAuthStateListener(authStateListener)
 //        auth.addIdTokenListener(tokenStateListener)
 
 //        preferenceViewModel.getLoginAsLiveData().observe(this) { user ->
@@ -274,7 +236,7 @@ class MainActivity : ComponentActivity() {
                                     navigateUp = { setDefaultContent(true) },
                                     newUserScreen = true,
                                     onSubmit = {
-                                        preferenceViewModel.setNotNewUser()
+                                        mainViewModel.setNotNewUser()
                                         setDefaultContent(true)
                                     },
                                 )

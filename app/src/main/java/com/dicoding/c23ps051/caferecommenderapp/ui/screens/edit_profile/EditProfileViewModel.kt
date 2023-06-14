@@ -1,6 +1,7 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.edit_profile
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -38,11 +39,13 @@ class EditProfileViewModel(private val pref: UserPreference) : ViewModel() {
         viewModelScope.launch {
             try {
                 pref.getLogin().collect {
+                    Log.d("MyLogger", "${it.userId}, ${it.token}")
                     val response = ApiConfig.getApiService().getUserProfile(it.token, it.userId)
 
                     if (response.status == 200) {
                         val data = response.data
 
+                        Log.d("MyLogger", data.fullName)
                         user = User(
                             fullName = data.fullName,
                             email = data.email,
@@ -50,7 +53,8 @@ class EditProfileViewModel(private val pref: UserPreference) : ViewModel() {
                             preferences = data.preferences.map { preference ->
                                 Facility.valueOf(preference.first) to preference.second
                             },
-                            username = data.username
+                            username = data.username,
+                            isNewUser = data.isNewUser
                         )
 
                         _nameState.value = user.fullName

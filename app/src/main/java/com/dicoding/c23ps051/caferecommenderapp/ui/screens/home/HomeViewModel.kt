@@ -1,5 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.home
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,17 +36,21 @@ class HomeViewModel(private val pref: UserPreference) : ViewModel() {
 
     fun getAllCafes() {
         viewModelScope.launch {
-            try {
-                pref.getLogin().collect { login ->
-                    val cafes = ApiConfig.getApiService()
-                        .getAllCafes("Bearer ${login.token}")
-                    if (cafes.status == 200) {
-                        val result = mapCafes(cafes.data)
-                        _cafesState.value = UiState.Success(result)
+            pref.getLogin().collect { login ->
+                val request = viewModelScope.launch {
+                    try {
+                        val cafes = ApiConfig.getApiService()
+                            .getAllCafes("Bearer ${login.token}")
+                        if (cafes.status == 200) {
+                            val result = mapCafes(cafes.data)
+                            _cafesState.value = UiState.Success(result)
+                        }
+                    } catch (e: Exception) {
+                        _cafesState.value = UiState.Error(e.message.toString())
                     }
                 }
-            } catch (e: Exception) {
-                _cafesState.value = UiState.Error(e.message.toString())
+
+                if (login.token == "") request.cancel()
             }
         }
     }
