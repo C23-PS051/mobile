@@ -1,7 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in
 
 import android.app.Activity
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +29,7 @@ import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.constants.MIN_PASSWORD_LENGTH
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.AuthViewModel
-import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.ui.ViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.AppLogo
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.AppName
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
@@ -56,7 +55,7 @@ fun SignInScreen(
     navigateToSignUp: () -> Unit,
     userPreference: UserPreference,
     modifier: Modifier = Modifier,
-    signInViewModel: SignInViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
+    signInViewModel: SignInViewModel = viewModel(factory = ViewModelFactory(userPreference)),
     state: SignInState = rememberSignInState(
         text = "",
         hasError = false,
@@ -81,32 +80,32 @@ fun SignInScreen(
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     state.showProgressBar = false
-                    val user = auth.currentUser
-                    val isNewUser = task.result?.additionalUserInfo?.isNewUser ?: false
-
-                    user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
-                        if (tokenTask.isSuccessful) {
-                            val token = tokenTask.result?.token
-                            if (token != null) {
-                                signInViewModel.signIn(
-                                    name = user.displayName,
-                                    email = user.email as String,
-                                    token = token,
-                                    photoUrl = user.photoUrl.toString(),
-                                    userId = user.uid,
-                                    isNewUser = isNewUser,
-                                )
-                            } else {
-                                state.showErrorDialog = true
-                                state.errorMessage =
-                                    context.getString(R.string.failed_to_sign_in)
-                            }
-                        } else {
-                            state.showErrorDialog = true
-                            state.errorMessage =
-                                context.getString(R.string.failed_to_sign_in)
-                        }
-                    }
+//                    val user = auth.currentUser
+//                    val isNewUser = task.result?.additionalUserInfo?.isNewUser ?: false
+//
+//                    user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
+//                        if (tokenTask.isSuccessful) {
+//                            val token = tokenTask.result?.token
+//                            if (token != null) {
+//                                signInViewModel.signIn(
+//                                    name = user.displayName as String,
+//                                    email = user.email as String,
+//                                    token = token,
+//                                    photoUrl = user.photoUrl.toString(),
+//                                    userId = user.uid,
+//                                    isNewUser = isNewUser,
+//                                )
+//                            } else {
+//                                state.showErrorDialog = true
+//                                state.errorMessage =
+//                                    context.getString(R.string.failed_to_sign_in)
+//                            }
+//                        } else {
+//                            state.showErrorDialog = true
+//                            state.errorMessage =
+//                                context.getString(R.string.failed_to_sign_in)
+//                        }
+//                    }
                 } else {
                     state.showProgressBar = false
                     state.showErrorDialog = true
@@ -142,30 +141,30 @@ fun SignInScreen(
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     state.showProgressBar = false
-                    val user = auth.currentUser
-                    val isNewUser = task.result?.additionalUserInfo?.isNewUser ?: false
-
-                    user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
-                        if (tokenTask.isSuccessful) {
-                            val token = tokenTask.result?.token
-                            if (token != null) {
-                                signInViewModel.signIn(
-                                    name = user.displayName,
-                                    email = user.email as String,
-                                    token = token,
-                                    photoUrl = user.photoUrl.toString(),
-                                    userId = user.uid,
-                                    isNewUser = isNewUser,
-                                )
-                            } else {
-                                state.showErrorDialog = true
-                                state.errorMessage = context.getString(R.string.failed_to_sign_in)
-                            }
-                        } else {
-                            state.showErrorDialog = true
-                            state.errorMessage = context.getString(R.string.failed_to_sign_in)
-                        }
-                    }
+//                    val user = auth.currentUser
+//                    val isNewUser = task.result?.additionalUserInfo?.isNewUser ?: false
+//
+//                    user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
+//                        if (tokenTask.isSuccessful) {
+//                            val token = tokenTask.result?.token
+//                            if (token != null) {
+//                                signInViewModel.signIn(
+//                                    name = user.displayName,
+//                                    email = user.email as String,
+//                                    token = token,
+//                                    photoUrl = user.photoUrl.toString(),
+//                                    userId = user.uid,
+//                                    isNewUser = isNewUser,
+//                                )
+//                            } else {
+//                                state.showErrorDialog = true
+//                                state.errorMessage = context.getString(R.string.failed_to_sign_in)
+//                            }
+//                        } else {
+//                            state.showErrorDialog = true
+//                            state.errorMessage = context.getString(R.string.failed_to_sign_in)
+//                        }
+//                    }
                 } else {
                     state.showProgressBar = false
                     state.showErrorDialog = true
@@ -230,16 +229,19 @@ fun SignInScreen(
                 }
             )
             Spacer(modifier = Modifier.height(24.dp))
-            Button(text = stringResource(id = R.string.sign_in)) {
-                focusManager.clearFocus()
-                val isInputValid = isInputValid(state.emailText, state.passwordText)
-                if (isInputValid && !state.emailHasError && !state.passwordHasError) {
-                    firebaseAuthWithEmail(state.emailText, state.passwordText)
-                } else {
-                    state.showErrorDialog = true
-                    state.errorMessage = context.getString(R.string.check_your_input)
+            Button(
+                text = stringResource(id = R.string.sign_in),
+                onClick = {
+                    focusManager.clearFocus()
+                    val isInputValid = isInputValid(state.emailText, state.passwordText)
+                    if (isInputValid && !state.emailHasError && !state.passwordHasError) {
+                        firebaseAuthWithEmail(state.emailText, state.passwordText)
+                    } else {
+                        state.showErrorDialog = true
+                        state.errorMessage = context.getString(R.string.check_your_input)
+                    }
                 }
-            }
+            )
             Spacer(modifier = Modifier.height(16.dp))
             ForgotPassword()
             Spacer(modifier = Modifier.height(48.dp))

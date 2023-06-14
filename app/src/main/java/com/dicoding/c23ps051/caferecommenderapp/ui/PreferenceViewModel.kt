@@ -53,4 +53,10 @@ class PreferenceViewModel(private val pref: UserPreference) : ViewModel() {
             pref.logout()
         }
     }
+
+    fun updateToken(idToken: String) {
+        viewModelScope.launch {
+            pref.setToken(idToken)
+        }
+    }
 }

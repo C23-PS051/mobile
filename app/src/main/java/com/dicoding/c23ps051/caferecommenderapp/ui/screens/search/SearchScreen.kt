@@ -31,15 +31,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.model.Facility
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
-import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.ui.ViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
-import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackPressHandler
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Chip
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OutlinedDropDown
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OutlinedDropDownTextField
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Section
-import com.dicoding.c23ps051.caferecommenderapp.ui.event.BackPress
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.ErrorScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
@@ -55,7 +53,7 @@ fun SearchScreen(
     newUserScreen: Boolean,
     navigateUp: () -> Unit,
     onSubmit: () -> Unit,
-    viewModel: SearchViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
+    viewModel: SearchViewModel = viewModel(factory = ViewModelFactory(userPreference)),
     state: SearchState = rememberSearchState(
         expanded = false,
         checkedCheckbox = List(facilitiesSize) { false },
@@ -210,9 +208,10 @@ fun SearchContent(
                     .background(MaterialTheme.colorScheme.background)
                     .padding(16.dp)
             ) {
-                Button(text = stringResource(id = R.string.submit)) {
-                    onSubmit()
-                }
+                Button(
+                    text = stringResource(id = R.string.submit),
+                    onClick = onSubmit
+                )
             }
         }
     ) { innerPadding ->

@@ -45,8 +45,8 @@ fun ErrorScreen(
             modifier = Modifier
                 .padding(vertical = 24.dp)
         )
-        Button(text = stringResource(id = R.string.retry)) {
-            onRetry()
-        }
+        Button(text = stringResource(id = R.string.retry),
+            onClick = onRetry
+        )
     }
 }

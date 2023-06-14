@@ -14,6 +14,7 @@ fun ChangeProfilePicture(
     imageUrl: String,
     onTextClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     imageSize: Int = 112,
 ) {
     ProfilePicture(
@@ -25,5 +26,6 @@ fun ChangeProfilePicture(
         stringResource(id = R.string.change_profile_picture),
         onClick = onTextClick,
         modifier = modifier,
+        enabled = enabled
     )
 }

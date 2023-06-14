@@ -25,9 +25,6 @@ fun SearchCafe(
     Surface(
         color = MaterialTheme.colorScheme.secondary,
         modifier = modifier
-//            .padding(16.dp)
-//            .background(MaterialTheme.colors.secondary)
-//            .clip(RoundedCornerShape(12.dp))
             .height(128.dp)
 
     ) {
@@ -41,10 +38,10 @@ fun SearchCafe(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.W600
             )
-//            ButtonSearchBar()
-            Button(text = stringResource(id = R.string.get_recommendation)) {
-                navigateToSearchCafe()
-            }
+            Button(
+                text = stringResource(id = R.string.get_recommendation),
+                onClick = navigateToSearchCafe
+            )
         }
     }
 }

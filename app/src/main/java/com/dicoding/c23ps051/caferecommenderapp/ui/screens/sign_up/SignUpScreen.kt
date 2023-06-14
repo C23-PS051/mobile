@@ -32,7 +32,7 @@ import com.dicoding.c23ps051.caferecommenderapp.constants.MIN_PASSWORD_LENGTH
 import com.dicoding.c23ps051.caferecommenderapp.constants.NAME_REGEX
 import com.dicoding.c23ps051.caferecommenderapp.constants.PASSWORD_REGEX
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
-import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.ui.ViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ChangeProfilePicture
@@ -77,7 +77,7 @@ fun SignUpScreen(
         showProgressBar = false,
         errorMessage = "",
     ),
-    signUpViewModel: SignUpViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
+    signUpViewModel: SignUpViewModel = viewModel(factory = ViewModelFactory(userPreference)),
 ) {
     val context = LocalContext.current
     cameraExecutor = Executors.newSingleThreadExecutor()
@@ -242,7 +242,6 @@ fun SignUpScreen(
                             name = state.nameText,
                             password = state.passwordText,
                             photoUri = state.photoUri,
-                            username = state.repasswordText
                         )
                     } else {
                         state.errorMessage = context.getString(R.string.check_your_input)
@@ -418,9 +417,10 @@ fun SignUpContent(
                 onRepasswordTrailingIconClick = onRepasswordTrailingIconClick,
             )
             Spacer(modifier = Modifier.height(36.dp))
-            Button(text = stringResource(id = R.string.sign_up)) {
-                onSignUp()
-            }
+            Button(
+                text = stringResource(id = R.string.sign_up),
+                onClick = onSignUp
+            )
             Spacer(modifier = Modifier.height(16.dp))
             ClickableText(
                 text = stringResource(id = R.string.already_have_account),

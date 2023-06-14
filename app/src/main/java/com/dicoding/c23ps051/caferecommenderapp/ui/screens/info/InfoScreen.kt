@@ -51,14 +51,10 @@ fun InfoScreen(
             modifier = Modifier
                 .padding(vertical = 24.dp)
         )
-        Button(text = actionText) {
-            action()
-        }
+        Button(text = actionText, onClick = action)
         Spacer(modifier = Modifier.height(8.dp))
         if (secondaryActionText != "") {
-            Button(text = secondaryActionText) {
-                secondaryAction()
-            }
+            Button(text = secondaryActionText, onClick = secondaryAction)
         }
     }
 }

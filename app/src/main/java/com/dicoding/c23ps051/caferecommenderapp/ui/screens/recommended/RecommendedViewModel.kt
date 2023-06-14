@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.api.ApiConfig
-import com.dicoding.c23ps051.caferecommenderapp.data.CafeRepository
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.model.Facility
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference

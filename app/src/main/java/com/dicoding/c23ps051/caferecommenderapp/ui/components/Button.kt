@@ -28,11 +28,12 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.White
 
 @Composable
 fun Button(
-    modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.primary,
-    textColor: Color = White,
     text: String,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    color: Color = MaterialTheme.colorScheme.primary,
+    textColor: Color = White,
 ) {
     Button(
         shape = MaterialTheme.shapes.large,
@@ -42,6 +43,7 @@ fun Button(
         colors = ButtonDefaults.buttonColors(color),
         elevation = ButtonDefaults.buttonElevation(0.dp),
         onClick = onClick,
+        enabled = enabled
     ) {
         Text(
             text = text,
@@ -86,9 +88,8 @@ fun GoogleButton(
             text = stringResource(id = R.string.google_sign_in),
             color = VeryLightGray,
             textColor = Black,
-        ) {
-            onClick()
-        }
+            onClick = onClick
+        )
         Image(
             painter = painterResource(id = R.drawable.google),
             contentDescription = null,

@@ -103,11 +103,11 @@
     <string name="i_want_to_change_password">I want to change password</string>
 
     <!-- Location Page -->
-    <string name="need_location_permission">To continue, we need to access your location</string>
-    <string name="turn_on_location">TURN ON LOCATION</string>
-    <string name="location_permission_not_granted">You have not given location permission. For the best experience, consider give access to your location. You can go to settings to change the permission.</string>
+    <string name="need_permissions">To continue, we need to access your location and media</string>
+    <string name="give_permissions">GIVE PERMISSIONS</string>
+    <string name="permission_not_granted">For the best experience, consider to grant permissions. You can go to settings to change the permission.</string>
     <string name="getting_location">Getting your location</string>
-    <string name="get_location_failed">You can retry or skip this to continue without location information.</string>
+    <string name="get_location_failed">You can retry or skip this.</string>
     <string name="go_to_settings">GO TO SETTINGS</string>
     <string name="skip">SKIP</string>
     <string name="not_set">Not set</string>
@@ -158,9 +158,9 @@
 
     <!-- Camera -->
     <string name="camera_permission_not_granted">You have not given camera permission. You can go to settings to change the permission.</string>
-    <string name="take_picture">TAKE PICTURE</string>
-    <string name="choose_from_gallery">CHOOSE FROM GALLERY</string>
-    <string name="cancel">@android:string/cancel</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="choose_from_gallery">Choose From Gallery</string>
+    <string name="cancel">Cancel</string>
     <string name="picture_chooser">Choose how do you want to upload your picture</string>
     <string name="change_picture">Change Picture</string>
     <string name="choose_gallery">Choose Gallery</string>
@@ -171,4 +171,6 @@
     <string name="success">Success</string>
     <string name="your_account_signed_up_successfully">Your account signed up successfully</string>
     <string name="failed_to_load_cafe">Failed to load cafe</string>
+    <string name="something_wrong_happened">Something wrong happened</string>
+    <string name="changes_saved">Changes saved</string>
 </resources>

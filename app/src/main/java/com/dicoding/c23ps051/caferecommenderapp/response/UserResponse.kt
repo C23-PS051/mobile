@@ -16,7 +16,7 @@ data class UserResponseItem(
 	@field:SerializedName("preferences")
 	val preferences: List<PreferencesItem>,
 
-	@field:SerializedName("full_name")
+	@field:SerializedName("fullName")
 	val fullName: String,
 
 	@field:SerializedName("photoUri")

@@ -1,5 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,7 +33,7 @@ import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.constants.DEFAULT_PHOTO_URI
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.AuthViewModel
-import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.ui.ViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ButtonSmall
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProfilePicture
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProgressBar
@@ -52,7 +53,7 @@ fun ProfileScreen(
     navigateToPrivacyPolicy: () -> Unit,
     navigateToHelpCenter: () -> Unit,
     navigateToApplicationInfo: () -> Unit,
-    profileViewModel: ProfileViewModel = viewModel(factory = PreferenceViewModelFactory(userPreference)),
+    profileViewModel: ProfileViewModel = viewModel(factory = ViewModelFactory(userPreference)),
     authViewModel: AuthViewModel = viewModel(),
     state: ProfileState = rememberProfileState(
         showDialog = false,
@@ -93,6 +94,7 @@ fun ProfileScreen(
             is UiState.Success -> {
                 state.loadingState = false
                 val data = uiState.data
+                Log.d("MyLogger", data.photoUri)
                 state.userName = data.fullName
                 state.userEmail = data.email
                 state.photoUri = data.photoUri

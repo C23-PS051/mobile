@@ -1,10 +1,13 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -14,20 +17,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
-import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.ui.ViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackPressHandler
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.ButtonSmall
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeLargeList
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafesTopBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.event.BackPress
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.ErrorScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
@@ -39,7 +44,7 @@ fun RecommendedScreen(
     navigateToDetail: (String) -> Unit,
     userPreference: UserPreference,
     viewModel: RecommendedViewModel = viewModel(
-        factory = PreferenceViewModelFactory(userPreference)
+        factory = ViewModelFactory(userPreference)
     ),
 ) {
     val focusManager = LocalFocusManager.current
@@ -154,8 +159,11 @@ fun RecommendedContent(
 
         Column(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = APP_CONTENT_PADDING),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             uiState.let { state ->
                 when (state) {
@@ -174,10 +182,13 @@ fun RecommendedContent(
                     }
 
                     is UiState.Error -> {
-                        ErrorScreen(
+                        Text(
                             text = stringResource(id = R.string.failed_to_load_cafe),
-                            onRetry = onRetry
+                            modifier = Modifier.padding(bottom = 8.dp)
                         )
+                        ButtonSmall(text = stringResource(id = R.string.retry)) {
+                            onRetry()
+                        }
                     }
                 }
             }

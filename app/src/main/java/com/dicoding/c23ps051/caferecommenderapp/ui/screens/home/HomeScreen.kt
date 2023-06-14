@@ -1,5 +1,6 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.home
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,10 +22,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
+import com.dicoding.c23ps051.caferecommenderapp.constants.DEFAULT_PHOTO_URI
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
-import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModel
-import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.ui.ViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackPressHandler
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ButtonSmall
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeList
@@ -42,7 +43,7 @@ fun HomeScreen(
     navigateToSearchCafe: () -> Unit,
     onProfileClick: () -> Unit,
     viewModel: HomeViewModel = viewModel(
-        factory = PreferenceViewModelFactory(userPreference)
+        factory = ViewModelFactory(userPreference)
     ),
 ) {
     var backPressState by remember { mutableStateOf<BackPress>(BackPress.Idle) }
@@ -59,7 +60,7 @@ fun HomeScreen(
     val myRegionCafes = if (uiStateMyRegion is UiState.Success) uiStateMyRegion.data else emptyList()
     val open24HoursCafes = if (uiStateOpen24Hours is UiState.Success) uiStateOpen24Hours.data else emptyList()
     val popularCafes = if (uiStatePopular is UiState.Success) uiStatePopular.data else emptyList()
-    val photoUri by viewModel.profileUri
+    val photoUri by viewModel.profileUri.collectAsState(initial = DEFAULT_PHOTO_URI)
 
     cafesState.let { uiState ->
         when (uiState) {
@@ -155,6 +156,7 @@ fun HomeContent(
     photoUri: String,
     modifier: Modifier = Modifier,
 ) {
+    Log.d("MyLogger", "Home: $photoUri")
     Scaffold(
         topBar = { Header(userLocation, photoUri, onProfileClick) },
     ) { innerPadding ->

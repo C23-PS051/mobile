@@ -74,17 +74,17 @@ fun WelcomeScreen(
                     .fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(64.dp))
-            Button(text = stringResource(id = R.string.sign_in)) {
-                navigateToSignIn()
-            }
+            Button(
+                text = stringResource(id = R.string.sign_in),
+                onClick = navigateToSignIn
+            )
             Spacer(modifier = Modifier.height(12.dp))
             Button(
                 text = stringResource(id = R.string.sign_up),
                 color = LightCream,
                 textColor = Black,
-            ) {
-                navigateToSignUp()
-            }
+                onClick = navigateToSignUp
+            )
         }
     }
 }

@@ -22,7 +22,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.navigation.Screen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.detail.DetailScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.favorite.FavoriteScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.home.HomeScreen
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile.EditProfileScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.edit_profile.EditProfileScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile.ProfileScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended.RecommendedScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.search.SearchScreen
@@ -174,6 +174,7 @@ fun CafeRecommenderApp(
             }
             composable(Screen.EditProfile.route) {
                 EditProfileScreen(
+                    userPreference = userPreference,
                     navigateUp = { navController.navigateUp() }
                 )
             }

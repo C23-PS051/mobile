@@ -36,12 +36,6 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         }
     }
 
-    fun getIsLogin(): Flow<Boolean> {
-        return dataStore.data.map { preferences ->
-            preferences[STATE_KEY] ?: false
-        }
-    }
-
     suspend fun setUserLocation(location: String) {
         dataStore.edit { preferences ->
             preferences[USER_LOCATION] = location
@@ -79,9 +73,22 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         }
     }
 
-    fun getIsNewUser(): Flow<Boolean> {
+    suspend fun editUser(name: String, photoUrl: String) {
+        dataStore.edit { preferences ->
+            preferences[NAME_KEY] = name
+            preferences[PHOTO_KEY] = photoUrl
+        }
+    }
+
+    fun getPhotoUrl(): Flow<String> {
         return dataStore.data.map { preferences ->
-            preferences[NEW_USER_KEY] ?: false
+            preferences[PHOTO_KEY] ?: ""
+        }
+    }
+
+    suspend fun setToken(idToken: String) {
+        dataStore.edit { preferences ->
+            preferences[TOKEN_KEY] = idToken
         }
     }
 

@@ -13,11 +13,11 @@ import kotlinx.coroutines.launch
 
 class SignInViewModel(private val pref: UserPreference) : ViewModel() {
 
-    fun signIn(name: String?, email: String, token: String, photoUrl: String, userId: String, isNewUser: Boolean) {
-        val convName = name ?: ""
+    fun signIn(name: String, email: String, token: String, photoUrl: String, userId: String, isNewUser: Boolean) {
+        Log.d("MyLogger", "Sign In: $photoUrl")
         val convPhotoUrl = if (photoUrl == "null") "" else photoUrl
         val loginData = Login(
-            name = convName,
+            name = name,
             email = email,
             photoUrl = convPhotoUrl,
             token = token,

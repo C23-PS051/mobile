@@ -31,11 +31,7 @@ class HomeViewModel(private val pref: UserPreference) : ViewModel() {
 
     val location get() = pref.getUserLocation()
 
-    val profileUri = mutableStateOf("")
-
-    init {
-        getProfileUri()
-    }
+    val profileUri get() = pref.getPhotoUrl()
 
     fun getAllCafes() {
         viewModelScope.launch {
@@ -46,20 +42,10 @@ class HomeViewModel(private val pref: UserPreference) : ViewModel() {
                     if (cafes.status == 200) {
                         val result = mapCafes(cafes.data)
                         _cafesState.value = UiState.Success(result)
-                    } else {
-                        _cafesState.value = UiState.Error("Failed to load cafes")
                     }
                 }
             } catch (e: Exception) {
                 _cafesState.value = UiState.Error(e.message.toString())
-            }
-        }
-    }
-
-    private fun getProfileUri() {
-        viewModelScope.launch {
-            pref.getLogin().collect {
-                profileUri.value = it.photoUrl
             }
         }
     }

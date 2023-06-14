@@ -37,15 +37,16 @@ fun RequestLocationScreen(
                 .size(128.dp)
         )
         Text(
-            text = stringResource(R.string.need_location_permission),
+            text = stringResource(R.string.need_permissions),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(vertical = 24.dp)
         )
-        Button(text = stringResource(id = R.string.turn_on_location)) {
-            onButtonClick()
-        }
+        Button(
+            text = stringResource(id = R.string.give_permissions),
+            onClick = onButtonClick
+        )
     }
 }

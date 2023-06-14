@@ -20,8 +20,9 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 @Composable
 fun ClickableText(
     text: String,
-    modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     Text(
         text = text,
@@ -32,8 +33,10 @@ fun ClickableText(
         modifier = modifier
             .clip(CircleShape)
             .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(4.dp),
+            .run {
+                if (enabled) clickable { onClick() } else this
+            }
+            .padding(4.dp)
     )
 }
 

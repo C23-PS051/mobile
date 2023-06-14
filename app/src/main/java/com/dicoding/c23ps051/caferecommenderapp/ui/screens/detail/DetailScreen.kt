@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,7 +41,7 @@ import coil.compose.AsyncImage
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.model.Facility
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
-import com.dicoding.c23ps051.caferecommenderapp.ui.PreferenceViewModelFactory
+import com.dicoding.c23ps051.caferecommenderapp.ui.ViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ButtonSmall
@@ -70,7 +69,7 @@ fun DetailScreen(
     itemId: String,
     navigateBack: () -> Unit,
     viewModel: DetailViewModel = viewModel(
-        factory = PreferenceViewModelFactory(userPreference)
+        factory = ViewModelFactory(userPreference)
     ),
     state: DetailState = rememberDetailState(
         showMapDialog = false,
@@ -313,9 +312,8 @@ fun DetailContent(
                                     Button(
                                         modifier = Modifier.padding(top = 8.dp),
                                         text = stringResource(id = R.string.view_on_google_maps),
-                                    ) {
-                                        navigateToGoogleMaps(context, state.data, toggleShowMapDialog)
-                                    }
+                                        onClick = { navigateToGoogleMaps(context, state.data, toggleShowMapDialog) }
+                                    )
                                 }
                                 is UiState.Error -> {
                                     Text(stringResource(id = R.string.failed_to_get_location))

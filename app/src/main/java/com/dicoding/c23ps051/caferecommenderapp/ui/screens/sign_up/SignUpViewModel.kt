@@ -1,6 +1,7 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_up
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.api.ApiConfig
@@ -25,7 +26,7 @@ class SignUpViewModel(private val pref: UserPreference) : ViewModel() {
     val resultState: StateFlow<ResultState> get() = _resultState
 
     fun signUpWithFirebaseAuth(
-        username: String, email: String, password: String, name: String, photoUri: String
+        email: String, password: String, name: String, photoUri: String
     ) {
         _resultState.value = ResultState.Loading
         auth.createUserWithEmailAndPassword(email, password)
@@ -45,12 +46,12 @@ class SignUpViewModel(private val pref: UserPreference) : ViewModel() {
                                     if (tokenResult.token != null) {
                                         val idToken = tokenResult.token as String
                                         signUp(
-                                            idToken,
-                                            firebaseUser.uid,
-                                            email,
-                                            password,
-                                            name,
-                                            photoUri
+                                            idToken = idToken,
+                                            userId = firebaseUser.uid,
+                                            email = email,
+                                            password = password,
+                                            name = name,
+                                            photoUri = photoUri
                                         )
                                     } else {
                                         _resultState.value =
@@ -74,9 +75,10 @@ class SignUpViewModel(private val pref: UserPreference) : ViewModel() {
         viewModelScope.launch {
             val user = User(
                 email = email,
-                fullName = name,
+                fullName = name.trim(),
                 photoUri = photoUri,
-                preferences = enumValues<Facility>().map { it to false }
+                preferences = enumValues<Facility>().map { it to false },
+                username = userId
             )
 
             val response = ApiConfig.getApiService().editProfile(
@@ -123,6 +125,7 @@ class SignUpViewModel(private val pref: UserPreference) : ViewModel() {
     }
 
     private fun signIn(name: String?, email: String, token: String, photoUri: String, userId: String) {
+        Log.d("MyLogger", "Sign Up: $photoUri")
         val convName = name ?: ""
         val convPhotoUrl = if (photoUri == "null") DEFAULT_PHOTO_URI else photoUri
         val loginData = Login(

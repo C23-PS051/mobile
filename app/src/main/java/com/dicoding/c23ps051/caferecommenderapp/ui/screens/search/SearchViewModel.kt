@@ -45,16 +45,17 @@ class SearchViewModel(private val pref: UserPreference) : ViewModel() {
         _resultState.value = ResultState.Loading
         viewModelScope.launch {
             pref.getLogin().collect {
-                Log.d("MyLogger", "SearchViewModel: ${it.userId}")
                 val response = ApiConfig.getApiService().getUserProfile(it.token, it.userId)
 
                 if (response.status == 200) {
                     val data = response.data
+                    Log.d("MyLogger", "SearchViewModel: ${data.photoUri}")
                     val user = User(
                         email = data.email,
                         fullName = data.fullName,
                         photoUri = data.photoUri,
-                        preferences = preferences
+                        preferences = preferences,
+                        username = data.username,
                     )
 
                     val result = ApiConfig.getApiService().editProfile(it.token, it.userId, user)
