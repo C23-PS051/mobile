@@ -56,6 +56,7 @@ class FavoriteViewModel(private val pref: UserPreference) : ViewModel() {
                         val response = ApiConfig.getApiService().getFavoritesByUserId(it.token)
 
                         if (response.status == 200) {
+                            favoriteCafes = mutableListOf()
                             val result = mapCafes(response.result)
                             result.forEach { cafe ->
                                 favoriteCafes.add(cafe)

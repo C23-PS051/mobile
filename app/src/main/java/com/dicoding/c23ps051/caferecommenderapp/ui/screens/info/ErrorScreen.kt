@@ -32,7 +32,7 @@ fun ErrorScreen(
         verticalArrangement = Arrangement.Center,
     ) {
         Image(
-            painter = painterResource(id = R.drawable.img),
+            painter = painterResource(id = R.drawable.error),
             contentDescription = null,
             modifier = Modifier
                 .size(128.dp)

@@ -186,7 +186,7 @@ fun EditProfileScreen(
         showInfoScreen -> {
             InfoScreen(
                 text = stringResource(R.string.camera_permission_not_granted),
-                image = painterResource(R.drawable.img),
+                image = painterResource(R.drawable.no_camera),
                 actionText = stringResource(R.string.go_to_settings),
                 secondaryActionText = stringResource(R.string.skip),
                 action = {

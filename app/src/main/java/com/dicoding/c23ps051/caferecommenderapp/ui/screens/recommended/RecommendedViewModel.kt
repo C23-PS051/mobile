@@ -57,6 +57,7 @@ class RecommendedViewModel(private val pref: UserPreference) : ViewModel() {
 
                         if (response.status == 200) {
                             val data = response.data
+                            recommendedCafes = mutableListOf()
                             data.forEach { item ->
                                 val cafe = Cafe(
                                     id = item.cafe_id,
