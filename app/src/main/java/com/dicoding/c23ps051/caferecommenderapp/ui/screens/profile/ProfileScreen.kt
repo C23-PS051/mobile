@@ -87,6 +87,7 @@ fun ProfileScreen(
 
     profileViewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
+            UiState.Initial -> {}
             is UiState.Loading -> {
                 state.loadingState = true
                 profileViewModel.getUserProfile()

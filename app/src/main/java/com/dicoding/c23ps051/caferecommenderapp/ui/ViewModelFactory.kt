@@ -4,9 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.detail.DetailViewModel
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.edit_profile.EditProfileViewModel
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.favorite.FavoriteViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.home.HomeViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.location.LocationViewModel
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.edit_profile.EditProfileViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile.ProfileViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended.RecommendedViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.search.SearchViewModel
@@ -48,6 +49,9 @@ class ViewModelFactory(private val pref: UserPreference) :
             }
             modelClass.isAssignableFrom(EditProfileViewModel::class.java) -> {
                 EditProfileViewModel(pref) as T
+            }
+            modelClass.isAssignableFrom(FavoriteViewModel::class.java) -> {
+                FavoriteViewModel(pref) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

@@ -7,6 +7,7 @@ import android.Manifest.permission.READ_MEDIA_IMAGES
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
@@ -29,12 +30,12 @@ import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.MainViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.ViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.CafeRecommenderApp
-import com.dicoding.c23ps051.caferecommenderapp.ui.states.PermissionState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.InfoScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.location.LocationViewModel
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.location.RequestLocationScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.search.SearchScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_in.SignInViewModel
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.PermissionState
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.CafeRecommenderAppTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -43,9 +44,6 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 
 class MainActivity : ComponentActivity() {
 
-//    private lateinit var auth: FirebaseAuth
-//    private lateinit var authStateListener: FirebaseAuth.AuthStateListener
-//    private lateinit var tokenStateListener: FirebaseAuth.IdTokenListener
     private lateinit var mainViewModel: MainViewModel
     private lateinit var signInViewModel: SignInViewModel
     private lateinit var locationViewModel: LocationViewModel
@@ -69,7 +67,6 @@ class MainActivity : ComponentActivity() {
             getString(R.string.jakarta_barat) to getString(R.string.west_jakarta),
             getString(R.string.jakarta_timur) to getString(R.string.east_jakarta),
             getString(R.string.jakarta_pusat) to getString(R.string.central_jakarta),
-//            "Kota Bandung" to "Bandung City"// TODO: For experiment purposes only, remember to remove when done
         )
 
         mainViewModel = ViewModelProvider(
@@ -113,33 +110,6 @@ class MainActivity : ComponentActivity() {
                 setDefaultContent(false)
             }
         }
-
-//        tokenStateListener = FirebaseAuth.IdTokenListener { firebaseAuth ->
-//            val user = firebaseAuth.currentUser
-//            user?.getIdToken(true)?.addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    val idToken = task.result.token
-//                    if (idToken != null) {
-//                        preferenceViewModel.updateToken(idToken)
-//                    } else {
-//                        auth.signOut()
-//                    }
-//                } else {
-//                    auth.signOut()
-//                }
-//            }
-//        }
-
-//        auth.addAuthStateListener(authStateListener)
-//        auth.addIdTokenListener(tokenStateListener)
-
-//        preferenceViewModel.getLoginAsLiveData().observe(this) { user ->
-//            if (user.isLogin) {
-//
-//            } else {
-//
-//            }
-//        }
     }
 
     private fun handleUserLocation(isNewUser: Boolean) {
@@ -185,6 +155,7 @@ class MainActivity : ComponentActivity() {
                             secondaryActionText = getString(R.string.skip),
                             action = {
                                 val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
+                                intent.data = Uri.fromParts("package", packageName, null)
                                 startActivityForResult(intent, REQUEST_APPLICATION_SETTINGS)
                             },
                             secondaryAction = {
@@ -257,23 +228,6 @@ class MainActivity : ComponentActivity() {
     private fun removeLocationObserver() {
         locationViewModel.locationPermission.removeObserver(locationObserver)
     }
-
-//    private fun getNewToken() {
-//        val firebaseUser = FirebaseAuth.getInstance().currentUser
-//        firebaseUser?.getIdToken(true)?.addOnSuccessListener { tokenResult ->
-//            val token = tokenResult.token
-//            if (token != null) {
-//                signInViewModel.signIn(
-//                    name = firebaseUser.displayName,
-//                    email = firebaseUser.email as String,
-//                    token = token,
-//                    photoUrl = firebaseUser.photoUrl.toString(),
-//                    userId = firebaseUser.uid,
-//                    isNewUser = false,
-//                )
-//            }
-//        }
-//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

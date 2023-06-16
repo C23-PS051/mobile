@@ -1,6 +1,7 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -33,15 +34,15 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.ButtonSmall
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeLargeList
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafesTopBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.event.BackPress
-import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 @Composable
 fun RecommendedScreen(
-    navigateToDetail: (String) -> Unit,
+    navigateToDetail: (String, Boolean) -> Unit,
     userPreference: UserPreference,
     viewModel: RecommendedViewModel = viewModel(
         factory = ViewModelFactory(userPreference)
@@ -121,7 +122,7 @@ fun RecommendedContent(
     onRetry: () -> Unit,
     text: String,
     onQueryChange: (String) -> Unit,
-    navigateToDetail: (String) -> Unit,
+    navigateToDetail: (String, Boolean) -> Unit,
     focusManager: FocusManager,
     listState: LazyListState,
     selectedText: Int,
@@ -159,35 +160,56 @@ fun RecommendedContent(
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = APP_CONTENT_PADDING),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             uiState.let { state ->
                 when (state) {
+                    UiState.Initial -> {}
                     is UiState.Loading -> {
-                        LoadingScreen(stringResource(id = R.string.loading_recommendations))
                         onLoading()
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            LoadingScreen(stringResource(id = R.string.loading_recommendations))
+                        }
                     }
 
                     is UiState.Success -> {
-                        CafeLargeList(
-                            cafes = state.data,
-                            onCafeItemClick = navigateToDetail,
-                            state = listState
-                        )
-                        /*TODO: ALSO HANDLE EMPTY LIST */
+                        if (state.data.isNotEmpty()) {
+                            CafeLargeList(
+                                fromFavorite = false,
+                                cafes = state.data,
+                                onCafeItemClick = navigateToDetail,
+                                state = listState
+                            )
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(text = stringResource(id = R.string.this_list_is_empty))
+                            }
+                        }
                     }
 
                     is UiState.Error -> {
-                        Text(
-                            text = stringResource(id = R.string.failed_to_load_cafe),
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                        ButtonSmall(text = stringResource(id = R.string.retry)) {
-                            onRetry()
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.failed_to_load_cafe),
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                            ButtonSmall(text = stringResource(id = R.string.retry)) {
+                                onRetry()
+                            }
                         }
                     }
                 }

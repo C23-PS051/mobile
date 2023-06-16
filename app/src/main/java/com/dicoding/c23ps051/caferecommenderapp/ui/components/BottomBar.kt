@@ -73,7 +73,6 @@ fun BottomBar(
                     )
                 },
                 selected = currentRoute == it.screen.route,
-//                unselectedContentColor = Gray,
                 onClick = {
                     navController.navigate(it.screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) {

@@ -45,7 +45,7 @@ fun WelcomeScreen(
             verticalArrangement = Arrangement.Center,
         ) {
             Image(
-                painter = painterResource(id = R.drawable.image),
+                painter = painterResource(id = R.drawable.illustration),
                 contentDescription = stringResource(id = R.string.app_logo),
                 modifier = modifier
                     .size(256.dp)

@@ -4,10 +4,8 @@ import android.Manifest
 import android.util.Log
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,13 +32,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.c23ps051.caferecommenderapp.R
 import com.dicoding.c23ps051.caferecommenderapp.constants.MIN_PASSWORD_LENGTH
 import com.dicoding.c23ps051.caferecommenderapp.constants.NAME_REGEX
 import com.dicoding.c23ps051.caferecommenderapp.constants.PASSWORD_REGEX
-import com.dicoding.c23ps051.caferecommenderapp.model.User
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.ViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
@@ -53,7 +49,6 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.screens.camera.CameraPermissi
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.camera.CameraView
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.camera.IntentGalleryLauncher
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.InfoScreen
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.ResultState
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.STARTER_CONTENT_PADDING
@@ -104,6 +99,7 @@ fun EditProfileScreen(
 
     viewModel.uiState.collectAsState().value.let { uiState ->
         when (uiState) {
+            UiState.Initial -> {}
             UiState.Loading -> {
                 state.isLoading = true
                 viewModel.getUserProfile()

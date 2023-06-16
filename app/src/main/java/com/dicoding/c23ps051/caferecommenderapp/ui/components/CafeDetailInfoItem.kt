@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -28,25 +27,6 @@ fun CafeDetailInfoItem(
             modifier = Modifier
                 .size(24.dp)
                 .padding(end = 4.dp)
-        )
-        Text(text)
-    }
-}
-
-@Composable
-fun CafeDetailInfoItem(
-    icon: String,
-    text: String,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = icon,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(end = 4.dp)
         )
         Text(text)
     }

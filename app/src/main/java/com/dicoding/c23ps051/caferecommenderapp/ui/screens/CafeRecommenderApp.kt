@@ -20,9 +20,9 @@ import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BottomBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.navigation.Screen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.detail.DetailScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.screens.edit_profile.EditProfileScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.favorite.FavoriteScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.home.HomeScreen
-import com.dicoding.c23ps051.caferecommenderapp.ui.screens.edit_profile.EditProfileScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.profile.ProfileScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended.RecommendedScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.search.SearchScreen
@@ -70,8 +70,8 @@ fun CafeRecommenderApp(
                             launchSingleTop = true
                         }
                     },
-                    navigateToDetail = { id ->
-                        navController.navigate(Screen.Detail.createRoute(id))
+                    navigateToDetail = { id, fromFavorite ->
+                        navController.navigate(Screen.Detail.createRoute(id, fromFavorite))
                     },
                     navigateToSearchCafe = {
                         navController.navigate(Screen.Search.route)
@@ -81,13 +81,18 @@ fun CafeRecommenderApp(
             composable(Screen.Recommended.route) {
                 RecommendedScreen(
                     userPreference = userPreference,
-                    navigateToDetail = { id ->
-                        navController.navigate(Screen.Detail.createRoute(id))
+                    navigateToDetail = { id, fromFavorite ->
+                        navController.navigate(Screen.Detail.createRoute(id, fromFavorite))
                     }
                 )
             }
             composable(Screen.Favorite.route) {
-                FavoriteScreen()
+                FavoriteScreen(
+                    userPreference = userPreference,
+                    navigateToDetail = { id, fromFavorite ->
+                        navController.navigate(Screen.Detail.createRoute(id, fromFavorite))
+                    }
+                )
             }
             composable(Screen.Profile.route) {
                 ProfileScreen(
@@ -96,13 +101,13 @@ fun CafeRecommenderApp(
                         navController.navigate(Screen.EditProfile.route)
                     },
                     navigateToPrivacyPolicy = {
-
+                        /*TODO*/
                     },
                     navigateToHelpCenter = {
-
+                        /*TODO*/
                     },
                     navigateToApplicationInfo = {
-
+                        /*TODO*/
                     }
                 )
             }
@@ -142,14 +147,24 @@ fun CafeRecommenderApp(
             }
             composable(
                 route = Screen.Detail.route,
-                arguments = listOf(navArgument("id") {  type = NavType.StringType })
+                arguments = listOf(
+                    navArgument("id") {  type = NavType.StringType },
+                    navArgument("from_favorite") { type = NavType.BoolType }
+                )
             ) {
                 val id = it.arguments?.getString("id") ?: ""
+                val fromFavorite = it.arguments?.getBoolean("from_favorite") ?: false
                 DetailScreen(
                     userPreference = userPreference,
                     itemId = id,
                     navigateBack = {
-                        navController.navigateUp()
+                        if (fromFavorite) {
+                            navController.popBackStack()
+                            navController.navigateUp()
+                            navController.navigate(Screen.Favorite.route)
+                        } else {
+                            navController.navigateUp()
+                        }
                     }
                 )
             }
@@ -161,14 +176,9 @@ fun CafeRecommenderApp(
                         navController.navigateUp()
                     },
                     onSubmit = {
-                        navController.popBackStack()
-                        navController.navigate(Screen.Recommended.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            restoreState = true
-                            launchSingleTop = true
-                        }
+//                        navController.popBackStack()
+                        navController.navigateUp()
+//                        navController.navigate(Screen.Recommended.route)
                     }
                 )
             }

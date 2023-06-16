@@ -34,6 +34,7 @@ fun CafesTopBar(
     onOpenChipClicked: () -> Unit,
     modifier: Modifier = Modifier,
     showBackButton: Boolean = false,
+    onBackButtonClick: () -> Unit = {},
 ) {
     Column (
         modifier = modifier
@@ -45,7 +46,7 @@ fun CafesTopBar(
         ) {
             if (showBackButton) {
                 BackButton(
-                    onClick = { /*TODO*/ }
+                    onClick = onBackButtonClick
                 )
                 Spacer(modifier = Modifier.width(4.dp))
             }
@@ -99,11 +100,9 @@ fun CafesTopBarOutlinedSearchBar(
         onValueChange = onQueryChange,
         onClick = {
             focusManager.clearFocus()
-            /*TODO*/
         },
         onSearch = {
             focusManager.clearFocus()
-            /* TODO */
         }
     )
 }
@@ -120,7 +119,7 @@ fun CafesTopBarDropDown(
     val options = listOf(
         stringResource(id = R.string.sort_by),
         stringResource(id = R.string.highest_rating),
-        stringResource(id = R.string.nearest),
+        stringResource(id = R.string.most_review),
         stringResource(id = R.string.lowest_price_range),
         stringResource(id = R.string.highest_price_range),
     )
@@ -155,11 +154,3 @@ fun CafesTopBarDropDown(
         onDismissRequest = onDismissRequest
     )
 }
-
-//@Preview
-//@Composable
-//fun CafesTopBarPreview() {
-//    CafeRecommenderAppTheme {
-//        CafesTopBar(title = "Recommended for you")
-//    }
-//}

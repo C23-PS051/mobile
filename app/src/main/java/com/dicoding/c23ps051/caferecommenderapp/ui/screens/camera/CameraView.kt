@@ -20,8 +20,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,7 +58,6 @@ fun CameraView(
     val preview = Preview.Builder().build()
     val previewView = remember { PreviewView(context) }
     val imageCapture: ImageCapture = remember { ImageCapture.Builder().build() }
-    val backPressState by remember { mutableStateOf<BackPress>(BackPress.Idle) }
 
     LaunchedEffect(cameraSelector) {
         val cameraProvider = context.getCameraProvider()
@@ -121,7 +118,7 @@ fun CameraView(
     }
 
     BackPressHandler(
-        backPressState = backPressState,
+        backPressState = BackPress.Idle,
         toggleBackPressState = {}
     ) {
         navigateUp()

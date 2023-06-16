@@ -1,6 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.search
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.api.ApiConfig
@@ -12,6 +11,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class SearchViewModel(private val pref: UserPreference) : ViewModel() {
@@ -41,33 +41,35 @@ class SearchViewModel(private val pref: UserPreference) : ViewModel() {
         }
     }
 
-    fun editCafePreference(preferences: List<Pair<Facility, Boolean>>) {
+    fun editCafePreference(preferences: List<Pair<Facility, Boolean>>, priceCategory: String) {
         _resultState.value = ResultState.Loading
         viewModelScope.launch {
-            pref.getLogin().collect {
-                val response = ApiConfig.getApiService().getUserProfile(it.token, it.userId)
+            val pref = pref.getLogin().first()
 
-                if (response.status == 200) {
-                    val data = response.data
-                    Log.d("MyLogger", "SearchViewModel: ${data.fullName}, ${data.photoUri}")
-                    val user = User(
-                        email = data.email,
-                        fullName = data.fullName,
-                        photoUri = data.photoUri,
-                        preferences = preferences,
-                        username = data.username,
-                        isNewUser = data.isNewUser
-                    )
+            val user = User(
+                cafe_alcohol = preferences.first { it.first == Facility.ALCOHOL }.second,
+                cafe_in_mall = preferences.first { it.first == Facility.IN_MALL }.second,
+                cafe_indoor = preferences.first { it.first == Facility.INDOOR }.second,
+                cafe_kid_friendly = preferences.first { it.first == Facility.KID_FRIENDLY }.second,
+                cafe_live_music = preferences.first { it.first == Facility.LIVE_MUSIC }.second,
+                cafe_outdoor = preferences.first { it.first == Facility.OUTDOOR }.second,
+                cafe_parking_area = preferences.first { it.first == Facility.PARKING_AREA }.second,
+                cafe_pet_friendly = preferences.first { it.first == Facility.PET_FRIENDLY }.second,
+                cafe_price_category = priceCategory,
+                cafe_reservation = preferences.first { it.first == Facility.ALCOHOL }.second,
+                cafe_smoking_area = preferences.first { it.first == Facility.ALCOHOL }.second,
+                cafe_takeaway = preferences.first { it.first == Facility.ALCOHOL }.second,
+                cafe_toilets = preferences.first { it.first == Facility.ALCOHOL }.second,
+                cafe_vip_room = preferences.first { it.first == Facility.ALCOHOL }.second,
+                cafe_wifi = preferences.first { it.first == Facility.ALCOHOL }.second,
+                username = pref.userId,
+            )
 
-                    val result = ApiConfig.getApiService().editProfile(it.token, it.userId, user)
-                    if (result.status == 200) {
-                        _resultState.value = ResultState.Success
-                    } else {
-                        _resultState.value = ResultState.Error("Failed to save preference")
-                    }
-                } else {
-                    _resultState.value = ResultState.Error("Failed to save preference")
-                }
+            val result = ApiConfig.getApiService().editProfile(pref.token, pref.userId, user)
+            if (result.status == 200) {
+                _resultState.value = ResultState.Success
+            } else {
+                _resultState.value = ResultState.Error("Failed to save preference")
             }
         }
     }

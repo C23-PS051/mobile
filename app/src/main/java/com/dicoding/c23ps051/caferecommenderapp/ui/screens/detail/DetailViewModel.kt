@@ -1,6 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.detail
 
-import com.dicoding.c23ps051.caferecommenderapp.api.ApiConfig
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
@@ -8,9 +7,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.R
+import com.dicoding.c23ps051.caferecommenderapp.api.ApiConfig
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.model.Facility
-import com.dicoding.c23ps051.caferecommenderapp.model.Favorite
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.google.android.gms.maps.model.LatLng
@@ -30,7 +29,7 @@ class DetailViewModel(private val pref: UserPreference) : ViewModel() {
     val favoriteState: StateFlow<Boolean> get() = _favoriteState
 
     fun getCafeById(id: String) {
-        Log.d("MyLogger", "DetailViewModel: getCafebyId")
+        _uiState.value = UiState.Loading
         viewModelScope.launch {
             pref.getToken().collect { token ->
                 try {
@@ -39,35 +38,35 @@ class DetailViewModel(private val pref: UserPreference) : ViewModel() {
                     if (cafe.status == 200) {
                         val data = cafe.data
                         val result = Cafe(
-                            id = data.cafeId,
+                            id = data.cafe_id,
                             address = data.address,
-                            closingHour = data.closingHour,
+                            closingHour = data.closing_hour,
                             description = data.description,
                             name = data.name,
-                            openingHour = data.openingHour,
-                            priceCategory = data.priceCategory,
+                            openingHour = data.opening_hour,
+                            priceCategory = data.price_category,
                             rating = data.rating as Double,
                             region = data.region,
                             review = data.review,
-                            thumbnail = data.thumbnailUrl,
+                            thumbnail = data.thumbnail_url,
                             facilities = listOf(
                                 Facility.ALCOHOL to data.alcohol,
                                 Facility.INDOOR to data.indoor,
-                                Facility.IN_MALL to data.inMall,
-                                Facility.KID_FRIENDLY to data.kidFriendly,
-                                Facility.LIVE_MUSIC to data.liveMusic,
+                                Facility.IN_MALL to data.in_mall,
+                                Facility.KID_FRIENDLY to data.kid_friendly,
+                                Facility.LIVE_MUSIC to data.live_music,
                                 Facility.OUTDOOR to data.outdoor,
-                                Facility.PET_FRIENDLY to data.petFriendly,
-                                Facility.PARKING_AREA to data.parkingArea,
+                                Facility.PET_FRIENDLY to data.pet_friendly,
+                                Facility.PARKING_AREA to data.parking_area,
                                 Facility.RESERVATION to data.reservation,
-                                Facility.SMOKING_AREA to data.smokingArea,
+                                Facility.SMOKING_AREA to data.smoking_area,
                                 Facility.TAKEAWAY to data.takeaway,
                                 Facility.TOILETS to data.toilets,
-                                Facility.VIP_ROOM to data.vipRoom,
+                                Facility.VIP_ROOM to data.vip_room,
                                 Facility.WIFI to (data.wifi != 0),
                             )
                         )
-                        _uiState.value = UiState.Success(result)
+                        getIsCafeFavorite(id, result)
                     } else {
                         _uiState.value = UiState.Error("Failed to load cafe")
                     }
@@ -102,7 +101,7 @@ class DetailViewModel(private val pref: UserPreference) : ViewModel() {
         viewModelScope.launch {
             try {
                 pref.getLogin().collect {
-                    val response = ApiConfig.getApiService().addToFavorite(it.token, Favorite(it.userId, cafeId))
+                    val response = ApiConfig.getApiService().addToFavorite("Bearer ${it.token}", it.userId, cafeId)
                     if (response.status == 200) _favoriteState.value = true
                 }
             } catch (e: Exception) {
@@ -115,7 +114,7 @@ class DetailViewModel(private val pref: UserPreference) : ViewModel() {
         viewModelScope.launch {
             try {
                 pref.getLogin().collect {
-                    val response = ApiConfig.getApiService().removeFromFavorite(it.token, Favorite(it.userId, cafeId))
+                    val response = ApiConfig.getApiService().removeFromFavorite("Bearer ${it.token}", it.userId, cafeId)
                     if (response.status == 200) _favoriteState.value = false
                 }
             } catch (e: Exception) {
@@ -124,20 +123,22 @@ class DetailViewModel(private val pref: UserPreference) : ViewModel() {
         }
     }
 
-    fun getIsCafeFavorite(cafeId: String) {
+    private fun getIsCafeFavorite(cafeId: String, cafe: Cafe) {
         viewModelScope.launch {
             try {
                 pref.getLogin().collect {
-                    val response = ApiConfig.getApiService().getFavoritesByUserId(it.token, it.userId)
+                    val response = ApiConfig.getApiService().getFavoritesByUserId("Bearer ${it.token}")
 
                     if (response.status == 200) {
-                        val data = response.data
-                        val result = data.filter { item -> item.cafeId == cafeId }
+                        val data = response.result
+                        val result = data.filter { item -> item.cafe_id == cafeId }
                         _favoriteState.value = result.isNotEmpty()
+                        _uiState.value = UiState.Success(cafe)
                     }
                 }
             } catch (e: Exception) {
                 Log.e(this::class.java.simpleName, e.message.toString())
+                _uiState.value = UiState.Error(e.message.toString())
             }
         }
     }

@@ -38,21 +38,34 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
 @Composable
 fun CafeItem(
     id: String,
+    fromFavorite: Boolean,
     thumbnail: String,
     name: String,
     rating: Double,
     review: String,
-    onClick: (String) -> Unit,
+    onClick: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val nameLetterLimit = 25
+    var newName = ""
+    if (name.length > nameLetterLimit) {
+        for (i in 0..nameLetterLimit) {
+            newName += name[i]
+        }
+        newName += "..."
+    } else {
+        newName = name
+    }
+
     Card(
         shape = MaterialTheme.shapes.large,
         modifier = modifier
             .width(140.dp)
+            .height(172.dp)
     ) {
         Column (
             modifier = Modifier
-                .clickable { onClick(id) },
+                .clickable { onClick(id, fromFavorite) },
         ) {
             AsyncImage(
                 model = thumbnail,
@@ -66,7 +79,7 @@ fun CafeItem(
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text(
-                    text = name,
+                    text = newName,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.W500,
                 )
@@ -95,11 +108,12 @@ fun CafeItemPreview() {
         val cafe = CafeDummy.cafeList[0]
         CafeItem(
             id = cafe.id,
+            fromFavorite = false,
             thumbnail = cafe.thumbnail,
             name = cafe.name,
             rating = cafe.rating,
             review = cafe.review,
-            onClick = {}
+            onClick = { _, _ -> }
         )
     }
 }
@@ -107,6 +121,7 @@ fun CafeItemPreview() {
 @Composable
 fun CafeItemLarge(
     id: String,
+    fromFavorite: Boolean,
     thumbnail: String,
     name: String,
     address: String,
@@ -117,7 +132,7 @@ fun CafeItemLarge(
     closingHour: Int,
     modifier: Modifier = Modifier,
     enableFavoriteIcon: Boolean = false,
-    onClick: (String) -> Unit = {},
+    onClick: (String, Boolean) -> Unit = { _, _ -> },
 ) {
     val addressLetterLimit = 50
     var newAddress = ""
@@ -133,13 +148,8 @@ fun CafeItemLarge(
     Card(
         modifier = modifier
             .fillMaxWidth()
-//            .border(
-//                width = 1.dp,
-//                color = Gray,
-//                shape = MaterialTheme.shapes.large
-//            )
             .clip(MaterialTheme.shapes.large)
-            .clickable { onClick(id) },
+            .clickable { onClick(id, fromFavorite) },
         shape = MaterialTheme.shapes.large,
     ) {
         Box {
@@ -216,6 +226,7 @@ fun CafeItemLargePreview() {
         val cafe = CafeDummy.cafeList[0]
         CafeItemLarge(
             id = cafe.id,
+            fromFavorite = false,
             thumbnail = cafe.thumbnail,
             name = cafe.name,
             address = cafe.address,

@@ -12,8 +12,9 @@ import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 
 @Composable
 fun CafeLargeList(
+    fromFavorite: Boolean,
     cafes: List<Cafe>,
-    onCafeItemClick: (String) -> Unit,
+    onCafeItemClick: (String, Boolean) -> Unit,
     state: LazyListState,
     modifier: Modifier = Modifier
 ) {
@@ -29,6 +30,7 @@ fun CafeLargeList(
         ) { _, cafe ->
             CafeItemLarge(
                 id = cafe.id,
+                fromFavorite = fromFavorite,
                 thumbnail = cafe.thumbnail,
                 name = cafe.name,
                 address = cafe.address,

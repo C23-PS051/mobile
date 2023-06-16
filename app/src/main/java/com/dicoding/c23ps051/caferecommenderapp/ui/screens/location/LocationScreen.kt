@@ -31,7 +31,7 @@ fun RequestLocationScreen(
         verticalArrangement = Arrangement.Center,
     ) {
         Image(
-            painter = painterResource(id = R.drawable.img),
+            painter = painterResource(id = R.drawable.location_permission),
             contentDescription = null,
             modifier = Modifier
                 .size(128.dp)

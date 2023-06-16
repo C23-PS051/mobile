@@ -5,4 +5,8 @@
         <item name="android:statusBarColor">@color/dark_brown</item>
         <item name="android:fontFamily">@font/work_sans</item>
     </style>
+
+    <style name="SplashScreenStyle" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_brand_logo</item>
+    </style>
 </resources>

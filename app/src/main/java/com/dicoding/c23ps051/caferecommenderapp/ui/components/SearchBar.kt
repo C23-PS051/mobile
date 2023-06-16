@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -60,37 +61,6 @@ fun ButtonSearchBar(
     }
 }
 
-//@Composable
-//fun OutlinedSearchBar(
-//    modifier: Modifier = Modifier,
-//) {
-//    Surface(
-//        modifier = modifier
-//            .clip(RoundedCornerShape(12.dp))
-//            .border(
-//                width = 1.dp,
-//                color = Gray,
-//                shape = RoundedCornerShape(12.dp),
-//            )
-//            .padding(12.dp)
-//    ) {
-//        Row {
-//
-//            Text(
-//                text = stringResource(id = R.string.search_hint),
-//                color = Gray,
-//                modifier = modifier
-//                    .padding(horizontal = 4.dp)
-//                    .weight(1f)
-//            )
-//            Image(
-//                painter = painterResource(id = R.drawable.search),
-//                contentDescription = null,
-//            )
-//        }
-//    }
-//}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OutlinedSearchBar(
@@ -113,7 +83,8 @@ fun OutlinedSearchBar(
             IconButton(onClick = { onClick() }) {
                 Icon(
                     painterResource(id = R.drawable.search),
-                    contentDescription = stringResource(id = R.string.start_search)
+                    contentDescription = stringResource(id = R.string.start_search),
+                    modifier = Modifier.size(32.dp)
                 )
             }
         },

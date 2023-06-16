@@ -1,14 +1,11 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.home
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.api.ApiConfig
 import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 import com.dicoding.c23ps051.caferecommenderapp.model.Facility
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
-import com.dicoding.c23ps051.caferecommenderapp.response.CafeResponse
 import com.dicoding.c23ps051.caferecommenderapp.response.CafeResponseItem
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,31 +55,31 @@ class HomeViewModel(private val pref: UserPreference) : ViewModel() {
     private fun mapCafes(data: List<CafeResponseItem>): List<Cafe> {
         return data.map { item ->
             Cafe(
-                id = item.cafeId,
+                id = item.cafe_id,
                 address = item.address,
-                closingHour = item.closingHour,
+                closingHour = item.closing_hour,
                 description = item.description,
                 name = item.name,
-                openingHour = item.openingHour,
-                priceCategory = item.priceCategory,
+                openingHour = item.opening_hour,
+                priceCategory = item.price_category,
                 rating = item.rating as Double,
                 region = item.region,
                 review = item.review,
-                thumbnail = item.thumbnailUrl,
+                thumbnail = item.thumbnail_url,
                 facilities = listOf(
                     Facility.ALCOHOL to item.alcohol,
                     Facility.INDOOR to item.indoor,
-                    Facility.IN_MALL to item.inMall,
-                    Facility.KID_FRIENDLY to item.kidFriendly,
-                    Facility.LIVE_MUSIC to item.liveMusic,
+                    Facility.IN_MALL to item.in_mall,
+                    Facility.KID_FRIENDLY to item.kid_friendly,
+                    Facility.LIVE_MUSIC to item.live_music,
                     Facility.OUTDOOR to item.outdoor,
-                    Facility.PET_FRIENDLY to item.petFriendly,
-                    Facility.PARKING_AREA to item.parkingArea,
+                    Facility.PET_FRIENDLY to item.pet_friendly,
+                    Facility.PARKING_AREA to item.parking_area,
                     Facility.RESERVATION to item.reservation,
-                    Facility.SMOKING_AREA to item.smokingArea,
+                    Facility.SMOKING_AREA to item.smoking_area,
                     Facility.TAKEAWAY to item.takeaway,
                     Facility.TOILETS to item.toilets,
-                    Facility.VIP_ROOM to item.vipRoom,
+                    Facility.VIP_ROOM to item.vip_room,
                     Facility.WIFI to (item.wifi != 0),
                 )
             )
@@ -126,43 +123,4 @@ class HomeViewModel(private val pref: UserPreference) : ViewModel() {
     fun setPopularCafesToError() {
         _uiStatePopular.value = UiState.Error("Failed to get cafes")
     }
-
-//    fun getNearbyCafes() {
-//        viewModelScope.launch {
-//            // TODO: TO BE UPDATED (repository get function)
-//            repository.getNearbyCafes()
-//                .catch {
-//                    _uiStateNearby.value = UiState.Error(it.message.toString())
-//                }
-//                .collect { cafes ->
-//                    _uiStateNearby.value = UiState.Success(cafes)
-//                }
-//        }
-//    }
-//
-//    fun getOpen24HoursCafes() {
-//        // TODO: TO BE UPDATED (repository get function)
-//        viewModelScope.launch {
-//            repository.getOpen24HoursCafes()
-//                .catch {
-//                    _uiStateOpen24Hours.value = UiState.Error(it.message.toString())
-//                }
-//                .collect { cafes ->
-//                    _uiStateOpen24Hours.value = UiState.Success(cafes)
-//                }
-//        }
-//    }
-//
-//    fun getOnBudgetCafes() {
-//        // TODO: TO BE UPDATED (repository get function)
-//        viewModelScope.launch {
-//            repository.getOnBudgetCafes()
-//                .catch {
-//                    _uiStateOnBudget.value = UiState.Error(it.message.toString())
-//                }
-//                .collect { cafes ->
-//                    _uiStateOnBudget.value = UiState.Success(cafes)
-//                }
-//        }
-//    }
 }

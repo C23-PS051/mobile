@@ -6,7 +6,4 @@ data class Response(
 
     @field:SerializedName("status")
     val status: Int,
-
-    @field:SerializedName("message")
-    val message: String,
 )

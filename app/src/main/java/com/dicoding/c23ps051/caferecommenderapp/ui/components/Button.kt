@@ -102,9 +102,7 @@ fun GoogleButton(
 @Composable
 fun ButtonPreview() {
     CafeRecommenderAppTheme {
-        Button(onClick = { /*TODO*/ }) {
-
-        }
+        Button(onClick = {}) {}
     }
 }
 

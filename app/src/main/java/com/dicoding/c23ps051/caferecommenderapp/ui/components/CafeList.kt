@@ -10,7 +10,8 @@ import com.dicoding.c23ps051.caferecommenderapp.model.Cafe
 
 @Composable
 fun CafeList(
-    onCafeItemClick: (String) -> Unit,
+    fromFavorite: Boolean,
+    onCafeItemClick: (String, Boolean) -> Unit,
     cafes: List<Cafe>,
     modifier: Modifier = Modifier,
 ) {
@@ -21,6 +22,7 @@ fun CafeList(
         itemsIndexed(cafes) { _, cafe ->
             CafeItem(
                 id = cafe.id,
+                fromFavorite = fromFavorite,
                 thumbnail = cafe.thumbnail,
                 name = cafe.name,
                 rating = cafe.rating,

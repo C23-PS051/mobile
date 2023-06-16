@@ -41,10 +41,10 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.OutlinedDropDown
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.OutlinedDropDownTextField
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProgressBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Section
-import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.ErrorScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.ResultState
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 
 private const val facilitiesSize = 14
@@ -76,8 +76,15 @@ fun SearchScreen(
         stringResource(id = R.string.east_jakarta),
     )
 
+    val priceRange = listOf(
+        stringResource(id = R.string.low_price),
+        stringResource(id = R.string.mid_price),
+        stringResource(id = R.string.high_price),
+    )
+
     viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
+            UiState.Initial -> {}
             UiState.Loading -> {
                 LoadingScreen()
                 viewModel.getLocation()
@@ -96,10 +103,15 @@ fun SearchScreen(
                     navigateUp = navigateUp,
                     onDismissRequest = { state.expanded = false },
                     onSubmit = {
+                        var selectedPriceRange = ""
+                        state.checkedPriceChip.forEachIndexed { index, isChecked ->
+                            if (isChecked) selectedPriceRange = priceRange[index]
+                        }
                         viewModel.editCafePreference(
                             enumValues<Facility>().mapIndexed { index, facility ->
                                 facility to state.checkedCheckbox[index]
-                            }
+                            },
+                            selectedPriceRange
                         )
                     },
                     checkedState = state.checkedCheckbox,
@@ -115,9 +127,12 @@ fun SearchScreen(
                     },
                     isCheckedPriceChip = state.checkedPriceChip,
                     onPriceChipClicked = { index ->
-                        state.checkedPriceChip[index] = !state.checkedPriceChip[index]
+                        for (i in state.checkedPriceChip.indices) {
+                            state.checkedPriceChip[i] = index == i
+                        }
                     },
-                    regions = regions
+                    regions = regions,
+                    priceRange = priceRange
                 )
             }
             is UiState.Error -> {
@@ -190,6 +205,7 @@ fun SearchContent(
     isCheckedPriceChip: List<Boolean>,
     onPriceChipClicked: (Int) -> Unit,
     regions: List<String>,
+    priceRange: List<String>,
     modifier: Modifier = Modifier,
 ) {
     val ratings = listOf(
@@ -198,12 +214,6 @@ fun SearchContent(
         stringResource(id = R.string.three_star_rating),
         stringResource(id = R.string.four_star_rating),
         stringResource(id = R.string.five_star_rating),
-    )
-
-    val priceRange = listOf(
-        stringResource(id = R.string.low_price),
-        stringResource(id = R.string.mid_price),
-        stringResource(id = R.string.high_price),
     )
 
     val facilities = enumValues<Facility>().map { it.displayName }
@@ -260,23 +270,23 @@ fun SearchContent(
                     )
                 },
             )
-            Section(
-                title = stringResource(id = R.string.ratings),
-                content = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        ratings.forEachIndexed { index, rating ->
-                            SearchChip(
-                                text = rating,
-                                isChecked = isCheckedRatingChip[index],
-                                onClick = { onRatingChipClicked(index) }
-                            )
-                        }
-                    }
-                }
-            )
+//            Section(
+//                title = stringResource(id = R.string.ratings),
+//                content = {
+//                    Row(
+//                        modifier = Modifier.fillMaxWidth(),
+//                        horizontalArrangement = Arrangement.SpaceBetween
+//                    ) {
+//                        ratings.forEachIndexed { index, rating ->
+//                            SearchChip(
+//                                text = rating,
+//                                isChecked = isCheckedRatingChip[index],
+//                                onClick = { onRatingChipClicked(index) }
+//                            )
+//                        }
+//                    }
+//                }
+//            )
             Section(
                 title = stringResource(id = R.string.price_range),
                 content = {

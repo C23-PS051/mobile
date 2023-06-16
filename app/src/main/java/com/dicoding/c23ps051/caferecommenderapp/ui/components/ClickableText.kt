@@ -66,9 +66,7 @@ fun ClickableTextPreview() {
     CafeRecommenderAppTheme {
         ClickableText(
             text = "Some texts",
-            onClick = {
-                /* TODO */
-            }
+            onClick = {}
         )
     }
 }

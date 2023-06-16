@@ -43,6 +43,7 @@ import com.dicoding.c23ps051.caferecommenderapp.model.Facility
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
 import com.dicoding.c23ps051.caferecommenderapp.ui.ViewModelFactory
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackButton
+import com.dicoding.c23ps051.caferecommenderapp.ui.components.BackPressHandler
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.Button
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ButtonSmall
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.CafeDetailInfoItem
@@ -50,9 +51,10 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.components.FacilitiesItem
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.FavoriteButton
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.ProgressBar
 import com.dicoding.c23ps051.caferecommenderapp.ui.components.SectionBig
-import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
+import com.dicoding.c23ps051.caferecommenderapp.ui.event.BackPress
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.info.ErrorScreen
 import com.dicoding.c23ps051.caferecommenderapp.ui.screens.loading.LoadingScreen
+import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 import com.dicoding.c23ps051.caferecommenderapp.ui.theme.Gray
 import com.google.android.gms.maps.model.CameraPosition
@@ -74,6 +76,7 @@ fun DetailScreen(
     state: DetailState = rememberDetailState(
         showMapDialog = false,
         isGetLocationHandled = false,
+        showLoading = false,
     ),
 ) {
     val context = LocalContext.current
@@ -83,10 +86,10 @@ fun DetailScreen(
 
     viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
+            UiState.Initial -> {}
             is UiState.Loading -> {
                 LoadingScreen(stringResource(id = R.string.serving_up_cafe_info))
                 viewModel.getCafeById(itemId)
-                viewModel.getIsCafeFavorite(itemId)
             }
             is UiState.Success -> {
                 val cafe = uiState.data
@@ -108,20 +111,11 @@ fun DetailScreen(
                     facilities = cafe.facilities,
                     toggleFavorite = {
                         Log.d("MyLogger", "Toggle Favorite")
-                        val isSuccessful = if (isFavorite) {
+                        if (isFavorite) {
                             viewModel.removeFromFavorite(cafe.id)
                         } else {
                             viewModel.addToFavorite(cafe.id)
                         }
-
-//                        if (isSuccessful) {
-//                            Log.d("MyLogger", "Favorite Success ")
-//                            if (isFavorite) {
-//                                Toast.makeText(context, "${cafe.name} has been removed from favorite", Toast.LENGTH_SHORT).show()
-//                            } else {
-//                                Toast.makeText(context, "${cafe.name} has been added to favorite", Toast.LENGTH_SHORT).show()
-//                            }
-//                        }
                     },
                     isFavorite = isFavorite,
                     navigateBack = navigateBack,
@@ -157,23 +151,33 @@ fun DetailScreen(
             },
         )
     }
+
+    BackPressHandler(
+        backPressState = BackPress.Idle,
+        toggleBackPressState = {}
+    ) {
+        navigateBack()
+    }
 }
 
 class DetailState(
     initialShowMapDialogState: Boolean,
     initialIsGetLocationHandledState: Boolean,
+    initialShowLoadingState: Boolean,
 ) {
     var showMapDialog by mutableStateOf(initialShowMapDialogState)
     var isGetLocationHandled by mutableStateOf(initialIsGetLocationHandledState)
+    var showLoading by mutableStateOf(initialShowLoadingState)
 }
 
 @Composable
 fun rememberDetailState(
     showMapDialog: Boolean,
     isGetLocationHandled: Boolean,
+    showLoading: Boolean,
 ): DetailState =
-    remember(showMapDialog, isGetLocationHandled) {
-        DetailState(showMapDialog, isGetLocationHandled)
+    remember(showMapDialog, isGetLocationHandled, showLoading) {
+        DetailState(showMapDialog, isGetLocationHandled, showLoading)
     }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -291,6 +295,7 @@ fun DetailContent(
                     ) {
                         mapsState.let { state ->
                             when (state) {
+                                UiState.Initial -> {}
                                 UiState.Loading -> {
                                     ProgressBar(Modifier.size(40.dp))
                                 }

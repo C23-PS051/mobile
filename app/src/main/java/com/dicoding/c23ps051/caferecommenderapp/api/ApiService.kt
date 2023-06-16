@@ -1,18 +1,16 @@
 package com.dicoding.c23ps051.caferecommenderapp.api
 
-import com.dicoding.c23ps051.caferecommenderapp.model.Favorite
 import com.dicoding.c23ps051.caferecommenderapp.model.User
 import com.dicoding.c23ps051.caferecommenderapp.response.CafeDetailResponse
 import com.dicoding.c23ps051.caferecommenderapp.response.CafeResponse
-import com.dicoding.c23ps051.caferecommenderapp.response.CafeResponseItem
+import com.dicoding.c23ps051.caferecommenderapp.response.FavoriteCafeResponse
 import com.dicoding.c23ps051.caferecommenderapp.response.Response
 import com.dicoding.c23ps051.caferecommenderapp.response.UserResponse
-import retrofit2.Call
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -49,21 +47,24 @@ interface ApiService {
         @Header("Authorization") idToken: String,
     ): CafeResponse
 
-    @POST("/favorites")
+    @FormUrlEncoded
+    @POST("/favorites/")
     suspend fun addToFavorite(
         @Header("Authorization") idToken: String,
-        @Body favorite: Favorite
+        @Field("user_id") userId: String,
+        @Field("cafe_id") cafeId: String,
     ): Response
 
-    @DELETE("/favorites")
+    @FormUrlEncoded
+    @HTTP(method = "DELETE", path = "/favorites/", hasBody = true)
     suspend fun removeFromFavorite(
         @Header("Authorization") idToken: String,
-        @Body favorite: Favorite
+        @Field("user_id") userId: String,
+        @Field("cafe_id") cafeId: String,
     ): Response
 
-    @GET("/favorites")
+    @GET("/favorites/")
     suspend fun getFavoritesByUserId(
         @Header("Authorization") idToken: String,
-        @Body userId: String,
-    ): CafeResponse
+    ): FavoriteCafeResponse
 }

@@ -1,16 +1,11 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.sign_up
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.c23ps051.caferecommenderapp.api.ApiConfig
-import com.dicoding.c23ps051.caferecommenderapp.constants.DEFAULT_PHOTO_URI
-import com.dicoding.c23ps051.caferecommenderapp.model.Facility
-import com.dicoding.c23ps051.caferecommenderapp.model.Login
 import com.dicoding.c23ps051.caferecommenderapp.model.User
 import com.dicoding.c23ps051.caferecommenderapp.model.UserPreference
-import com.dicoding.c23ps051.caferecommenderapp.response.UserResponseItem
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.ResultState
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -49,10 +44,6 @@ class SignUpViewModel(private val pref: UserPreference) : ViewModel() {
                                         signUp(
                                             idToken = idToken,
                                             userId = firebaseUser.uid,
-                                            email = email,
-                                            password = password,
-                                            name = name,
-                                            photoUri = photoUri
                                         )
                                     } else {
                                         _resultState.value =
@@ -71,16 +62,26 @@ class SignUpViewModel(private val pref: UserPreference) : ViewModel() {
     }
 
     private fun signUp(
-        idToken: String, userId: String, email: String, password: String, name: String, photoUri: String
+        idToken: String, userId: String
     ) {
         viewModelScope.launch {
             val user = User(
-                email = email,
-                fullName = name.trim(),
-                photoUri = photoUri,
-                preferences = enumValues<Facility>().map { it to false },
+                cafe_alcohol = false,
+                cafe_in_mall = false,
+                cafe_indoor = false,
+                cafe_kid_friendly = false,
+                cafe_live_music = false,
+                cafe_outdoor = false,
+                cafe_parking_area = false,
+                cafe_pet_friendly = false,
+                cafe_price_category = "",
+                cafe_reservation = false,
+                cafe_smoking_area = false,
+                cafe_takeaway = false,
+                cafe_toilets = false,
+                cafe_vip_room = false,
+                cafe_wifi = false,
                 username = userId,
-                isNewUser = true
             )
 
             val response = ApiConfig.getApiService().editProfile(
@@ -91,58 +92,9 @@ class SignUpViewModel(private val pref: UserPreference) : ViewModel() {
 
             if (response.status == 200) {
                 _resultState.value = ResultState.Success
-//                auth.signInWithEmailAndPassword(email, password)
-//                    .addOnCompleteListener { task ->
-//                        if (task.isSuccessful) {
-//                            val currentUser = auth.currentUser
-//
-//                            currentUser?.getIdToken(true)
-//                                ?.addOnCompleteListener { tokenTask ->
-//                                    if (tokenTask.isSuccessful) {
-//                                        val token = tokenTask.result?.token
-//                                        if (token != null) {
-//                                            signIn(
-//                                                name = name,
-//                                                email = email,
-//                                                token = token,
-//                                                photoUri = photoUri,
-//                                                userId = userId,
-//                                            )
-//                                        }
-//                                    } else {
-//                                        _resultState.value = ResultState.Error("Failed to create user account")
-//                                    }
-//                                }?.addOnFailureListener {
-//                                    _resultState.value = ResultState.Error(it.message.toString())
-//                                }
-//                        } else {
-//                            _resultState.value = ResultState.Error("Failed to create user account")
-//                        }
-//                    }.addOnFailureListener {
-//                        _resultState.value = ResultState.Error(it.message.toString())
-//                    }
             } else {
                 _resultState.value = ResultState.Error("Failed to create user account")
             }
-        }
-    }
-
-    private fun signIn(name: String?, email: String, token: String, photoUri: String, userId: String) {
-        Log.d("MyLogger", "Sign Up: $photoUri")
-        val convName = name ?: ""
-        val convPhotoUrl = if (photoUri == "null") DEFAULT_PHOTO_URI else photoUri
-        val loginData = Login(
-            name = convName,
-            email = email,
-            photoUrl = convPhotoUrl,
-            token = token,
-            isLogin = true,
-            isNewUser = true,
-            userId = userId,
-        )
-
-        viewModelScope.launch {
-            pref.saveLogin(loginData)
         }
     }
 

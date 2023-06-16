@@ -1,6 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.home
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -39,7 +38,7 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 @Composable
 fun HomeScreen(
     userPreference: UserPreference,
-    navigateToDetail: (String) -> Unit,
+    navigateToDetail: (String, Boolean) -> Unit,
     navigateToSearchCafe: () -> Unit,
     onProfileClick: () -> Unit,
     viewModel: HomeViewModel = viewModel(
@@ -64,6 +63,7 @@ fun HomeScreen(
 
     cafesState.let { uiState ->
         when (uiState) {
+            UiState.Initial -> {}
             UiState.Loading -> {
                 viewModel.getAllCafes()
             }
@@ -100,32 +100,6 @@ fun HomeScreen(
         photoUri = photoUri
     )
 
-//    val loadCompleted = nearbyCafes.isNotEmpty() && open24HoursCafes.isNotEmpty() && onBudgetCafes.isNotEmpty() && login != null
-//
-//    if (loadCompleted) {
-//
-//    } else {
-//        viewModel.getAllCafes()
-//        if (uiStateMyRegion is UiState.Loading) {
-//            state.loadingMyRegionCafes = true
-//        }
-//        if (uiStateOpen24Hours is UiState.Loading) {
-//            state.loadingOn24HoursCafes = true
-//        }
-//        if (uiStatePopular is UiState.Loading) {
-//            state.loadingPopularCafes = true
-//        }
-//        if (uiStateLogin is UiState.Loading) {
-//            preferenceViewModel.getLogin()
-//        }
-//
-//        if (uiStateMyRegion is UiState.Error || uiStateOpen24Hours is UiState.Error || uiStatePopular is UiState.Error) {
-//            ErrorScreen(stringResource(id = R.string.failed_to_load_cafes), { /*TODO*/ })
-//        } else {
-//            LoadingScreen(stringResource(id = R.string.exploring_cafe_options))
-//        }
-//    }
-
     // User needs to press back twice to exit
     BackPressHandler(
         backPressState = backPressState,
@@ -143,7 +117,7 @@ fun HomeScreen(
 
 @Composable
 fun HomeContent(
-    navigateToDetail: (String) -> Unit,
+    navigateToDetail: (String, Boolean) -> Unit,
     navigateToSearchCafe: () -> Unit,
     onProfileClick: () -> Unit,
     myRegionCafes: UiState<List<Cafe>>,
@@ -156,7 +130,6 @@ fun HomeContent(
     photoUri: String,
     modifier: Modifier = Modifier,
 ) {
-    Log.d("MyLogger", "Home: $photoUri")
     Scaffold(
         topBar = { Header(userLocation, photoUri, onProfileClick) },
     ) { innerPadding ->
@@ -179,9 +152,11 @@ fun HomeContent(
                     content = {
                         myRegionCafes.let { uiState ->
                             when (uiState) {
+                                UiState.Initial -> {}
                                 UiState.Loading -> { ProgressBar(modifier.size(40.dp)) }
                                 is UiState.Success -> {
                                     CafeList(
+                                        fromFavorite = false,
                                         onCafeItemClick = navigateToDetail,
                                         cafes = uiState.data,
                                     )
@@ -200,9 +175,11 @@ fun HomeContent(
                     content = {
                         open24HoursCafes.let { uiState ->
                             when (uiState) {
+                                UiState.Initial -> {}
                                 UiState.Loading -> { ProgressBar(modifier.size(40.dp)) }
                                 is UiState.Success -> {
                                     CafeList(
+                                        fromFavorite = false,
                                         onCafeItemClick = navigateToDetail,
                                         cafes = uiState.data,
                                     )
@@ -221,9 +198,11 @@ fun HomeContent(
                     content = {
                         popularCafes.let { uiState ->
                             when (uiState) {
+                                UiState.Initial -> {}
                                 UiState.Loading -> { ProgressBar(modifier.size(40.dp)) }
                                 is UiState.Success -> {
                                     CafeList(
+                                        fromFavorite = false,
                                         onCafeItemClick = navigateToDetail,
                                         cafes = uiState.data,
                                     )

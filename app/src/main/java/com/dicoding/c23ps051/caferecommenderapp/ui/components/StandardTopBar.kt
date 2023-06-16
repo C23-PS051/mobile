@@ -15,8 +15,8 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.theme.APP_CONTENT_PADDING
 
 @Composable
 fun StandardTopBar(
-    modifier: Modifier = Modifier,
     title: String,
+    modifier: Modifier = Modifier,
     showBackButton: Boolean = false,
     onBack: () -> Unit = {},
 ) {

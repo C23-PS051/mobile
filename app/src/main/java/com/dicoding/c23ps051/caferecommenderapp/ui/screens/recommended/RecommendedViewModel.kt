@@ -1,6 +1,5 @@
 package com.dicoding.c23ps051.caferecommenderapp.ui.screens.recommended
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -13,11 +12,12 @@ import com.dicoding.c23ps051.caferecommenderapp.ui.common.isOpen
 import com.dicoding.c23ps051.caferecommenderapp.ui.states.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class RecommendedViewModel(private val pref: UserPreference) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<UiState<List<Cafe>>> = MutableStateFlow(UiState.Loading)
+    private val _uiState: MutableStateFlow<UiState<List<Cafe>>> = MutableStateFlow(UiState.Initial)
     val uiState: StateFlow<UiState<List<Cafe>>> get() = _uiState
 
     private var recommendedCafes = mutableListOf<Cafe>()
@@ -45,64 +45,58 @@ class RecommendedViewModel(private val pref: UserPreference) : ViewModel() {
     private var _openChip = mutableStateOf(initialOpenChipState)
     val openChip: State<Boolean> get() = _openChip
 
-    init {
-        viewModelScope.launch {
-            pref.getUserLocation().collect {
-                location = it
-            }
-        }
-
-//        getRecommendedCafes()
-    }
-
     fun getRecommendedCafes() {
-        _uiState.value = UiState.Loading
-        viewModelScope.launch {
-            try {
-                pref.getLogin().collect {
-                    val response = ApiConfig.getApiService().getRecommendedCafes(it.token)
+        if (uiState.value != UiState.Loading) {
+            _uiState.value = UiState.Loading
+            viewModelScope.launch {
+                try {
+                    location = pref.getUserLocation().first()
+                    pref.getLogin().collect {
+                        val response =
+                            ApiConfig.getApiService().getRecommendedCafes("Bearer ${it.token}")
 
-                    if (response.status == 200) {
-                        val data = response.data
-                        data.forEach { item ->
-                            val cafe = Cafe(
-                                id = item.cafeId,
-                                address = item.address,
-                                closingHour = item.closingHour,
-                                description = item.description,
-                                name = item.name,
-                                openingHour = item.openingHour,
-                                priceCategory = item.priceCategory,
-                                rating = item.rating as Double,
-                                region = item.region,
-                                review = item.review,
-                                thumbnail = item.thumbnailUrl,
-                                facilities = listOf(
-                                    Facility.ALCOHOL to item.alcohol,
-                                    Facility.INDOOR to item.indoor,
-                                    Facility.IN_MALL to item.inMall,
-                                    Facility.KID_FRIENDLY to item.kidFriendly,
-                                    Facility.LIVE_MUSIC to item.liveMusic,
-                                    Facility.OUTDOOR to item.outdoor,
-                                    Facility.PET_FRIENDLY to item.petFriendly,
-                                    Facility.PARKING_AREA to item.parkingArea,
-                                    Facility.RESERVATION to item.reservation,
-                                    Facility.SMOKING_AREA to item.smokingArea,
-                                    Facility.TAKEAWAY to item.takeaway,
-                                    Facility.TOILETS to item.toilets,
-                                    Facility.VIP_ROOM to item.vipRoom,
-                                    Facility.WIFI to (item.wifi != 0),
+                        if (response.status == 200) {
+                            val data = response.data
+                            data.forEach { item ->
+                                val cafe = Cafe(
+                                    id = item.cafe_id,
+                                    address = item.address,
+                                    closingHour = item.closing_hour,
+                                    description = item.description,
+                                    name = item.name,
+                                    openingHour = item.opening_hour,
+                                    priceCategory = item.price_category,
+                                    rating = item.rating as Double,
+                                    region = item.region,
+                                    review = item.review,
+                                    thumbnail = item.thumbnail_url,
+                                    facilities = listOf(
+                                        Facility.ALCOHOL to item.alcohol,
+                                        Facility.INDOOR to item.indoor,
+                                        Facility.IN_MALL to item.in_mall,
+                                        Facility.KID_FRIENDLY to item.kid_friendly,
+                                        Facility.LIVE_MUSIC to item.live_music,
+                                        Facility.OUTDOOR to item.outdoor,
+                                        Facility.PET_FRIENDLY to item.pet_friendly,
+                                        Facility.PARKING_AREA to item.parking_area,
+                                        Facility.RESERVATION to item.reservation,
+                                        Facility.SMOKING_AREA to item.smoking_area,
+                                        Facility.TAKEAWAY to item.takeaway,
+                                        Facility.TOILETS to item.toilets,
+                                        Facility.VIP_ROOM to item.vip_room,
+                                        Facility.WIFI to (item.wifi != 0),
+                                    )
                                 )
-                            )
-                            recommendedCafes.add(cafe)
+                                recommendedCafes.add(cafe)
+                            }
+                            updateStates()
+                        } else {
+                            _uiState.value = UiState.Error("Failed loading cafes")
                         }
-                        updateStates()
-                    } else {
-                        _uiState.value = UiState.Error("Failed loading cafes")
                     }
+                } catch (e: Exception) {
+                    _uiState.value = UiState.Error(e.message.toString())
                 }
-            } catch (e: Exception) {
-                _uiState.value = UiState.Error(e.message.toString())
             }
         }
     }
@@ -133,9 +127,10 @@ class RecommendedViewModel(private val pref: UserPreference) : ViewModel() {
     }
 
     private fun updateStates() {
+        _uiState.value = UiState.Loading
         filteredRecommendedCafes = recommendedCafes
 
-        if (query.value == "") {
+        filteredRecommendedCafes = if (query.value == "") {
             filteredRecommendedCafes.sortedBy { it.name }
         } else {
             filteredRecommendedCafes.filter {
@@ -152,14 +147,26 @@ class RecommendedViewModel(private val pref: UserPreference) : ViewModel() {
             filteredRecommendedCafes = filteredRecommendedCafes.filter { isOpen(it.openingHour, it.closingHour) }
         }
 
-//        filteredRecommendedCafes = when (selectedText.value) {
-//            0 -> filteredRecommendedCafes.sortedBy { it.name }
-//            1 -> filteredRecommendedCafes.sortedBy { it.distance }
-//            2 -> filteredRecommendedCafes.sortedByDescending { it.rating }
-//            3 -> filteredRecommendedCafes.sortedBy { it.maxPrice - it.minPrice }
-//            4 -> filteredRecommendedCafes.sortedByDescending { it.maxPrice - it.minPrice }
-//            else -> filteredRecommendedCafes
-//        }
+        filteredRecommendedCafes = when (selectedText.value) {
+            0 -> filteredRecommendedCafes.sortedBy { it.name }
+            1 -> filteredRecommendedCafes.sortedByDescending { it.rating }
+            2 -> filteredRecommendedCafes.sortedByDescending { it.review.replace(",", "").toInt() }
+            3 -> filteredRecommendedCafes.sortedWith(compareBy { cafe ->
+                when (cafe.priceCategory) {
+                    "$" -> 0
+                    "$$$" -> 2
+                    else -> 1
+                }
+            })
+            4 -> filteredRecommendedCafes.sortedWith(compareBy { cafe ->
+                when (cafe.priceCategory) {
+                    "$" -> 2
+                    "$$$" -> 0
+                    else -> 1
+                }
+            })
+            else -> filteredRecommendedCafes
+        }
 
         _uiState.value = UiState.Success(filteredRecommendedCafes)
     }

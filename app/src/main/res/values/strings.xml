@@ -42,7 +42,7 @@
     <string name="name">Name</string>
     <string name="already_have_account">I already have an account</string>
     <string name="visibility">Visibility</string>
-    <string name="welcome_text">Welcome to AppName!</string>
+    <string name="welcome_text">Welcome to Brewscovery!</string>
     <string name="welcome_description">Your personalized dining companion designed to satisfy your unique cravings.</string>
     <string name="welcome_closing">Going to cafe without confusion!</string>
     <string name="back_button">Go back</string>
@@ -54,6 +54,7 @@
     <string name="recommended_for_you">Recommended for you</string>
     <string name="highest_rating">Highest rating</string>
     <string name="nearest">Nearest</string>
+    <string name="most_review">Most review</string>
     <string name="lowest_price_range">Lowest price range</string>
     <string name="highest_price_range">Highest price range</string>
     <string name="sort_by">Sort by</string>
@@ -174,4 +175,8 @@
     <string name="something_wrong_happened">Something wrong happened</string>
     <string name="changes_saved">Changes saved</string>
     <string name="failed_to_save_preference">Failed to save preference. Set to default.</string>
+    <string name="sign_in_text">Sign In</string>
+    <string name="this_list_is_empty">Whoops.. This list is empty</string>
+    <string name="your_favorites">Your Favorites</string>
+    <string name="loading_favorites">Getting your favorite cafes</string>
 </resources>

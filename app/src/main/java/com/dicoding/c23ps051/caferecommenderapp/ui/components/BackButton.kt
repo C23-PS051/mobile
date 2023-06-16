@@ -43,9 +43,7 @@ fun BackButton(
 fun BackButtonPreview() {
     CafeRecommenderAppTheme {
         BackButton(
-            onClick = {
-                /* TODO */
-            }
+            onClick = {}
         )
     }
 }
